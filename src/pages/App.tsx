@@ -4,6 +4,7 @@ import {
     Switch,
     Route,
     Redirect,
+    useHistory,
 } from 'react-router-dom';
 import Login from './login';
 import Home from './home';
