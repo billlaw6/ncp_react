@@ -1,8 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// import App from './pages/App';
-import App from './router/index';
+import App from './pages/App';
+// import App from './router/index';
+import { AppState } from './store';
 import * as serviceWorker from './serviceWorker';
+
+const mapStateToProps = (state: AppState) => ({
+    system: state.system,
+    chat: state.chat,
+});
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
