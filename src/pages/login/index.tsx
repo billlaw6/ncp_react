@@ -13,6 +13,13 @@ const fakeAuth = {
     },
 };
 
+/* 
+ * 1. 函数式定义的无状态组件
+ * 2. es5原生方式React.createClass定义的组件
+ * 3. es6形式的extends React.Component定义的组件
+ * 只要有可能，尽量使用无状态组件创建形式，
+ * 否则（如需要state，生命周期方法等），则使用'React.Component'这种es6形式创建组件。
+ */
 // export default class Login extends React.Component {
 export default function Login() {
     let history = useHistory();
