@@ -3,16 +3,11 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link,
     Redirect,
-    useRouteMatch,
-	useHistory,
-    useParams,
 } from 'react-router-dom';
-import Login from '../pages/Login';
-import Home from '../pages/Home';
-import Canvas from '../pages/Canvas';
-import { isLogin } from '../common/';
+import Login from './login';
+import Home from './home';
+import Canvas from './canvas';
 
 const fakeAuth = {
     isAuthenticated: false,
