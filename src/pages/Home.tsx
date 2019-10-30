@@ -4,7 +4,8 @@ export default class Home extends React.Component {
     render() {
         return (
             <div>
-                <a>GO LOGIN</a>
+                <a href="/login">GO LOGIN</a>
+                <a href="/canvas">GO CANVAS</a>
             </div>
         );
     }

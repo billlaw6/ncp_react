@@ -4,12 +4,65 @@ import {
     Switch,
     Route,
     Link,
+    Redirect,
     useRouteMatch,
+	useHistory,
     useParams,
 } from 'react-router-dom';
 import Login from '../pages/Login';
 import Home from '../pages/Home';
 import Canvas from '../pages/Canvas';
+import { isLogin } from '../common/';
+
+const fakeAuth = {
+    isAuthenticated: false,
+    authenticate(cb: any) {
+        fakeAuth.isAuthenticated = true;
+        setTimeout(cb, 100); // fake async
+    },
+    signout(cb: any) {
+        fakeAuth.isAuthenticated = false;
+        setTimeout(cb, 100);
+    },
+};
+
+function AuthButton() {
+    let history = useHistory();
+
+    return fakeAuth.isAuthenticated ? (
+        <p>
+            Welcome!{' '}
+            <button
+                onClick={() => {
+                    fakeAuth.signout(() => history.push('/'));
+                }}>
+                Sign out
+            </button>
+        </p>
+    ) : (
+        <p>You are not logged in.</p>
+    );
+}
+
+function PrivateRoute({ children, ...rest }: any) {
+    return (
+        <Route
+            {...rest}
+            render={({ location }) =>
+                fakeAuth.isAuthenticated ? (
+                    children
+                ) : (
+                    <Redirect
+                        to={{
+                            pathname: '/login',
+                            state: { from: location },
+                        }}
+                    />
+                )
+            }
+        />
+    );
+}
 
 export default function routerConfig() {
     return (
@@ -19,7 +72,9 @@ export default function routerConfig() {
                 renders the first one that matches the current URL. */}
                 <Switch>
                     <Route path="/login" component={Login}></Route>
-                    <Route path="/canvas" component={Canvas}></Route>
+                    <PrivateRoute path="/canvas">
+                        <Canvas />
+                    </PrivateRoute>
                     <Route exact path="/" component={Home}></Route>
                 </Switch>
             </div>
