@@ -16,18 +16,19 @@ interface State {
     data: CanvasData;
 }
 
-class Canvas extends React.Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = { data: this.props.data }
-    }
+// class Canvas extends React.Component<Props, State> {
+class Canvas extends React.Component {
+    // constructor(props: Props) {
+    //     super(props);
+    //     this.state = { data: this.props.data }
+    // }
 
     render() {
         return (
             <div className="Canvas">
                 <a href="/">Canvas</a>
-                <span>{this.props.data.label}</span>
-                <span>{this.state.data.label}</span>
+                <span>this.props.data.label</span>
+                <span>this.state.data.label</span>
             </div>
         );
     }
