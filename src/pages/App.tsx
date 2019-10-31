@@ -11,7 +11,7 @@ import Home from './home';
 import Canvas from './canvas';
 
 const fakeAuth = {
-    isAuthenticated: false,
+    isAuthenticated: true,
     authenticate(cb: any) {
         fakeAuth.isAuthenticated = true;
         setTimeout(cb, 100); // fake async
@@ -21,7 +21,6 @@ const fakeAuth = {
         setTimeout(cb, 100);
     },
 };
-
 
 function PrivateRoute({ children, ...rest }: any) {
     return (
@@ -44,6 +43,11 @@ function PrivateRoute({ children, ...rest }: any) {
 }
 
 export default function routerConfig() {
+    let canvasData = {
+        label: 'laksdjf',
+        count: 100,
+    };
+
     return (
         <Router>
             <div>
@@ -52,7 +56,7 @@ export default function routerConfig() {
                 <Switch>
                     <Route path="/login" component={Login}></Route>
                     <PrivateRoute path="/canvas">
-                        <Canvas />
+                        <Canvas  data={canvasData}/>
                     </PrivateRoute>
                     <Route exact path="/" component={Home}></Route>
                 </Switch>
