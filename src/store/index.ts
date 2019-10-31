@@ -1,6 +1,7 @@
-const store = {
-    title: 'mediclouds',
-    version: 1.0,
-};
+import { applyMiddleware, combineReducers, createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import reducers from '../reducers';
+
+const store = createStore(reducers);
 
 export default store;
