@@ -9,3 +9,5 @@ declare interface IStoreState {
     };
     draft: IDraftState;
 }
+
+export { IDraftState, IStoreState };

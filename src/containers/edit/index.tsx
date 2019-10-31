@@ -1,24 +1,34 @@
 import React, { ChangeEventHandler } from 'react';
+import { connect } from 'react-redux';
+import { editDraftAction } from '../../actions/';
+import { IDraftState, IStoreState } from '../../constants/store.d';
 
-declare interface IState {
-    isChecked: boolean;
-    content: string;
-}
+const mapStateToProps = (storeState: IStoreState) => ({
+    draft: storeState.draft,
+});
 
-class Edit extends React.Component {
-    state: IState = {
-        isChecked: false,
-        content: '',
-    };
+type IStateProps = ReturnType<typeof mapStateToProps>;
+
+const mapDispatchToProps = {
+    editDraftAction,
+};
+
+type IDispatchProps = typeof mapDispatchToProps;
+
+type IProps = IStateProps & IDispatchProps;
+
+class Edit extends React.Component<IProps> {
 
     onCheckboxValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-        this.setState({
+        this.props.editDraftAction({
+            ...this.props.draft,
             isChecked: e.target.checked,
         });
     };
 
     onContentValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-        this.setState({
+        this.props.editDraftAction({
+            ...this.props.draft,
             content: e.target.value,
         });
     };
@@ -33,12 +43,12 @@ class Edit extends React.Component {
                 <div>
                     <input
                         type="checkbox"
-                        checked={this.state.isChecked}
+                        checked={this.props.draft.isChecked}
                         onChange={this.onCheckboxValueChange}
                     />
                     <input
                         type="text"
-                        value={this.state.content}
+                        value={this.props.draft.content}
                         onChange={this.onContentValueChange}
                     />
                 </div>

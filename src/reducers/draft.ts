@@ -1,3 +1,4 @@
+import { IDraftState, IStoreState } from '../constants/store.d';
 import { editDraftAction, EDIT_DRAFT_ACTION_TYPE } from '../actions/';
 
 const defaultState: IDraftState = {
