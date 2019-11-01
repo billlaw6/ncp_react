@@ -18,6 +18,11 @@ type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
 
 class Edit extends React.Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+        console.log(this.props);
+        // this.state = { data: this.props.data }
+    }
 
     onCheckboxValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         this.props.editDraftAction({
@@ -43,12 +48,12 @@ class Edit extends React.Component<IProps> {
                 <div>
                     <input
                         type="checkbox"
-                        checked={this.props.draft.isChecked}
+                        // checked={this.props.draft.isChecked}
                         onChange={this.onCheckboxValueChange}
                     />
                     <input
                         type="text"
-                        value={this.props.draft.content}
+                        // value={this.props.draft.content}
                         onChange={this.onContentValueChange}
                     />
                 </div>

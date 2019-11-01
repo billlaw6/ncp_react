@@ -1,14 +1,17 @@
 import React from 'react';
-// import { createBrowserHistory } from 'history';
+// 官网推荐安装react-router-dom，react-router会被当依赖自动安装。
+// 使用中猜测用react-router可能兼容性更高
 import {
-    BrowserRouter as Router,
+    Router,
     Switch,
     Route,
     Redirect,
     useHistory,
     useLocation,
-} from 'react-router-dom';
+} from 'react-router';
 import { Provider } from 'react-redux';
+import { ConnectedRouter } from 'connected-react-router';
+import configureStore, { history } from '../configureStore';
 import Login from './login';
 import Home from './home';
 import Canvas from './canvas';
@@ -46,23 +49,26 @@ function PrivateRoute({ children, ...rest }: any) {
     );
 }
 
-// let history = createBrowserHistory();
+// provide initial state if any
+const store = configureStore();
 
 export default function routerConfig() {
     return (
-        <Router>
-            <div>
-                {/* A <Switch> looks through its children <Route>s and
-                renders the first one that matches the current URL. */}
-                <Switch>
-                    <Route path="/login" component={Login}></Route>
-                    <PrivateRoute path="/canvas">
-                        <Canvas />
-                    </PrivateRoute>
-                    <Route path="/edit" component={Edit}></Route>
-                    <Route exact path="/" component={Home}></Route>
-                </Switch>
-            </div>
-        </Router>
+        <Provider store={store}>
+            <Router history={history}>
+                <div>
+                    {/* A <Switch> looks through its children <Route>s and
+                    renders the first one that matches the current URL. */}
+                    <Switch>
+                        <Route path="/login" component={Login}></Route>
+                        <PrivateRoute path="/canvas">
+                            <Canvas />
+                        </PrivateRoute>
+                        <Route path="/edit" component={Edit}></Route>
+                        <Route exact path="/" component={Home}></Route>
+                    </Switch>
+                </div>
+            </Router>
+        </Provider>
     );
 }
