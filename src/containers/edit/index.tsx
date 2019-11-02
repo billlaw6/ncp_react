@@ -3,6 +3,12 @@ import { connect } from 'react-redux';
 import { editDraftAction } from '../../actions/';
 import { IDraftState, IStoreState } from '../../constants/store.d';
 
+// const mapStateToProps = (storeState: IStoreState) => {
+//     return ({
+//         draft: storeState.draft,
+//     });
+// };
+
 const mapStateToProps = (storeState: IStoreState) => ({
     draft: storeState.draft,
 });
@@ -66,4 +72,7 @@ class Edit extends React.Component<IProps> {
     }
 }
 
-export default Edit;
+export default connect<IStateProps, IDispatchProps>(
+    mapStateToProps,
+    mapDispatchToProps,
+)(Edit);
