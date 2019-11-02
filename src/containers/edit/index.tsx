@@ -1,6 +1,9 @@
 import React, { ChangeEventHandler } from 'react';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { editDraftAction } from '../../actions/';
+import { State } from '../../reducers';
 import { IDraftState, IStoreState } from '../../constants/store.d';
 
 // const mapStateToProps = (storeState: IStoreState) => {
@@ -21,11 +24,12 @@ const mapDispatchToProps = {
 
 type IDispatchProps = typeof mapDispatchToProps;
 
-type IProps = IStateProps & IDispatchProps;
+type IProps = RouteComponentProps<any> & IStateProps & IDispatchProps;
 
 class Edit extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props);
+        debugger;
         console.log(this.props);
         // this.state = { data: this.props.data }
     }
@@ -72,6 +76,8 @@ class Edit extends React.Component<IProps> {
     }
 }
 
+// export default Edit;
+// debugger;
 export default connect<IStateProps, IDispatchProps>(
     mapStateToProps,
     mapDispatchToProps,
