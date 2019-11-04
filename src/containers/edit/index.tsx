@@ -3,15 +3,9 @@ import { Dispatch } from "redux";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { editDraftAction } from "../../actions/";
-import { State } from "../../reducers";
 import { IDraftState, IStoreState } from "../../constants/store.d";
 
-// const mapStateToProps = (storeState: IStoreState) => {
-//     return ({
-//         draft: storeState.draft,
-//     });
-// };
-
+// 从root级storeState中摘出本组件需要的部分
 const mapStateToProps = (storeState: IStoreState) => ({
   draft: storeState.draft
 });
@@ -29,7 +23,6 @@ type IProps = IStateProps & IDispatchProps;
 class Edit extends React.Component<IProps> {
   constructor(props: IProps) {
     super(props);
-    debugger;
     console.log(this.props);
     // this.state = { data: this.props.data }
   }
@@ -76,8 +69,6 @@ class Edit extends React.Component<IProps> {
   }
 }
 
-// export default Edit;
-// debugger;
 export default connect(
   mapStateToProps,
   mapDispatchToProps

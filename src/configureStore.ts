@@ -6,19 +6,18 @@ import createRootReducer from './reducers';
 
 export const history = createBrowserHistory();
 
-export default function configureStore(preloadedState?: any) {
+export default function configureStore() {
     const composeEnhancer: typeof compose =
         (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
     const store = createStore(
         createRootReducer(history),
-        preloadedState,
-        composeEnhancer(
-            applyMiddleware(
-                routerMiddleware(history), // for dispatching history actions
-                // ... other middlewares ...
-            ),
-        ),
+        // composeEnhancer(
+        //     applyMiddleware(
+        //         routerMiddleware(history), // for dispatching history actions
+        //         // ... other middlewares ...
+        //     ),
+        // ),
     );
 
     // Hot reloading
@@ -30,6 +29,7 @@ export default function configureStore(preloadedState?: any) {
     //         store.replaceReducer(createRootReducer(history));
     //     });
     // }
+    console.log(store.getState());
 
     return store;
 }
