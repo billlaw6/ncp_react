@@ -2,6 +2,8 @@ import React from 'react';
 import { changeCanvasAction } from '../../actions/canvas'
 import { IStoreState } from "../../constants/store.d";
 
+import { DatePicker } from 'antd';
+
 const mapStateToProps = (storeState: IStoreState) => ({
     canvas: storeState.canvas
 })
@@ -23,6 +25,7 @@ class Canvas extends React.Component<IProps> {
                 <a href="/">Canvas</a>
                 <span>this.props.data.label</span>
                 <span>this.state.data.label</span>
+                <DatePicker />
             </div>
         );
     }
