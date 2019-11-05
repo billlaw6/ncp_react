@@ -1,27 +1,21 @@
 import React from 'react';
-import { CanvasData } from '../../typings';
+import { changeCanvasAction } from '../../actions/canvas'
+import { IStoreState } from "../../constants/store.d";
 
-// Type和Interface大部分场合可混用，细节差别看文档
-// type Props = {
-//     label: string;
-//     count: number;
-//     onIncrement: () => void;
-// };
+const mapStateToProps = (storeState: IStoreState) => ({
+    canvas: storeState.canvas
+})
 
-interface Props {
-    data: CanvasData;
+type IStateProps = ReturnType<typeof mapStateToProps>;
+
+const mapDispatchToProps = {
+    changeCanvasAction
 }
 
-interface State {
-    data: CanvasData;
-}
+type IDispatchProps = typeof mapDispatchToProps;
 
-// class Canvas extends React.Component<Props, State> {
-class Canvas extends React.Component {
-    // constructor(props: Props) {
-    //     super(props);
-    //     this.state = { data: this.props.data }
-    // }
+type IProps = IStoreState & IDispatchProps;
+class Canvas extends React.Component<IProps> {
 
     render() {
         return (

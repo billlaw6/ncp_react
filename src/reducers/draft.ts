@@ -1,23 +1,24 @@
-import { IDraftState, IStoreState } from "../constants/store.d";
-import { editDraftAction, EDIT_DRAFT_ACTION_TYPE } from "../actions/";
+import { IDraftState } from '../constants/store.d';
+import { editDraftAction, EDIT_DRAFT_ACTION_TYPE } from '../actions/draft';
 
+// 设置本组件默认值
 const defaultState: IDraftState = {
-  isChecked: false,
-  content: ""
+    isChecked: false,
+    content: 'origin',
 };
 
 const draftReducer = (
-  state = defaultState,
-  action: ReturnType<typeof editDraftAction>,
+    state = defaultState,
+    action: ReturnType<typeof editDraftAction>,
 ) => {
-  switch (action.type) {
-    case EDIT_DRAFT_ACTION_TYPE: {
-      return action.payload;
+    switch (action.type) {
+        case EDIT_DRAFT_ACTION_TYPE: {
+            return action.payload;
+        }
+        default: {
+            return state;
+        }
     }
-    default: {
-      return state;
-    }
-  }
 };
 
 export default draftReducer;

@@ -6,7 +6,9 @@ import App from './App';
 import configureStore, { history } from './configureStore';
 
 let store = configureStore();
-
+// 将store传入app根结点，与整个生命周期绑定
+// 初始数据在各个reducer中，通过configureStore整合进来，
+// 又在各组件中通过mapStateToProps取走各组件需要的部分。
 ReactDOM.render(
     <Provider store={store}>
         <App history={history} />

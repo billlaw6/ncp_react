@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 import { History } from 'history';
-import { connectRouter, RouterState } from 'connected-react-router';
+import { connectRouter } from 'connected-react-router';
 import draftReducer from './draft';
 
 const createRootReducer = (history: History) =>
