@@ -1,23 +1,22 @@
 import { createBrowserHistory } from 'history';
-import { applyMiddleware, compose, createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { routerMiddleware } from 'connected-react-router';
 import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import createRootReducer from './reducers';
 
 export const history = createBrowserHistory();
 
-export default function configureStore() {
-    // const composeEnhancer = (typeof window !== 'undefined' && 
-    //     window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
 
+export default function configureStore() {
+    const composeEnhancer =
+        (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
     const store = createStore(
         createRootReducer(history),
-        // composeEnhancer(
-        //     applyMiddleware(
-        //         routerMiddleware(history), // for dispatching history actions
-        //         // ... other middlewares ...
-        //     ),
-        // ),
+        composeEnhancer(
+            applyMiddleware(thunk),
+            // routerMiddleware(history),
+        ),
     );
 
     // Hot reloading
@@ -29,7 +28,6 @@ export default function configureStore() {
     //         store.replaceReducer(createRootReducer(history));
     //     });
     // }
-    console.log(store.getState());
 
     return store;
 }

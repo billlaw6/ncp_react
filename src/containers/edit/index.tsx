@@ -42,6 +42,7 @@ class Edit extends React.Component<IProps> {
     };
 
     onSave = () => {
+        // debugger;
         console.log(this.state);
     };
 
@@ -60,6 +61,7 @@ class Edit extends React.Component<IProps> {
                         onChange={this.onContentValueChange}
                     />
                 </div>
+                {}
                 <div>
                     <button>取消</button>
                     <button onClick={this.onSave}>确定</button>
