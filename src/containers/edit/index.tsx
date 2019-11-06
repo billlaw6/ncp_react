@@ -5,15 +5,16 @@ import { RouteComponentProps } from 'react-router';
 import { editDraftAction } from '../../actions/draft';
 // import { IStoreState } from '../../constants/store.d';
 import { IDraftState } from '../../constants/store.d';
-import { IState } from '../../reducers/';
+// import { IState } from '../../reducers/';
+import { IStoreState } from '../../constants/store.d'
 
 // 从root级storeState中摘出本组件需要的部分
-const mapStateToProps = (state: IState) => {
+const mapStateToProps = (state: IStoreState) => {
     // Property 'draft' does not exist on type 'Reducer<{ draft: IDraftState; router: RouterState; }, AnyAction>'.  TS2339
-    const { draft, router } = state;
-    console.log(draft);
+    // const { draft, router } = state;
+    // console.log(draft);
     return {
-        draft: state.draft as IDraftState,
+        draft: state.draft,
     };
 };
 // 根据摘选部分约束本组件state类型

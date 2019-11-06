@@ -3,7 +3,8 @@ import { Dispatch } from 'redux'
 import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { increment, decrement } from '../../actions/counter'
-import { IState } from '../../reducers'
+// import { IState } from '../../reducers'
+import { IStoreState } from '../../constants/store.d'
 
 const Counter = (props: RouteComponentProps<any> & StateProps & DispatchProps) => (
   <div>
@@ -22,7 +23,7 @@ interface DispatchProps {
   decrement: () => void
 }
 
-const mapStateToProps = (state: IState) => ({
+const mapStateToProps = (state: IStoreState) => ({
   count: state.count,
 })
 
@@ -31,5 +32,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   decrement: () => dispatch(decrement()),
 })
 
-export default connect<StateProps, DispatchProps, RouteComponentProps<any>>(mapStateToProps, mapDispatchToProps)(Counter)
+// 此处不能用范型
+// export default connect<StateProps, DispatchProps, RouteComponentProps<any>>(mapStateToProps, mapDispatchToProps)(Counter)
+export default connect(mapStateToProps, mapDispatchToProps)(Counter)
 
