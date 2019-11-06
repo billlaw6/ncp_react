@@ -11,9 +11,26 @@ const draftReducer = (
     state = defaultState,
     action: ReturnType<typeof editDraftAction>,
 ) => {
+    if (!action) return state;
+
+    const { type, payload, error, status } = action;
+
+    if (status < 0) {
+        throw new Error('error');
+    }
+
+    if (status === 0) {
+        return state;
+    }
+
     switch (action.type) {
         case EDIT_DRAFT_ACTION_TYPE: {
-            return action.payload;
+            const { isChecked, content } = payload;
+            // return action.payload;
+            return Object.assign({}, state, {
+                isChecked: true,
+                content: 'EDIT content',
+            });
         }
         default: {
             return state;

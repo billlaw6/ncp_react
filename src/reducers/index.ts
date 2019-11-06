@@ -1,12 +1,15 @@
 import { combineReducers } from 'redux';
 import { History } from 'history';
-import { connectRouter } from 'connected-react-router';
-import draftReducer from './draft';
+import { RouterState, connectRouter } from 'connected-react-router';
+// import draftReducer from './draft';
+import counterReducer from './counter';
 
-const createRootReducer = (history: History) =>
+const rootReducer = (history: History) =>
     combineReducers({
+        count: counterReducer,
         router: connectRouter(history),
-        draft: draftReducer,
     });
 
-export default createRootReducer;
+export type IState = ReturnType<typeof rootReducer>
+
+export default rootReducer;

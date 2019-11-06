@@ -1,12 +1,21 @@
 import React, { ChangeEventHandler } from 'react';
+import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { editDraftAction } from '../../actions/draft';
-import { IStoreState } from '../../constants/store.d';
+// import { IStoreState } from '../../constants/store.d';
+import { IDraftState } from '../../constants/store.d';
+import { IState } from '../../reducers/';
 
 // 从root级storeState中摘出本组件需要的部分
-const mapStateToProps = (storeState: IStoreState) => ({
-    draft: storeState.draft,
-});
+const mapStateToProps = (state: IState) => {
+    // Property 'draft' does not exist on type 'Reducer<{ draft: IDraftState; router: RouterState; }, AnyAction>'.  TS2339
+    const { draft, router } = state;
+    console.log(draft);
+    return {
+        draft: state.draft as IDraftState,
+    };
+};
 // 根据摘选部分约束本组件state类型
 type IStateProps = ReturnType<typeof mapStateToProps>;
 
@@ -18,9 +27,9 @@ const mapDispatchToProps = {
 type IDispatchProps = typeof mapDispatchToProps;
 
 // 使用交叉类型
-type IProps = IStateProps & IDispatchProps;
+type IProps = RouteComponentProps<any> & IStateProps & IDispatchProps;
 
-class Edit extends React.Component<IProps> {
+class Edit extends React.Component<IProps, {}> {
     constructor(props: IProps) {
         super(props);
         console.log(this.props);
@@ -28,15 +37,18 @@ class Edit extends React.Component<IProps> {
     }
 
     onCheckboxValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+        console.log(this.props.draft);
         this.props.editDraftAction({
             ...this.props.draft,
             isChecked: e.target.checked,
+            content: 'new action',
         });
     };
 
     onContentValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         this.props.editDraftAction({
             ...this.props.draft,
+            isChecked: true,
             content: e.target.value,
         });
     };

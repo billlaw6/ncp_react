@@ -1329,7 +1329,7 @@
 
 "@types/node@*", "@types/node@^12.12.5":
   version "12.12.5"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.5.tgz?cache=0&sync_timestamp=1572630659390&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.5.tgz#66103d2eddc543d44a04394abb7be52506d7f290"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.5.tgz?cache=0&sync_timestamp=1572630676951&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.5.tgz#66103d2eddc543d44a04394abb7be52506d7f290"
   integrity sha1-ZhA9Lt3FQ9RKBDlKu3vlJQbX8pA=
 
 "@types/normalize-package-data@^2.4.0":
@@ -1432,6 +1432,11 @@
   version "1.0.1"
   resolved "https://registry.npm.taobao.org/@types/stack-utils/download/@types/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
   integrity sha1-CoUdO9lkmPolwzq3J47TvWXwbD4=
+
+"@types/webpack-env@^1.14.1":
+  version "1.14.1"
+  resolved "https://registry.npm.taobao.org/@types/webpack-env/download/@types/webpack-env-1.14.1.tgz#0d8a53f308f017c53a5ddc3d07f4d6fa76b790d7"
+  integrity sha1-DYpT8wjwF8U6Xdw9B/TW+na3kNc=
 
 "@types/yargs-parser@*":
   version "13.1.0"

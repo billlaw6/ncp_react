@@ -1,8 +1,9 @@
+import { AppContainer } from 'react-hot-loader';
+import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
-import * as serviceWorker from './serviceWorker';
 import App from './App';
+import * as serviceWorker from './serviceWorker';
 import configureStore, { history } from './configureStore';
 
 let store = configureStore();
@@ -10,9 +11,11 @@ let store = configureStore();
 // 初始数据在各个reducer中，通过configureStore整合进来，
 // 又在各组件中通过mapStateToProps取走各组件需要的部分。
 ReactDOM.render(
-    <Provider store={store}>
-        <App history={history} />
-    </Provider>,
+    <AppContainer>
+        <Provider store={store}>
+            <App history={history} />
+        </Provider>
+    </AppContainer>,
     document.getElementById('root'),
 );
 
