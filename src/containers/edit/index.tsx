@@ -11,8 +11,7 @@ import { IStoreState } from '../../constants/store.d'
 // 从root级storeState中摘出本组件需要的部分
 const mapStateToProps = (state: IStoreState) => {
     // Property 'draft' does not exist on type 'Reducer<{ draft: IDraftState; router: RouterState; }, AnyAction>'.  TS2339
-    // const { draft, router } = state;
-    // console.log(draft);
+    // console.log(state.draft);
     return {
         draft: state.draft,
     };
@@ -30,25 +29,26 @@ type IDispatchProps = typeof mapDispatchToProps;
 // 使用交叉类型
 type IProps = RouteComponentProps<any> & IStateProps & IDispatchProps;
 
-class Edit extends React.Component<IProps, {}> {
+class Edit extends React.Component<IProps, {}>{
     constructor(props: IProps) {
         super(props);
         console.log(this.props);
-        // this.state = { data: this.props.data }
+        this.state = { key: 'alsdk'}
     }
 
     onCheckboxValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
         console.log(this.props.draft);
         this.props.editDraftAction({
-            ...this.props.draft,
+            ...this.props,
             isChecked: e.target.checked,
             content: 'new action',
         });
     };
 
     onContentValueChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+        this.setState({key: 'newValue'});
         this.props.editDraftAction({
-            ...this.props.draft,
+            ...this.props,
             isChecked: true,
             content: e.target.value,
         });
@@ -56,7 +56,7 @@ class Edit extends React.Component<IProps, {}> {
 
     onSave = () => {
         // debugger;
-        console.log(this.state);
+        console.log(this.props.draft.content);
     };
 
     render() {

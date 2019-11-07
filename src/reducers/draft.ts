@@ -25,12 +25,14 @@ const draftReducer = (
 
     switch (action.type) {
         case EDIT_DRAFT_ACTION_TYPE: {
-            // const { isChecked, content } = payload;
-            return action.payload;
-            // return Object.assign({}, state, {
-            //     isChecked: true,
-            //     content: 'EDIT content',
-            // });
+            // return {
+            //     ...state,
+            //     content: action.payload,
+            // }
+            return Object.assign({}, state, {
+                isChecked: true,
+                content: action.payload.content,
+            });
         }
         default: {
             return state;

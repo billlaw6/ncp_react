@@ -1,5 +1,6 @@
 import { ICanvasState } from '../constants/store.d';
 import { changeCanvasAction, EDIT_CANVAS_ACTION_TYPE } from '../actions/canvas';
+import { statement } from '@babel/template';
 
 const defaultState: ICanvasState = {
     label: 'I am original lable',
@@ -9,12 +10,15 @@ const canvasReducer = (
     state = defaultState,
     action: ReturnType<typeof changeCanvasAction>,
 ) => {
-    switch (action.type) {
+    switch(action.type) {
         case 'EDIT_CANVAS_ACTION_TYPE':
-            return action.payload;
+            return {
+                ...state,
+                label: 'abc',
+            }
         default:
-            return 'I am default reducer label';
-    }
+            return state;
+    };
 };
 
 export default canvasReducer;
