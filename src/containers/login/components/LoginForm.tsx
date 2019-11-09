@@ -1,5 +1,6 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import './login-form.css'
 
 // 定义IProps，使内部能取到form，解决下面写法的后续报错
 // class NormalLoginForm extends React.Component {
@@ -83,8 +84,9 @@ class NormalLoginForm extends React.Component<IProps> {
     }
 }
 
-
-const WrappedNormalLoginForm = Form.create<IProps>()(
+// 此处的<IProps>可加可不加
+// const WrappedNormalLoginForm = Form.create<IProps>()( NormalLoginForm,);
+const WrappedNormalLoginForm = Form.create()(
     NormalLoginForm,
 );
 

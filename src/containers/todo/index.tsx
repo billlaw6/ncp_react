@@ -1,5 +1,4 @@
 import React, { ChangeEventHandler } from 'react';
-import { Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
 import { editDraftAction } from '../../actions/draft';

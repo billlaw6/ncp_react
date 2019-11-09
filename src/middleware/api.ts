@@ -1,4 +1,7 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
+import qs from 'qs';
+
+let requestName: any;  // 每次发起请求都会携带这个参数，用于标识这次请求，如果值相等，则取消重复请求
 
 switch (process.env.NODE_ENV) {
     case 'development':
@@ -12,30 +15,89 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
- axios.defaults.validateStatus = (status): boolean => {
-     // 自定义响应成功的HTTP状态码
-     return /^(2|3)\d{2}$/.test(status.toString());
- };
+// 自定义响应成功的HTTP状态码
+axios.defaults.validateStatus = (status): boolean => {
+    return /^(2|3)\d{2}$/.test(status.toString());
+};
 
- // axios.interceptors.response.use((error) => {
- //     let { response } = error;
+axios.interceptors.request.use((config: any) => {
+    // config 代表发起请求的参数的实体(可以发起一个请求在控制台打印一下这个config看看是什么东西)
+    // 得到参数中的 requestName 字段，用于决定下次发起请求，取消对应的 相同字段的请求
+    // 如果没有 requestName 就默认添加一个 不同的时间戳
+    if (config.method === 'post') {
+        if (config.data && qs.parse(config.data).requestName) {
+            requestName = qs.parse(config.data).requestName;
+        } else {
+            requestName = new Date().getTime();
+        }
+    } else {
+        if (config.params && config.params.requestName) {
+            //如果请求参数中有这个requestName标识，则赋值给上面定义的requestName
+            requestName = config.params.requestName;
+        } else {
+            requestName = new Date().getTime();
+        }
+    }
+    // 判断，如果这里拿到的参数中的 requestName 在上一次请求中已经存在，就取消上一次的请求
+    // if (requestName) {
+    //     if (axios.get(requestName) && axios.get(requestName).cancel) {
+    //         axios.get(requestName).cancel('取消了请求');
+    //     }
+    //     config.cancelToken = new axios.CancelToken((c: any) => {
+    //         axios.get(requestName) = {};
+    //         axios.get(requestName).cancel = c; //取消请求操作
+    //     });
+    // }
+    return config;
+}, (error: any) => {
+    return Promise.reject(error);
+});
 
- //     if (response) {
- //         // 服务器返回了结果
- //         switch (response.status) {
- //             case 401:   // 当前请求用户需要验证，未登录；
- //                 // 跳转路由或弹出蒙层
- //                 break;
- //             case 403:   // 服务器拒绝执行，通常是token过期；
- //                 break;
- //             case 404:   // 资源找不到；
- //                 break;
- //         }
- //     } else {
- //         if (!window.navigator.onLine) {
- //             // 断网处理：可以跳转到断网页面
- //         }
- //         // 服务器无响应又没断网，返回报错
- //         return Promise.reject(error);
- //     }
- // });
+axios.interceptors.response.use((config: any) => {
+    let { response } = config;
+
+    if (response) {
+        // 服务器返回了结果
+        switch (response.status) {
+            case 401:   // 当前请求用户需要验证，未登录；
+                // 跳转路由或弹出蒙层
+                return config;
+                break;
+            case 403:   // 服务器拒绝执行，通常是token过期；
+                return config;
+                break;
+            case 404:   // 资源找不到；
+                return config;
+                break;
+        }
+    } else {
+        if (!window.navigator.onLine) {
+            // 断网处理：可以跳转到断网页面
+            return config;
+        }
+        // 服务器无响应又没断网，返回报错
+        return Promise.reject(config);
+    }
+}, (error: any) => {
+    let { response } = error;
+    if (response) {
+        // 服务器返回了结果
+        switch (response.status) {
+            case 401:   // 当前请求用户需要验证，未登录；
+                // 跳转路由或弹出蒙层
+                break;
+            case 403:   // 服务器拒绝执行，通常是token过期；
+                break;
+            case 404:   // 资源找不到；
+                break;
+        }
+    } else {
+        if (!window.navigator.onLine) {
+            // 断网处理：可以跳转到断网页面
+        }
+        // 服务器无响应又没断网，返回报错
+        return Promise.reject(error);
+    }
+});
+
+export default axios

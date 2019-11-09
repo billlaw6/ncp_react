@@ -5,6 +5,17 @@ const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围控件
 
+const mapStateToProps = (state: IStoreState) => {
+    return {
+        userList: state.userList,
+    };
+};
+type IStateProps = ReturnType<typeof mapStateToProps>;
+
+const mapDispatchToProps = {
+    fetchUserListAction,,
+};
+
 class UserManage extends React.Component {
     render() {
         const columns = [

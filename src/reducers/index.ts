@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import { History } from 'history';
 import { RouterState, connectRouter } from 'connected-react-router';
+import userReducer from './user';
 import draftReducer from './draft';
 import canvasReducer from './canvas';
 import counterReducer from './counter';
@@ -8,6 +9,7 @@ import counterReducer from './counter';
 // 每个reducer必须都返回state类型的数据！
 const createRootReducer = (history: History) =>
     combineReducers({
+        user: userReducer,
         count: counterReducer,
         draft: draftReducer,
         canvas: canvasReducer,

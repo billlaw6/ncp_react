@@ -1,43 +1,58 @@
-import React from 'react';
+import React, { ChangeEventHandler } from 'react';
+import { connect } from 'react-redux';
+import { RouteComponentProps } from 'react-router';
 import { useHistory, useLocation } from 'react-router-dom';
+import LoginForm from './components/LoginForm';
+import { Layout } from 'antd';
+import { userLoginAction, userLogoutAction } from '../../actions/user';
+import { IStoreState } from '../../constants/store.d';
 
-const fakeAuth = {
-    isAuthenticated: false,
-    authenticate(cb: any) {
-        fakeAuth.isAuthenticated = true;
-        setTimeout(cb, 100); // fake async
-    },
-    signout(cb: any) {
-        fakeAuth.isAuthenticated = false;
-        setTimeout(cb, 100);
-    },
+const { Header, Footer, Sider, Content } = Layout;
+
+const mapStateToProps = (state: IStoreState) => {
+    return {
+        user: state.user,
+    };
 };
+type IStateProps = ReturnType<typeof mapStateToProps>;
 
-/* 
- * 1. 函数式定义的无状态组件
- * 2. es5原生方式React.createClass定义的组件
- * 3. es6形式的extends React.Component定义的组件
- * 只要有可能，尽量使用无状态组件创建形式，
- * 否则（如需要state，生命周期方法等），则使用'React.Component'这种es6形式创建组件。
- */
-// export default class Login extends React.Component {
-export default function Login() {
-    let history = useHistory();
-    let location = useLocation();
+const mapDispatchToProps = {
+    userLoginAction,
+    userLogoutAction,
+};
+type IDispatchProps = typeof mapDispatchToProps;
 
-    let { from } = location.state || { from: { pathname: '/' } };
-    let login = () => {
-        fakeAuth.authenticate(() => {
-            // debugger;
-            console.log(from);
-            history.replace(from);
+type IProps = RouteComponentProps<any> & IStateProps & IDispatchProps;
+
+class Login extends React.Component<IProps> {
+    constructor(props: IProps) {
+        super(props);
+        this.state = {
+            username: '',
+            password: '',
+        };
+    }
+
+    onLoginFormSubmit = () => {
+        console.log('login submit');
+        console.log(this);
+        this.props.userLoginAction({
+            username: 'this.state.username',
+            password: 'this.state.password',
         });
     };
 
-    return (
-        <div>
-            <p>You must log in to view the page at {from.pathname}</p>
-            <button onClick={login}>Log in</button>
-        </div>
-    );
+    render() {
+        return (
+            <Layout>
+                <Header>Header</Header>
+                <Content>
+                    <LoginForm/>
+                </Content>
+                <Footer>Footer</Footer>
+            </Layout>
+        );
+    }
 }
+
+export default Login;
