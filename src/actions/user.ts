@@ -5,7 +5,13 @@ export const USER_LOGIN_ACTION_TYPE = 'user/login';
 export const userLoginAction = (payload: ILoginState) => ({
     type: USER_LOGIN_ACTION_TYPE,
     payload,
-});
+})
+export const userLogin = (): ThunkAction<void, IStoreState, undefined, ReturnType<typeof userLoginAction>> =>
+    async (dispatch) => {
+        const response = await fetch('http://123.56.115.20:8083/rest-api/user/login', {})
+        const data = await response.json()
+        dispatch(userLoginAction(data))
+    }
 
 export const USER_LOGOUT_ACTION_TYPE = 'user/logout';
 export const userLogoutAction = () => ({

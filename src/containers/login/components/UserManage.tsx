@@ -1,5 +1,7 @@
 import React from 'react';
 import { Form, Table, Button, Select, Input, DatePicker } from 'antd';
+import { IStoreState } from '../../../constants/store.d';
+import { fetchUserListAction } from '../../../actions/user';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -13,7 +15,7 @@ const mapStateToProps = (state: IStoreState) => {
 type IStateProps = ReturnType<typeof mapStateToProps>;
 
 const mapDispatchToProps = {
-    fetchUserListAction,,
+    fetchUserListAction,
 };
 
 class UserManage extends React.Component {
