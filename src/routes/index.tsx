@@ -9,11 +9,11 @@ import Canvas from '../containers/canvas';
 const routes = (
     <div>
         <Switch>
-            <Route exact path="/" component={Home} />
             <Route path="/todo" component={ToDo} />
             <Route path="/counter" component={Counter} />
             <Route path="/canvas" component={Canvas} />
             <Route path="/login" component={Login} />
+            <Route exact path="/" component={Home} />
         </Switch>
     </div>
 );

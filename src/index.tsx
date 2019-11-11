@@ -2,20 +2,26 @@ import { AppContainer } from 'react-hot-loader';
 import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { ConnectedRouter } from 'connected-react-router';
+import configureStore, { history } from './configureStore';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import configureStore, { history } from './configureStore';
 
-let { store, persistor } = configureStore();
+// let { store, persistor } = configureStore();
+let store = configureStore();
 // 将store传入app根结点，与整个生命周期绑定
 // 初始数据在各个reducer中，通过configureStore整合进来，
 // 又在各组件中通过mapStateToProps取走各组件需要的部分。
 ReactDOM.render(
     <AppContainer>
         <Provider store={store}>
-            <App history={history} />
+            { /* place ConnectedRouter under Provider */ }
+            <ConnectedRouter history={history}>
+                { /* your usual react-router v4/v5 routing */ }
+                <App />
+            </ConnectedRouter>
         </Provider>
-    </AppContainer>,
+    </AppContainer >,
     document.getElementById('root'),
 );
 

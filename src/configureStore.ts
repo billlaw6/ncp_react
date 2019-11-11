@@ -19,9 +19,15 @@ export default function configureStore(preloadedState?: any) {
         (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     const store = createStore(
-        persistedReducer,
+        // persistedReducer,
+        createRootReducer(history), // root reducer with router state
         preloadedState,
-        composeEnhancer(applyMiddleware(routerMiddleware(history))),
+        composeEnhancer(
+            applyMiddleware(
+                routerMiddleware(history),  // for dispatching history actions
+                // ... other middlewares ...
+            ),
+        ),
     );
 
     const persistor = persistStore(store)
@@ -35,5 +41,6 @@ export default function configureStore(preloadedState?: any) {
     //     });
     // }
 
-    return { store, persistor };
+    // return { store, persistor };
+    return store;
 }

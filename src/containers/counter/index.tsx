@@ -34,5 +34,5 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
 
 // 此处不能用范型
 // export default connect<StateProps, DispatchProps, RouteComponentProps<any>>(mapStateToProps, mapDispatchToProps)(Counter)
-export default connect(mapStateToProps, mapDispatchToProps)(Counter)
+export default connect(mapStateToProps, mapDispatchToProps)(Counter);
 
