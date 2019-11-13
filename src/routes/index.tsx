@@ -1,21 +1,14 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import Login from '../containers/login';
-import Home from '../containers/home';
-import ToDo from '../containers/todo';
-import Counter from '../containers/counter';
-import Canvas from '../containers/canvas';
+// import { Route, Switch } from 'react-router-dom';
+import Login from '../pages/login';
+import Home from '../pages/home';
+import ToDo from '../pages/todo';
+import Counter from '../pages/counter';
+import Canvas from '../pages/canvas';
 
-const routes = (
-    <div>
-        <Switch>
-            <Route path="/todo" component={ToDo} />
-            <Route path="/counter" component={Counter} />
-            <Route path="/canvas" component={Canvas} />
-            <Route path="/login" component={Login} />
-            <Route exact path="/" component={Home} />
-        </Switch>
-    </div>
-);
+const routes = [
+    { path: "/login", name: "Login", component: Login },
+    { path: "/", name: "Home", component: Home }
+];
 
 export default routes;

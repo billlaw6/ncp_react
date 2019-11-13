@@ -1,11 +1,9 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router';
-import { editDraftAction } from '../../actions/draft';
-// import { IStoreState } from '../../constants/store.d';
-import { IDraftState } from '../../constants/store.d';
-// import { IState } from '../../reducers/';
-import { IStoreState } from '../../constants/store.d'
+import { editDraftAction } from '../../../actions/draft';
+import { IDraftState } from '../../../constants/store';
+import { IStoreState } from '../../../constants/store'
 
 // 从root级storeState中摘出本组件需要的部分
 const mapStateToProps = (state: IStoreState) => {
@@ -87,3 +85,4 @@ export default connect(
     mapStateToProps,
     mapDispatchToProps,
 )(Edit);
+

@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { RouteComponentProps } from 'react-router'
 import { increment, decrement } from '../../actions/counter'
 // import { IState } from '../../reducers'
-import { IStoreState } from '../../constants/store.d'
+import { IStoreState } from '../../constants/store'
 
 const Counter = (props: RouteComponentProps<any> & StateProps & DispatchProps) => (
   <div>

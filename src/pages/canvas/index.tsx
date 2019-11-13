@@ -1,6 +1,6 @@
 import React from 'react';
 import { changeCanvasAction } from '../../actions/canvas'
-import { IStoreState } from "../../constants/store.d";
+import { IStoreState } from "../../constants/store";
 
 import { DatePicker } from 'antd';
 
