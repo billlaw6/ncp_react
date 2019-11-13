@@ -5,6 +5,7 @@ import LoginForm from './components/LoginForm';
 import QRCodeLogin from './components/QRCodeLogin';
 import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { IStoreState } from '../../constants/store';
+import WxLogin from './components/WxLogin';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -32,8 +33,8 @@ class Login extends React.Component<IProps, IState> {
         console.log(props);
         console.log(this.state);
         this.state = {
-            appid: '',
-            redirectUri: '',
+            appid: 'wxbdc5610cc59c1631',
+            redirectUri: 'https://passport.yhd.com/wechat/callback.do',
         }
     }
 
@@ -41,7 +42,7 @@ class Login extends React.Component<IProps, IState> {
         return (
             <>
                 <LoginForm />
-                <QRCodeLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
+                <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
             </>
         );
     }
