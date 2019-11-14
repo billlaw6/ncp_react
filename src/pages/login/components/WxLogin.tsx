@@ -24,7 +24,6 @@ const WxLogin = function (props: {appid: string; redirectUri: string}) {
             <iframe 
                 src={qrcodeURL}
                 frameBorder={0} 
-                allowTransparency={true} 
                 scrolling="no" 
                 width="300px"
                 height="400px"

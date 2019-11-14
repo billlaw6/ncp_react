@@ -8,13 +8,14 @@ export const setTokenAction = (payload: ITokenState) => ({
     type: SET_TOKEN_ACTION_TYPE,
     payload: payload,
 });
-export const setTokenThunk = (): ThunkAction<void, IStoreState, undefined, ReturnType<typeof setTokenAction>> =>
+export const setTokenThunk = (formData: any): ThunkAction<void, IStoreState, undefined, ReturnType<typeof setTokenAction>> =>
     async (dispatch) => {
-        const formData = { username: 'liubin', password: 'liubin123456' }
+        // const formData = { username: 'liubin', password: 'liubin123456' }
         userLogin(formData).then((res) => {
-            console.log(res.data);
-            dispatch(setTokenAction(res.data))
+            // console.log(res.data);
+            dispatch(setTokenAction(res.data.key))
         }, (err) => {
+            dispatch(setTokenAction(''));
             console.log(err);
         })
     }

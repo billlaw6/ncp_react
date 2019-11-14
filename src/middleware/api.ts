@@ -1,6 +1,8 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
+import { history } from '../configureStore';
 
+// let store = configureStore();
 let requestName: any;  // 每次发起请求都会携带这个参数，用于标识这次请求，如果值相等，则取消重复请求
 
 switch (process.env.NODE_ENV) {
@@ -15,16 +17,22 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
-// 自定义响应成功的HTTP状态码
-axios.defaults.validateStatus = (status): boolean => {
-    console.log(status);
-    return /^(2|3)\d{2}$/.test(status.toString());
-};
-
 axios.interceptors.request.use((config: any) => {
     // config 代表发起请求的参数的实体(可以发起一个请求在控制台打印一下这个config看看是什么东西)
     // 得到参数中的 requestName 字段，用于决定下次发起请求，取消对应的 相同字段的请求
     // 如果没有 requestName 就默认添加一个 不同的时间戳
+    config.headers['X-Requested-With'] = 'XMLHttpRequest'
+    let regex = /.*csrftoken=([^;.]*).*$/ // 用于从cookies中匹配csrftoken值
+    config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)![1]
+    // console.log(localStorage.getItem('persist:root'));
+    const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
+    console.log(persistRoot.token);
+    console.log(persistRoot.token.length);
+    // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
+    if (persistRoot.token.length > 2) {
+        config.headers.Authorization = 'Token ' + persistRoot.token;
+    }
+
     if (config.method === 'post') {
         if (config.data && qs.parse(config.data).requestName) {
             requestName = qs.parse(config.data).requestName;
@@ -54,57 +62,52 @@ axios.interceptors.request.use((config: any) => {
     return Promise.reject(error);
 });
 
+// 自定义响应成功的HTTP状态码
+axios.defaults.validateStatus = (status): boolean => {
+    console.log(status);
+    return /^(2|3)\d{2}$/.test(status.toString());
+};
 axios.interceptors.response.use((response: any) => {
-    console.log('reponse interceptor:');
+    // 服务器返回了结果，有前面的validateStatus保证，这里接收的只会是2和3开着的状态
     console.log(response);
-    let { data, status, heders, config } = response;
-    console.log(config);
-
-    if (status) {
-        console.log(status);
-        // 服务器返回了结果
-        switch (status) {
-            case 401:   // 当前请求用户需要验证，未登录；
-                // 跳转路由或弹出蒙层
-                console.error('401');
-                // return response;
-                break;
-            case 403:   // 服务器拒绝执行，通常是token过期；
-                console.error('403');
-                // return response;
-                break;
-            case 404:   // 资源找不到；
-                // return response;
-                console.error('404');
-                break;
-        }
-    } else {
-        if (!window.navigator.onLine) {
-            // 断网处理：可以跳转到断网页面
-            console.error('!window.navigator.onLine');
-            return response;
-        }
-        // 服务器无响应又没断网，返回报错
-        return Promise.reject(response);
-    }
     return response;
 }, (error: any) => {
-    console.log(error);
+    // 两种错误返回类型
     let { response } = error;
+    console.log(response);
     if (response) {
         // 服务器返回了结果
+        console.log('response valid');
+        const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
         switch (response.status) {
+            case 400:
+                history.push('/login');
+                return Promise.reject(error);
             case 401:   // 当前请求用户需要验证，未登录；
                 // 跳转路由或弹出蒙层
-                break;
+                // 直接修改localStorage会被redux-persist还原
+                // delete persistRoot.token;
+                // console.log(persistRoot);
+                // localStorage.setItem('persist:root', JSON.stringify(persistRoot));
+                // localStorage.setItem('persist:root', persistRoot);
+                history.push('/login');
+                return Promise.reject(error);
             case 403:   // 服务器拒绝执行，通常是token过期；
-                break;
+                // 直接修改localStorage会被redux-persist还原
+                // persistRoot.token = '';
+                // console.log(persistRoot);
+                // localStorage.setItem('persist:root', JSON.stringify(persistRoot));
+                history.push('/login');
+                return Promise.reject(error);
             case 404:   // 资源找不到；
-                break;
+                history.push('/');
+                return Promise.reject(error);
         }
     } else {
         if (!window.navigator.onLine) {
             // 断网处理：可以跳转到断网页面
+            history.push('/offline');
+            return Promise.reject(error);
         }
         // 服务器无响应又没断网，返回报错
         return Promise.reject(error);

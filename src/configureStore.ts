@@ -1,6 +1,6 @@
 import { createBrowserHistory } from 'history';
 import { createStore, applyMiddleware, compose } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
+import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';    // default to localStorage for web
 import { routerMiddleware } from 'connected-react-router';
 import thunk from 'redux-thunk';
@@ -9,18 +9,18 @@ import createRootReducer from './reducers';
 export const history = createBrowserHistory();
 
 const persistConfig = {
-    key: 'root',
-    storage,
+    key: 'root',    // 必须有
+    storage,    // storage is now required
+    // blacklist: ['routor'],   // reducer里不持久化的数据
 }
-const persistedReducer = persistReducer(persistConfig, createRootReducer(history))
 
 export default function configureStore(preloadedState?: any) {
     const composeEnhancer: typeof compose =
         (window as any)['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] || compose;
 
     const store = createStore(
-        // persistedReducer,
-        createRootReducer(history), // root reducer with router state
+        persistReducer(persistConfig, createRootReducer(history)),
+        // createRootReducer(history), // root reducer with router state
         preloadedState,
         composeEnhancer(
             applyMiddleware(
@@ -31,8 +31,6 @@ export default function configureStore(preloadedState?: any) {
         ),
     );
 
-    const persistor = persistStore(store)
-
     // Hot reloading
     // Property 'hot' does not exist on type 'NodeModule'
     // if ((module as any).hot) {
@@ -42,6 +40,6 @@ export default function configureStore(preloadedState?: any) {
     //     });
     // }
 
-    // return { store, persistor };
     return store;
+    // return store;
 }

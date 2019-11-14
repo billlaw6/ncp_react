@@ -7,9 +7,7 @@ import {
 } from '../actions/token';
 
 // 设置本组件默认值
-const defaultState: ITokenState = {
-    token: '',
-};
+const defaultState: ITokenState = '';
 
 const tokenReducer = (
     state = defaultState,
@@ -26,7 +24,7 @@ const tokenReducer = (
             // })
         }
         case DEL_TOKEN_ACTION_TYPE: {
-            return undefined;
+            return '';
         }
         default: {
             return state;

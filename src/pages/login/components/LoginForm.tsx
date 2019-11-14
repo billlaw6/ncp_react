@@ -35,7 +35,7 @@ class NormalLoginForm extends React.Component<IProps> {
             if (!err) {
                 console.log('Received values of form: ', values);
                 // this.props.userLoginThunk();
-                this.props.setTokenThunk();
+                this.props.setTokenThunk(values);
             }
         });
     };
@@ -44,6 +44,7 @@ class NormalLoginForm extends React.Component<IProps> {
         const { getFieldDecorator } = this.props.form;
         return (
             <Form onSubmit={this.handleSubmit} className="login-form">
+                <FormattedMessage id='welcome' />
                 <Form.Item>
                     {getFieldDecorator('username', {
                         rules: [

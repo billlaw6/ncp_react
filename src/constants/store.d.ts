@@ -1,9 +1,7 @@
 // Store相关接口
 declare type ICountState = number;
 
-declare interface ITokenState {
-    token: string;
-}
+type ITokenState = string;
 
 declare interface IUserState {
     id: number;
