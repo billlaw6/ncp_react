@@ -1,5 +1,6 @@
 .login-form {
-  max-width: 300px;
+  max-width: 500px;
+  margin: 20px;
 }
 .login-form-forgot {
   float: right;

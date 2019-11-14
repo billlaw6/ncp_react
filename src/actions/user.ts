@@ -1,16 +1,23 @@
 import { ThunkAction } from 'redux-thunk';
-import { IUserState, IUserList, ILoginState, IStoreState } from '../constants/store.d';
+import { userLogin, userLogout } from '../middleware/user';
+import { ITokenState, IUserState, IUserList, IStoreState } from '../constants/store.d';
 
+// 登录成功后更新state里的user.token
 export const USER_LOGIN_ACTION_TYPE = 'user/login';
-export const userLoginAction = (payload: ILoginState) => ({
+// 此处的类型会影响
+export const userLoginAction = (payload: IUserState) => ({
     type: USER_LOGIN_ACTION_TYPE,
     payload,
 })
-export const userLogin = (): ThunkAction<void, IStoreState, undefined, ReturnType<typeof userLoginAction>> =>
+export const userLoginThunk = (): ThunkAction<void, IStoreState, undefined, ReturnType<typeof userLoginAction>> =>
     async (dispatch) => {
-        const response = await fetch('http://123.56.115.20:8083/rest-api/user/login', {})
-        const data = await response.json()
-        dispatch(userLoginAction(data))
+        const formData = { username: 'liubin', password: 'liubin123456' }
+        userLogin(formData).then((res) => {
+            console.log(res);
+            dispatch(userLoginAction(res.data.token))
+        }, (err) => {
+            console.log(err);
+        })
     }
 
 export const USER_LOGOUT_ACTION_TYPE = 'user/logout';

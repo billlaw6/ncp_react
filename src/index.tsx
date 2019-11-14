@@ -6,6 +6,7 @@ import { ConnectedRouter } from 'connected-react-router';
 import configureStore, { history } from './configureStore';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { IntlProvider, FormattedMessage } from 'react-intl';
 
 // let { store, persistor } = configureStore();
 let store = configureStore();
@@ -22,7 +23,9 @@ ReactDOM.render(
             { /* place ConnectedRouter under Provider */}
             <ConnectedRouter history={history}>
                 { /* your usual react-router v4/v5 routing */}
-                <App />
+                <IntlProvider locale="en">
+                    <App />
+                </IntlProvider>
             </ConnectedRouter>
         </Provider>
     </AppContainer >,

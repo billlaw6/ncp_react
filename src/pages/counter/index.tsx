@@ -6,14 +6,6 @@ import { increment, decrement } from '../../actions/counter'
 // import { IState } from '../../reducers'
 import { IStoreState } from '../../constants/store'
 
-const Counter = (props: RouteComponentProps<any> & StateProps & DispatchProps) => (
-  <div>
-    Counter: {props.count}
-    <button onClick={props.increment}>+</button>
-    <button onClick={props.decrement}>-</button>
-  </div>
-)
-
 interface StateProps {
   count: number
 }
@@ -32,7 +24,14 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   decrement: () => dispatch(decrement()),
 })
 
+const Counter = (props: RouteComponentProps<any> & StateProps & DispatchProps) => (
+  <div>
+    Counter: {props.count}
+    <button onClick={props.increment}>+</button>
+    <button onClick={props.decrement}>-</button>
+  </div>
+)
+
 // 此处不能用范型
 // export default connect<StateProps, DispatchProps, RouteComponentProps<any>>(mapStateToProps, mapDispatchToProps)(Counter)
 export default connect(mapStateToProps, mapDispatchToProps)(Counter);
-

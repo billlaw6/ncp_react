@@ -1,4 +1,4 @@
-import { IUserState, ILoginState } from '../constants/store.d';
+import { IUserState } from '../constants/store.d';
 import { Action } from 'redux';
 import {
     userLoginAction,
@@ -6,12 +6,23 @@ import {
     userLogoutAction,
     USER_LOGOUT_ACTION_TYPE,
 } from '../actions/user';
-// import { login } from '@/middleware/api';
+import { isDebuggerStatement } from '@babel/types';
 
-//
-const defaultState: ILoginState = {
+// type IState = ITokenState & IUserState;
+const defaultState: IUserState = {
+    id: -1,
     username: '',
-    password: '',
+    email: '',
+    cell_phone: '',
+    openid: '',
+    unionid: '',
+    groups: [],
+    first_name: '',
+    last_name: '',
+    pinyin: '',
+    py: '',
+    sex: 0,
+    user_permissions: [],
 };
 
 type ActionType = ReturnType<typeof userLoginAction> &

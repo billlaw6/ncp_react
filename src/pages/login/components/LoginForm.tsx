@@ -1,12 +1,32 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
+import { IStoreState } from '../../../constants/store.d';
+import { userLoginAction, userLoginThunk } from '../../../actions/user';
+import { setTokenAction, setTokenThunk } from '../../../actions/token';
+import { FormattedMessage } from 'react-intl';
 import './login-form.css'
 
 // 定义IProps，使内部能取到form，解决下面写法的后续报错
 // class NormalLoginForm extends React.Component {
 // Property 'form' does not exist on type 'Readonly<{}> & Readonly<{ children?: ReactNode; }>'.  TS2339
 
-type IProps = Readonly<{ form: any }>
+const mapStateToProps = (state: IStoreState) => ({
+    user: state.user,
+    token: state.token,
+})
+type IStateProps = ReturnType<typeof mapStateToProps>
+
+const mapDispatchToProps = {
+    setTokenAction,
+    setTokenThunk,
+    userLoginThunk,
+    userLoginAction,
+}
+type IDispatchProps = typeof mapDispatchToProps;
+
+// type IProps = Readonly<{ form: any }>
+type IProps = Readonly<{ form: any }> & IStateProps & IDispatchProps;
 
 class NormalLoginForm extends React.Component<IProps> {
     handleSubmit = (e: any) => {
@@ -14,6 +34,8 @@ class NormalLoginForm extends React.Component<IProps> {
         this.props.form.validateFields((err: any, values: any) => {
             if (!err) {
                 console.log('Received values of form: ', values);
+                // this.props.userLoginThunk();
+                this.props.setTokenThunk();
             }
         });
     };
@@ -90,4 +112,5 @@ const WrappedNormalLoginForm = Form.create()(
     NormalLoginForm,
 );
 
-export default WrappedNormalLoginForm;
+// export default WrappedNormalLoginForm;
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);

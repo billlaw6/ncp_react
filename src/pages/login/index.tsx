@@ -6,6 +6,7 @@ import QRCodeLogin from './components/QRCodeLogin';
 import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { IStoreState } from '../../constants/store';
 import WxLogin from './components/WxLogin';
+import './index.css';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -40,10 +41,10 @@ class Login extends React.Component<IProps, IState> {
 
     render() {
         return (
-            <>
+            <div className="login-wrapper">
                 <LoginForm />
                 <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
-            </>
+            </div>
         );
     }
 }

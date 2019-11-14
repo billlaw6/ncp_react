@@ -5,18 +5,19 @@ let requestName: any;  // 每次发起请求都会携带这个参数，用于标
 
 switch (process.env.NODE_ENV) {
     case 'development':
-        axios.defaults.baseURL = '';
+        axios.defaults.baseURL = 'http://123.56.115.20:8083/rest-api/';
         break;
     case 'production':
-        axios.defaults.baseURL = '';
+        axios.defaults.baseURL = 'rest-api/';
         break;
     default:
-        axios.defaults.baseURL = '';
+        axios.defaults.baseURL = 'rest-api/';
         break;
 }
 
 // 自定义响应成功的HTTP状态码
 axios.defaults.validateStatus = (status): boolean => {
+    console.log(status);
     return /^(2|3)\d{2}$/.test(status.toString());
 };
 
@@ -53,32 +54,42 @@ axios.interceptors.request.use((config: any) => {
     return Promise.reject(error);
 });
 
-axios.interceptors.response.use((config: any) => {
-    let { response } = config;
+axios.interceptors.response.use((response: any) => {
+    console.log('reponse interceptor:');
+    console.log(response);
+    let { data, status, heders, config } = response;
+    console.log(config);
 
-    if (response) {
+    if (status) {
+        console.log(status);
         // 服务器返回了结果
-        switch (response.status) {
+        switch (status) {
             case 401:   // 当前请求用户需要验证，未登录；
                 // 跳转路由或弹出蒙层
-                return config;
+                console.error('401');
+                // return response;
                 break;
             case 403:   // 服务器拒绝执行，通常是token过期；
-                return config;
+                console.error('403');
+                // return response;
                 break;
             case 404:   // 资源找不到；
-                return config;
+                // return response;
+                console.error('404');
                 break;
         }
     } else {
         if (!window.navigator.onLine) {
             // 断网处理：可以跳转到断网页面
-            return config;
+            console.error('!window.navigator.onLine');
+            return response;
         }
         // 服务器无响应又没断网，返回报错
-        return Promise.reject(config);
+        return Promise.reject(response);
     }
+    return response;
 }, (error: any) => {
+    console.log(error);
     let { response } = error;
     if (response) {
         // 服务器返回了结果
@@ -100,4 +111,4 @@ axios.interceptors.response.use((config: any) => {
     }
 });
 
-export default axios
+export default axios;

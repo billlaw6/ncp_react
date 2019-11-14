@@ -3,7 +3,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';    // default to localStorage for web
 import { routerMiddleware } from 'connected-react-router';
-// import thunk from 'redux-thunk';
+import thunk from 'redux-thunk';
 import createRootReducer from './reducers';
 
 export const history = createBrowserHistory();
@@ -26,6 +26,7 @@ export default function configureStore(preloadedState?: any) {
             applyMiddleware(
                 routerMiddleware(history),  // for dispatching history actions
                 // ... other middlewares ...
+                thunk,
             ),
         ),
     );
