@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { IStoreState } from '../../../constants/store.d';
-import { userLoginAction, userLoginThunk } from '../../../actions/user';
-import { setTokenAction, setTokenThunk } from '../../../actions/token';
+import { userLoginAction } from '../../../actions/user';
+import { setTokenAction } from '../../../actions/token';
 import { FormattedMessage } from 'react-intl';
 import './login-form.css'
 
@@ -19,8 +19,6 @@ type IStateProps = ReturnType<typeof mapStateToProps>
 
 const mapDispatchToProps = {
     setTokenAction,
-    setTokenThunk,
-    userLoginThunk,
     userLoginAction,
 }
 type IDispatchProps = typeof mapDispatchToProps;
@@ -35,7 +33,6 @@ class NormalLoginForm extends React.Component<IProps> {
             if (!err) {
                 console.log('Received values of form: ', values);
                 // this.props.userLoginThunk();
-                this.props.setTokenThunk(values);
             }
         });
     };

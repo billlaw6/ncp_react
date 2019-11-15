@@ -3,7 +3,6 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';    // default to localStorage for web
 import { routerMiddleware } from 'connected-react-router';
-import thunk from 'redux-thunk';
 import createRootReducer from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import mySaga from './middleware/sagas';
@@ -30,7 +29,6 @@ export default function configureStore(preloadedState?: any) {
                 routerMiddleware(history),  // for dispatching history actions
                 // ... other middlewares ...
                 sagaMiddleware,
-                thunk,
             ),
         ),
     );
