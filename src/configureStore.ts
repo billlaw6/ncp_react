@@ -5,8 +5,11 @@ import storage from 'redux-persist/lib/storage';    // default to localStorage f
 import { routerMiddleware } from 'connected-react-router';
 import thunk from 'redux-thunk';
 import createRootReducer from './reducers';
+import createSagaMiddleware from 'redux-saga';
+import mySaga from './middleware/sagas';
 
 export const history = createBrowserHistory();
+const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {
     key: 'root',    // 必须有
@@ -26,6 +29,7 @@ export default function configureStore(preloadedState?: any) {
             applyMiddleware(
                 routerMiddleware(history),  // for dispatching history actions
                 // ... other middlewares ...
+                sagaMiddleware,
                 thunk,
             ),
         ),
@@ -40,6 +44,6 @@ export default function configureStore(preloadedState?: any) {
     //     });
     // }
 
+    sagaMiddleware.run(mySaga);
     return store;
-    // return store;
 }

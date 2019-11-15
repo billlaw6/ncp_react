@@ -3,7 +3,7 @@ import qs from 'qs';
 import { history } from '../configureStore';
 
 // let store = configureStore();
-let requestName: any;  // 每次发起请求都会携带这个参数，用于标识这次请求，如果值相等，则取消重复请求
+let requestName: string;  // 每次发起请求都会携带这个参数，用于标识这次请求，如果值相等，则取消重复请求
 
 switch (process.env.NODE_ENV) {
     case 'development':
@@ -26,8 +26,8 @@ axios.interceptors.request.use((config: any) => {
     config.headers['X-CSRFToken'] = document.cookie.match(regex) === null ? null : document.cookie.match(regex)![1]
     // console.log(localStorage.getItem('persist:root'));
     const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
-    console.log(persistRoot.token);
-    console.log(persistRoot.token.length);
+    // console.log(persistRoot.token);
+    // console.log(persistRoot.token.length);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
     if (persistRoot.token.length > 2) {
         config.headers.Authorization = 'Token ' + persistRoot.token;
@@ -37,19 +37,19 @@ axios.interceptors.request.use((config: any) => {
         if (config.data && qs.parse(config.data).requestName) {
             requestName = qs.parse(config.data).requestName;
         } else {
-            requestName = new Date().getTime();
+            requestName = (new Date().getTime()).toString();
         }
     } else {
         if (config.params && config.params.requestName) {
             //如果请求参数中有这个requestName标识，则赋值给上面定义的requestName
             requestName = config.params.requestName;
         } else {
-            requestName = new Date().getTime();
+            requestName = (new Date().getTime()).toString();
         }
     }
     // 判断，如果这里拿到的参数中的 requestName 在上一次请求中已经存在，就取消上一次的请求
     // if (requestName) {
-    //     if (axios.get(requestName) && axios.get(requestName).cancel) {
+    //     if (axios.get(requestName) && axios.get(requestName).cancel ) {
     //         axios.get(requestName).cancel('取消了请求');
     //     }
     //     config.cancelToken = new axios.CancelToken((c: any) => {
@@ -64,21 +64,20 @@ axios.interceptors.request.use((config: any) => {
 
 // 自定义响应成功的HTTP状态码
 axios.defaults.validateStatus = (status): boolean => {
-    console.log(status);
+    // console.log(status);
     return /^(2|3)\d{2}$/.test(status.toString());
 };
 axios.interceptors.response.use((response: any) => {
     // 服务器返回了结果，有前面的validateStatus保证，这里接收的只会是2和3开着的状态
-    console.log(response);
+    // console.log(response);
     return response;
 }, (error: any) => {
     // 两种错误返回类型
     let { response } = error;
-    console.log(response);
+    // console.log(response);
     if (response) {
         // 服务器返回了结果
-        console.log('response valid');
-        const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
+        // console.log('response valid');
         switch (response.status) {
             case 400:
                 history.push('/login');
