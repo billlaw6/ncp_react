@@ -1,5 +1,5 @@
 import React from 'react';
-import './wx-login.css';
+import './wx-login.less';
 
 const WxLogin = function (props: {appid: string; redirectUri: string}) {
     const parsedRedirectUri = encodeURI(props.redirectUri);

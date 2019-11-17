@@ -1,4 +1,4 @@
-import { userLogin, userLogout } from '../middleware/user';
+import { userLogin, userLogout } from '../services/user';
 import { ITokenState, IUserState, IUserList, IStoreState } from '../constants/store.d';
 
 // 登录成功后更新state里的user.token

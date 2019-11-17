@@ -2,11 +2,12 @@ import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import LoginForm from './components/LoginForm';
+import LoginFormRedux from './components/LoginFormRedux';
 import QRCodeLogin from './components/QRCodeLogin';
 import { userLoginAction, userLogoutAction } from '../../actions/user';
-import { IStoreState } from '../../constants/store';
+import { ILoginState, IStoreState } from '../../constants/store.d';
 import WxLogin from './components/WxLogin';
-import './index.css';
+import './index.less';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -25,25 +26,41 @@ type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
 
 type IState = {
-    appid: string;
-    redirectUri: string;
+    fields: {
+        username: {
+            value: string,
+        },
+        password: {
+            value: string,
+        },
+    }
 }
 class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
-        console.log(props);
-        console.log(this.state);
         this.state = {
-            appid: 'wxbdc5610cc59c1631',
-            redirectUri: 'https://passport.yhd.com/wechat/callback.do',
+            fields: {
+                username: {
+                    value: 'test',
+                },
+                password: {
+                    value: 'tlksdf',
+                }
+            }
         }
     }
 
+    handleFormChange = (changeFields: ILoginState) => {
+        this.setState(({ fields }) => ({
+            fields: { ...fields, ... changeFields },
+        }));
+    }
+
     render() {
+        const fields  = this.state.fields;
         return (
             <div className="login-wrapper">
-                <LoginForm />
-                <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
+                <LoginFormRedux {...fields} />
             </div>
         );
     }

@@ -23,6 +23,8 @@
     "customize-cra": "^0.8.0",
     "history": "^4.10.1",
     "husky": "^3.0.9",
+    "less": "^3.10.3",
+    "less-loader": "^5.0.0",
     "qrcode.react": "^1.0.0",
     "qs": "^6.9.0",
     "react": "^16.11.0",

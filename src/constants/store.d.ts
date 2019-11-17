@@ -3,6 +3,15 @@ declare type ICountState = number;
 
 type ITokenState = string;
 
+declare interface ILoginState {
+    username: {
+        value: string;
+    },
+    password: {
+        value: string;
+    },
+}
+
 declare interface IUserState {
     id: number;
     username: string;
@@ -36,6 +45,7 @@ declare interface IStoreState {
 }
 
 export {
+    ILoginState,
     ITokenState,
     IUserState,
     IUserList,

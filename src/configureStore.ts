@@ -5,7 +5,7 @@ import storage from 'redux-persist/lib/storage';    // default to localStorage f
 import { routerMiddleware } from 'connected-react-router';
 import createRootReducer from './reducers';
 import createSagaMiddleware from 'redux-saga';
-import mySaga from './middleware/sagas';
+import rootSaga from './sagas/';
 
 export const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
@@ -42,6 +42,6 @@ export default function configureStore(preloadedState?: any) {
     //     });
     // }
 
-    sagaMiddleware.run(mySaga);
+    sagaMiddleware.run(rootSaga);
     return store;
 }

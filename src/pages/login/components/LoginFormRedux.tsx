@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { IStoreState } from '../../../constants/store.d';
+import { IStoreState, ILoginState } from '../../../constants/store.d';
 import { userLoginAction } from '../../../actions/user';
 import {
     tokenFetchRequstedAction,
@@ -11,42 +11,23 @@ import {
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
-// 定义IProps，使内部能取到form，解决下面写法的后续报错
-// class NormalLoginForm extends React.Component {
-// Property 'form' does not exist on type 'Readonly<{}> & Readonly<{ children?: ReactNode; }>'.  TS2339
+type IProps = Readonly<{ 
+    form: any, 
+    fields: ILoginState,
+    onChange(fields: ILoginState): void,
+    children?: ReactNode,
+}>
+// type IProps = Readonly<{ form: any }> & IStateProps & IDispatchProps;
 
-const mapStateToProps = (state: IStoreState) => ({
-    user: state.user,
-    token: state.token,
-})
-type IStateProps = ReturnType<typeof mapStateToProps>
-
-const mapDispatchToProps = {
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction,
-    userLoginAction,
-}
-type IDispatchProps = typeof mapDispatchToProps;
-
-// type IProps = Readonly<{ form: any }>
-type IProps = Readonly<{ form: any }> & IStateProps & IDispatchProps;
-
-class NormalLoginForm extends React.Component<IProps> {
-    handleSubmit = (e: any) => {
-        e.preventDefault();
-        this.props.form.validateFields((err: any, values: any) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-                this.props.tokenFetchRequstedAction();
-            }
-        });
-    };
-
+class NormalLoginForm extends React.Component<IProps, {}> {
+    constructor(props: IProps) {
+        super(props);
+        console.log(props);
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form className="login-form">
                 <FormattedMessage id='welcome' />
                 <Form.Item>
                     {getFieldDecorator('username', {
@@ -113,9 +94,24 @@ class NormalLoginForm extends React.Component<IProps> {
 // 此处的<IProps>可加可不加
 // const WrappedNormalLoginForm = Form.create<IProps>()( NormalLoginForm,);
 const WrappedNormalLoginForm = Form.create({
+    name: 'global_state',
+    onFieldsChange(props: IProps, changedFields: ILoginState) {
+        props.onChange(changedFields);
+    },
+    mapPropsToFields(props: any) {
+        return {
+            username: Form.createFormField({
+                ...props.username,
+                value: props.username.value,
+            }),
+        };
+    },
+    onValuesChange(_, values) {
+        console.log(values);
+    },
 })(
     NormalLoginForm,
 );
 
-// export default WrappedNormalLoginForm;
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);
+export default WrappedNormalLoginForm;
+// export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);
