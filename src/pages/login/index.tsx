@@ -58,11 +58,20 @@ class Login extends React.Component<IProps, IState> {
         }));
     }
 
+    handleFormSubmit = (submitedFormData: ILoginState) => {
+        console.log('received submit ');
+        console.log(submitedFormData);
+    }
+
     render() {
-        const fields  = this.state.fields;
+        const fields = this.state.fields;
         return (
             <div className="login-wrapper">
-                <LoginFormRedux fields={fields} onChange={this.handleFormChange}/>
+                <LoginFormRedux
+                    fields={fields}
+                    onChange={this.handleFormChange}
+                    onSubmit={this.handleFormSubmit}
+                />
                 <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
             </div>
         );

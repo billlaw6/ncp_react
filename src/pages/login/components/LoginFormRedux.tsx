@@ -8,11 +8,14 @@ import './login-form.less'
 
 // type IProps = Readonly<{
 //     form: any,
+//     fields: ILoginState,
+//     onChange(fields: ILoginState): void,
 //     children?: ReactNode,
 // }>
 interface ILoginFormProps extends FormComponentProps {
     fields: ILoginState,
     onChange(fields: ILoginState): void,
+    onSubmit(fields: ILoginState): void,
 }
 
 class NormalLoginForm extends React.Component<ILoginFormProps, any> {
@@ -20,10 +23,22 @@ class NormalLoginForm extends React.Component<ILoginFormProps, any> {
         super(props);
         console.log(props);
     }
+    handleSubmit = (e: any) => {
+        e.preventDefault();
+        this.props.form.validateFields(
+            // { force: true },    // 让已经校验通过的表单域在触发条件满足时再次检验。
+            (err, values) => {
+                if (!err) {
+                    console.log(values);
+                    this.props.onSubmit(values);
+                }
+            }
+        )
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form className="login-form">
+            <Form onSubmit={this.handleSubmit} className="login-form">
                 <FormattedMessage id='welcome' />
                 <Form.Item>
                     {getFieldDecorator('username', {
@@ -33,6 +48,7 @@ class NormalLoginForm extends React.Component<ILoginFormProps, any> {
                                 message: 'Please input your username!',
                             },
                         ],
+                        validateTrigger: 'onChange',
                     })(
                         <Input
                             prefix={
