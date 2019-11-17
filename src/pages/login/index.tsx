@@ -1,9 +1,7 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import LoginForm from './components/LoginForm';
 import LoginFormRedux from './components/LoginFormRedux';
-import QRCodeLogin from './components/QRCodeLogin';
 import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { ILoginState, IStoreState } from '../../constants/store.d';
 import WxLogin from './components/WxLogin';
@@ -26,6 +24,8 @@ type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
 
 type IState = {
+    appid: string,
+    redirectUri: string,
     fields: {
         username: {
             value: string,
@@ -39,20 +39,22 @@ class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
+            appid: 'wxbdc5610cc59c1631',
+            redirectUri: 'https://passport.yhd.com/wechat/callback.do',
             fields: {
                 username: {
-                    value: 'test',
+                    value: '',
                 },
                 password: {
-                    value: 'tlksdf',
+                    value: '',
                 }
             }
         }
     }
 
-    handleFormChange = (changeFields: ILoginState) => {
+    handleFormChange = (changedFields: ILoginState) => {
         this.setState(({ fields }) => ({
-            fields: { ...fields, ... changeFields },
+            fields: { ...fields, ...changedFields },
         }));
     }
 
@@ -60,7 +62,8 @@ class Login extends React.Component<IProps, IState> {
         const fields  = this.state.fields;
         return (
             <div className="login-wrapper">
-                <LoginFormRedux {...fields} />
+                <LoginFormRedux fields={fields} onChange={this.handleFormChange}/>
+                <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
             </div>
         );
     }

@@ -1,26 +1,22 @@
 import React, { ReactNode } from 'react';
-import { connect } from 'react-redux';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { IStoreState, ILoginState } from '../../../constants/store.d';
+import { FormComponentProps } from 'antd/es/form';
+import { ILoginState } from '../../../constants/store.d';
 import { userLoginAction } from '../../../actions/user';
-import {
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction
-} from '../../../actions/token';
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
-type IProps = Readonly<{ 
-    form: any, 
+// type IProps = Readonly<{
+//     form: any,
+//     children?: ReactNode,
+// }>
+interface ILoginFormProps extends FormComponentProps {
     fields: ILoginState,
     onChange(fields: ILoginState): void,
-    children?: ReactNode,
-}>
-// type IProps = Readonly<{ form: any }> & IStateProps & IDispatchProps;
+}
 
-class NormalLoginForm extends React.Component<IProps, {}> {
-    constructor(props: IProps) {
+class NormalLoginForm extends React.Component<ILoginFormProps, any> {
+    constructor(props: ILoginFormProps) {
         super(props);
         console.log(props);
     }
@@ -93,18 +89,40 @@ class NormalLoginForm extends React.Component<IProps, {}> {
 
 // 此处的<IProps>可加可不加
 // const WrappedNormalLoginForm = Form.create<IProps>()( NormalLoginForm,);
-const WrappedNormalLoginForm = Form.create({
-    name: 'global_state',
-    onFieldsChange(props: IProps, changedFields: ILoginState) {
-        props.onChange(changedFields);
-    },
+const WrappedNormalLoginForm = Form.create<ILoginFormProps>({
+    name: 'login_form',
     mapPropsToFields(props: any) {
         return {
             username: Form.createFormField({
                 ...props.username,
-                value: props.username.value,
+                value: props.fields.username.value,
+            }),
+            password: Form.createFormField({
+                ...props.username,
+                value: props.fields.password.value,
             }),
         };
+    },
+    // validateMessages: {
+    //     "username": {
+    //         "errors": [
+    //             {
+    //                 "message": "Please input your username!",
+    //                 "field": "username"
+    //             }
+    //         ]
+    //     },
+    //     "password": {
+    //         "errors": [
+    //             {
+    //                 "message": "Please input your Password!",
+    //                 "field": "password"
+    //             }
+    //         ]
+    //     }
+    // },
+    onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginState) {
+        props.onChange(changedFields);
     },
     onValuesChange(_, values) {
         console.log(values);
@@ -114,4 +132,3 @@ const WrappedNormalLoginForm = Form.create({
 );
 
 export default WrappedNormalLoginForm;
-// export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);

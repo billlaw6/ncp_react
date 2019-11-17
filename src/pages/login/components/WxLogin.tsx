@@ -1,7 +1,12 @@
 import React from 'react';
 import './wx-login.less';
 
-const WxLogin = function (props: {appid: string; redirectUri: string}) {
+declare interface IProps {
+    appid: string,
+    redirectUri: string,
+}
+
+const WxLogin = function (props: IProps) {
     const parsedRedirectUri = encodeURI(props.redirectUri);
     const qrcodeURL = `https://open.weixin.qq.com/connect/qrconnect?` +
         `appid=${props.appid}&` +
