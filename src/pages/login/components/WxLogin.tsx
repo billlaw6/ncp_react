@@ -27,6 +27,7 @@ const WxLogin = function (props: IProps) {
     return (
         <div className="weixin-login">
             <iframe 
+                title="WxLogin"
                 src={qrcodeURL}
                 frameBorder={0} 
                 scrolling="no" 

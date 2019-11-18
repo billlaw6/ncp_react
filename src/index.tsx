@@ -1,12 +1,12 @@
 import React from 'react';
-import ReactDOM, { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 import { ConnectedRouter } from 'connected-react-router';
 import configureStore, { history } from './configureStore';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-import { IntlProvider, FormattedMessage } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import zh_CN from './locales/zh_CN';
 import en_US from './locales/en_US';
 import { persistStore } from 'redux-persist';

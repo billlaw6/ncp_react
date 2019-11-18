@@ -21,7 +21,7 @@ interface ILoginFormProps extends FormComponentProps {
 class NormalLoginForm extends React.Component<ILoginFormProps, any> {
     constructor(props: ILoginFormProps) {
         super(props);
-        console.log(props);
+        // console.log(props);
     }
     handleSubmit = (e: any) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ class NormalLoginForm extends React.Component<ILoginFormProps, any> {
             // { force: true },    // 让已经校验通过的表单域在触发条件满足时再次检验。
             (err, values) => {
                 if (!err) {
-                    console.log(values);
+                    // console.log(values);
                     this.props.onSubmit(values);
                 }
             }

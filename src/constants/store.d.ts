@@ -1,15 +1,11 @@
 // Store相关接口
 declare type ICountState = number;
 
-type ITokenState = string;
-
 declare interface ILoginState {
-    username: {
-        value: string;
-    },
-    password: {
-        value: string;
-    },
+    username: string;
+    password: string;
+    token: string;
+    messages: Array<string>;
 }
 
 declare interface IUserState {
@@ -33,20 +29,18 @@ declare type IUserList = IUserState[];
 // 创建store时要遵循的rootState接口，不能使用rootReducers的类型
 // 作为组件创建时props类型！！！必须用store.d里定义的！三天的教训！
 declare interface IStoreState {
-    // router: any;
     router: { location: Location; };
+    token: ILoginState;
     user: IUserState;
     userList: IUserList;
     count: ICountState;
     draft: IDraftState;
     todoList: IToDoList;
     canvas: ICanvasState;
-    token: ITokenState;
 }
 
 export {
     ILoginState,
-    ITokenState,
     IUserState,
     IUserList,
     ICountState,

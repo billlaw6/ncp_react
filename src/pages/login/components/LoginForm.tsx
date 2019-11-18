@@ -38,7 +38,12 @@ class NormalLoginForm extends React.Component<IProps> {
         this.props.form.validateFields((err: any, values: any) => {
             if (!err) {
                 console.log('Received values of form: ', values);
-                this.props.tokenFetchRequstedAction();
+                this.props.tokenFetchRequstedAction({
+                    username: 'values',
+                    password: 'abc',
+                    token: '',
+                    messages: [],
+                });
             }
         });
     };

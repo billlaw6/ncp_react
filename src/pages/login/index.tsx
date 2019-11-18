@@ -6,6 +6,7 @@ import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { ILoginState, IStoreState } from '../../constants/store.d';
 import WxLogin from './components/WxLogin';
 import './index.less';
+import { TOKEN_FETCH_REQUESTED_ACTION, tokenFetchRequstedAction } from '../../actions/token';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -19,6 +20,7 @@ type IStateProps = ReturnType<typeof mapStateToProps>;
 const mapDispatchToProps = {
     userLoginAction,
     userLogoutAction,
+    tokenFetchRequstedAction,
 };
 type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
@@ -27,12 +29,10 @@ type IState = {
     appid: string,
     redirectUri: string,
     fields: {
-        username: {
-            value: string,
-        },
-        password: {
-            value: string,
-        },
+        username: string,
+        password: string,
+        token: string,
+        messages: Array<string>,
     }
 }
 class Login extends React.Component<IProps, IState> {
@@ -42,12 +42,10 @@ class Login extends React.Component<IProps, IState> {
             appid: 'wxbdc5610cc59c1631',
             redirectUri: 'https://passport.yhd.com/wechat/callback.do',
             fields: {
-                username: {
-                    value: '',
-                },
-                password: {
-                    value: '',
-                }
+                username: '',
+                password: '',
+                token: '',
+                messages: [],
             }
         }
     }
@@ -59,8 +57,8 @@ class Login extends React.Component<IProps, IState> {
     }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
-        console.log('received submit ');
         console.log(submitedFormData);
+        this.props.tokenFetchRequstedAction(submitedFormData);
     }
 
     render() {

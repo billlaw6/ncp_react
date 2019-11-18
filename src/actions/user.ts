@@ -1,5 +1,5 @@
 import { userLogin, userLogout } from '../services/user';
-import { ITokenState, IUserState, IUserList, IStoreState } from '../constants/store.d';
+import { IUserState, IUserList } from '../constants/store.d';
 
 // 登录成功后更新state里的user.token
 export const USER_LOGIN_ACTION_TYPE = 'user/login';

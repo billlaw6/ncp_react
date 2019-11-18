@@ -2,11 +2,10 @@ import React from 'react';
 import {
     BrowserRouter as Router,
     Route,
-    Switch,
-    Redirect
+    Switch
 } from 'react-router-dom';
 import Routes from './routes';
-import { routerActions } from 'connected-react-router';
+// import { routerActions } from 'connected-react-router';
 
 class App extends React.Component {
     constructor(props: any) {

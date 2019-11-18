@@ -17,7 +17,7 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
-axios.interceptors.request.use((config: any) => {
+axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // config 代表发起请求的参数的实体(可以发起一个请求在控制台打印一下这个config看看是什么东西)
     // 得到参数中的 requestName 字段，用于决定下次发起请求，取消对应的 相同字段的请求
     // 如果没有 requestName 就默认添加一个 不同的时间戳
@@ -29,8 +29,8 @@ axios.interceptors.request.use((config: any) => {
     // console.log(persistRoot.token);
     // console.log(persistRoot.token.length);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
-    if (persistRoot.token.length > 2) {
-        config.headers.Authorization = 'Token ' + persistRoot.token;
+    if (persistRoot.token.token && persistRoot.token.token.length > 2) {
+        config.headers.Authorization = 'Token ' + persistRoot.token.token;
     }
 
     if (config.method === 'post') {
