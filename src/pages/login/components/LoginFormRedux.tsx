@@ -108,13 +108,14 @@ class NormalLoginForm extends React.Component<ILoginFormProps, any> {
 const WrappedNormalLoginForm = Form.create<ILoginFormProps>({
     name: 'login_form',
     mapPropsToFields(props: any) {
+        // console.log(props.fields.username);
         return {
             username: Form.createFormField({
-                ...props.username,
+                ...props.fields.username,
                 value: props.fields.username.value,
             }),
             password: Form.createFormField({
-                ...props.username,
+                ...props.fields.password,
                 value: props.fields.password.value,
             }),
         };

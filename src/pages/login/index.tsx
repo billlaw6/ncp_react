@@ -6,13 +6,19 @@ import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { ILoginState, IStoreState } from '../../constants/store.d';
 import WxLogin from './components/WxLogin';
 import './index.less';
-import { TOKEN_FETCH_REQUESTED_ACTION, tokenFetchRequstedAction } from '../../actions/token';
+import {
+    TOKEN_FETCH_REQUESTED_ACTION,
+    tokenFetchRequstedAction,
+    tokenFetchSucceededAction,
+    tokenFetchFailedAction,
+} from '../../actions/token';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
     return {
         router: state.router,
         user: state.user,
+        token: state.token,
     };
 };
 type IStateProps = ReturnType<typeof mapStateToProps>;
@@ -21,6 +27,7 @@ const mapDispatchToProps = {
     userLoginAction,
     userLogoutAction,
     tokenFetchRequstedAction,
+    tokenFetchSucceededAction,
 };
 type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
@@ -54,6 +61,7 @@ class Login extends React.Component<IProps, IState> {
         this.setState(({ fields }) => ({
             fields: { ...fields, ...changedFields },
         }));
+        this.props.tokenFetchSucceededAction(changedFields);
     }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
@@ -62,7 +70,8 @@ class Login extends React.Component<IProps, IState> {
     }
 
     render() {
-        const fields = this.state.fields;
+        // const fields = this.state.fields;
+        const fields = this.props.token;
         return (
             <div className="login-wrapper">
                 <LoginFormRedux
