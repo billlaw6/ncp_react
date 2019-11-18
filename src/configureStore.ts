@@ -13,7 +13,7 @@ const sagaMiddleware = createSagaMiddleware();
 const persistConfig = {
     key: 'root',    // 必须有
     storage,    // storage is now required
-    // blacklist: ['routor'],   // reducer里不持久化的数据
+    blacklist: ['router'],   // reducer里不持久化的数据，不把router剔出来会有刷新跳回原页面的问题。
 }
 
 export default function configureStore(preloadedState?: any) {
