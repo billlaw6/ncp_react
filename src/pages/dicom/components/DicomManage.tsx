@@ -32,26 +32,27 @@ class DicomManage extends React.Component<IProps, any> {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
     }
-    // handleSubmit = (e: any) => {
-    //     e.preventDefault();
+    handleSubmit = (e: any) => {
+        e.preventDefault();
 
-    //     this.props.form.validateFields((err, fieldsValues) => {
-    //         if (err) {
-    //             return;
-    //         }
-    //         // Should format date value before submit.
-    //         console.log(fieldsValues);
-    //         const dtRangeValue = fieldsValues['dtRange'];
-    //         const values = {
-    //             ...fieldsValues,
-    //             'dtRange': [
-    //                 dtRangeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-    //                 dtRangeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-    //             ],
-    //         };
-    //         console.log('Received values of form: ', values);
-    //     });
-    // }
+        this.props.form.validateFields((err, fieldsValues) => {
+            if (err) {
+                return;
+            }
+            // Should format date value before submit.
+            console.log(fieldsValues);
+            const dtRangeValue = fieldsValues['dtRange'];
+            const values = {
+                ...fieldsValues,
+                'dtRange': [
+                    dtRangeValue[0].format('YYYY-MM-DD HH:mm:ss'),
+                    dtRangeValue[1].format('YYYY-MM-DD HH:mm:ss'),
+                ],
+            };
+            console.log('Received values of form: ', values);
+            this.props.onSubmit(values);
+        });
+    }
     render() {
         const columns = [
             {
@@ -66,7 +67,7 @@ class DicomManage extends React.Component<IProps, any> {
         const keywordError = isFieldTouched('keyword') && getFieldError('keyword');
         return (
             <div>
-                <Form layout="inline" className="dicom-search-form">
+                <Form onSubmit={this.handleSubmit} layout="inline" className="dicom-search-form">
                     <Form.Item
                         validateStatus={dtRangeError ? 'error' : ''}
                         help={dtRangeError || ''}
@@ -128,7 +129,7 @@ const WrappedDicomManage = Form.create<IProps>({
         return {
             dtRange: Form.createFormField({
                 ...props.fields.dtRange,
-                value: [moment(props.fields.dtRange[0]), moment(props.fields.dtRange[1])],
+                value: [moment(props.fields.dtRange[0]).startOf('day'), moment(props.fields.dtRange[1]).endOf('day')],
             }),
             keyword: Form.createFormField({
                 ...props.fields.keyword,
@@ -136,9 +137,9 @@ const WrappedDicomManage = Form.create<IProps>({
             }),
         };
     },
-    onValuesChange(props, fieldsValues) {
+    onValuesChange(props, changedValues, allValues) {
         console.log(props);
-        props.onChange(fieldsValues);
+        props.onChange(changedValues);
     }
 })(DicomManage);
 

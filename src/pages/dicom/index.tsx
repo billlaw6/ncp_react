@@ -23,6 +23,7 @@ const mapDispatchToProps = {
 };
 
 type IProps = ReturnType<typeof mapStateToProps> & typeof mapDispatchToProps;
+// state作为本页面或组件的默认值，使其不依赖外部变量。
 type IState = {
     fields: {
         dtRange: Array<Date>;
@@ -32,18 +33,11 @@ type IState = {
         results: Array<IDicomInfo>
     }
 }
-
 class Dicom extends React.Component<IProps, IState> {
     constructor(props: any) {
         super(props);
         this.state = {
-            fields: {
-                dtRange: [new Date((new Date().getTime() - 3 * 24 * 3600 * 1000)), new Date()],
-                keyword: 'father init',
-                status: '',
-                count: 0,
-                results: [],
-            }
+            fields: props.dicomList,
         }
     }
     handleFormChange = (changedFields: IDicomSearchState) => {
@@ -59,6 +53,7 @@ class Dicom extends React.Component<IProps, IState> {
     }
     render() {
         const { fields } = this.state;
+        console.log(fields);
         return (
             <>
                 <DicomManage fields={fields} onChange={this.handleFormChange} onSubmit={this.handleFormSubmit} />

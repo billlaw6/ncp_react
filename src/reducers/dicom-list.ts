@@ -11,7 +11,7 @@ import moment from 'moment';
 
 // 设置本组件默认值
 const defaultState: IDicomSearchState = {
-    dtRange: [new Date((new Date().getTime() - 3 * 24 * 3600 * 1000)), new Date()],
+    dtRange: [new Date((new Date().getTime() - 6 * 24 * 3600 * 1000)), new Date()],
     keyword: 'reduce initial',
     status: '',
     count: 0,

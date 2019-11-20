@@ -48,34 +48,29 @@ class Login extends React.Component<IProps, IState> {
         this.state = {
             appid: 'wxbdc5610cc59c1631',
             redirectUri: 'https://passport.yhd.com/wechat/callback.do',
-            fields: {
-                username: '',
-                password: '',
-                token: '',
-                messages: [],
-            }
+            fields: props.token,
         }
     }
 
     handleFormChange = (changedFields: ILoginState) => {
-        this.setState(({ fields }) => ({
-            fields: { ...fields, ...changedFields },
-        }));
+        // this.setState(({ fields }) => ({
+        //     fields: { ...fields, ...changedFields },
+        // }));
         this.props.tokenFetchSucceededAction(changedFields);
     }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
-        console.log(submitedFormData);
+        // console.log(submitedFormData);
         this.props.tokenFetchRequstedAction(submitedFormData);
     }
 
     render() {
         // const fields = this.state.fields;
-        const fields = this.props.token;
+        // console.log(fields);
         return (
             <div className="login-wrapper">
                 <LoginForm
-                    fields={fields}
+                    fields={this.props.token}
                     onChange={this.handleFormChange}
                     onSubmit={this.handleFormSubmit}
                 />

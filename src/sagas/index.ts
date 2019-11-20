@@ -8,12 +8,21 @@ import {
   tokenFetchFailedAction,
 } from '../actions/token';
 import { userLogin } from '../services/user';
+import {
+  dicomSearchFailedAction,
+  dicomSearchRequstedAction,
+  dicomSearchSucceededAction,
+  DICOM_SEARCH_FAILED_ACTION,
+  DICOM_SEARCH_REQUESTED_ACTION,
+  DICOM_SEARCH_SUCCEEDED_ACTION,
+} from '../actions/dicom';
+import { searchDicomInfo, searchDicomFile } from '../services/dicom';
 
 // worker Saga : 将在 USER_FETCH_REQUESTED action 被 dispatch 时调用
-declare type IActionType = ReturnType<typeof tokenFetchSucceededAction> &
+declare type ITokenActionType = ReturnType<typeof tokenFetchSucceededAction> &
   ReturnType<typeof tokenFetchFailedAction> &
   ReturnType<typeof tokenFetchRequstedAction>
-function* fetchToken(action: IActionType) {
+function* fetchToken(action: ITokenActionType) {
   try {
     console.log(action.payload);
     const res = yield call(userLogin, action.payload);
@@ -38,9 +47,37 @@ function* fetchToken(action: IActionType) {
   }
 }
 
+declare type IDicomInfoActionType = ReturnType<typeof tokenFetchSucceededAction> &
+  ReturnType<typeof tokenFetchFailedAction> &
+  ReturnType<typeof tokenFetchRequstedAction>
+function* fetchDicomInfo(action: IDicomInfoActionType) {
+  try {
+    console.log(action.payload);
+    const res = yield call(searchDicomInfo, action.payload);
+    console.log(res);
+    // put对应redux中的dispatch。
+    const succeededPayload = {
+      ...action.payload,
+      count: res.data.count,
+      results: res.data.results,
+    }
+    console.log(succeededPayload);
+    yield put({ type: TOKEN_FETCH_SUCCEEDED_ACTION, playload: succeededPayload });
+  } catch (error) {
+    console.log(error.response);
+    const failedPayload = {
+      ...action.payload,
+      count: 0,
+      results: [],
+    }
+    console.log(failedPayload);
+    yield put({ type: TOKEN_FETCH_FAILED_ACTION, playload: failedPayload });
+  }
+}
+
 function* rootSaga() {
   yield takeEvery(TOKEN_FETCH_REQUESTED_ACTION, fetchToken);
-  // yield takeLatest(TOKEN_FETCH_REQUESTED_ACTION, fetchToken);
+  yield takeEvery(DICOM_SEARCH_REQUESTED_ACTION, fetchDicomInfo);
 }
 
 export default rootSaga;

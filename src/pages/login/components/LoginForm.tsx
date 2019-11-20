@@ -6,12 +6,6 @@ import { userLoginAction } from '../../../actions/user';
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
-// type IProps = Readonly<{
-//     form: any,
-//     fields: ILoginState,
-//     onChange(fields: ILoginState): void,
-//     children?: ReactNode,
-// }>
 interface ILoginFormProps extends FormComponentProps {
     fields: ILoginState,
     onChange(fields: ILoginState): void,
@@ -116,37 +110,20 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
         return {
             username: Form.createFormField({
                 ...props.fields.username,
-                value: props.fields.username.value,
+                value: props.fields.username,
             }),
             password: Form.createFormField({
                 ...props.fields.password,
-                value: props.fields.password.value,
+                value: props.fields.password,
             }),
         };
     },
-    // validateMessages: {
-    //     "username": {
-    //         "errors": [
-    //             {
-    //                 "message": "Please input your username!",
-    //                 "field": "username"
-    //             }
-    //         ]
-    //     },
-    //     "password": {
-    //         "errors": [
-    //             {
-    //                 "message": "Please input your Password!",
-    //                 "field": "password"
-    //             }
-    //         ]
-    //     }
+    // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginState) {
+    //     console.log(changedFields);
     // },
-    onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginState) {
-        props.onChange(changedFields);
-    },
-    onValuesChange(_, values) {
-        console.log(values);
+    onValuesChange(props, changedValues, allValues) {
+        console.log(allValues);
+        props.onChange(changedValues);
     },
 })(
     LoginForm,
