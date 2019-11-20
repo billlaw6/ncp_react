@@ -1,7 +1,7 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import LoginFormRedux from './components/LoginFormRedux';
+import LoginForm from './components/LoginForm';
 import { userLoginAction, userLogoutAction } from '../../actions/user';
 import { ILoginState, IStoreState } from '../../constants/store.d';
 import WxLogin from './components/WxLogin';
@@ -74,7 +74,7 @@ class Login extends React.Component<IProps, IState> {
         const fields = this.props.token;
         return (
             <div className="login-wrapper">
-                <LoginFormRedux
+                <LoginForm
                     fields={fields}
                     onChange={this.handleFormChange}
                     onSubmit={this.handleFormSubmit}

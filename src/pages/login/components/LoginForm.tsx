@@ -1,53 +1,44 @@
-import React from 'react';
-import { connect } from 'react-redux';
+import React, { ReactNode } from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
-import { IStoreState } from '../../../constants/store.d';
+import { FormComponentProps } from 'antd/es/form';
+import { ILoginState } from '../../../constants/store';
 import { userLoginAction } from '../../../actions/user';
-import {
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction
-} from '../../../actions/token';
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
-// 定义IProps，使内部能取到form，解决下面写法的后续报错
-// class NormalLoginForm extends React.Component {
-// Property 'form' does not exist on type 'Readonly<{}> & Readonly<{ children?: ReactNode; }>'.  TS2339
-
-const mapStateToProps = (state: IStoreState) => ({
-    user: state.user,
-    token: state.token,
-})
-type IStateProps = ReturnType<typeof mapStateToProps>
-
-const mapDispatchToProps = {
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction,
-    userLoginAction,
+// type IProps = Readonly<{
+//     form: any,
+//     fields: ILoginState,
+//     onChange(fields: ILoginState): void,
+//     children?: ReactNode,
+// }>
+interface ILoginFormProps extends FormComponentProps {
+    fields: ILoginState,
+    onChange(fields: ILoginState): void,
+    onSubmit(fields: ILoginState): void,
 }
-type IDispatchProps = typeof mapDispatchToProps;
 
-// type IProps = Readonly<{ form: any }>
-type IProps = Readonly<{ form: any }> & IStateProps & IDispatchProps;
-
-class NormalLoginForm extends React.Component<IProps> {
+class LoginForm extends React.Component<ILoginFormProps, any> {
+    constructor(props: ILoginFormProps) {
+        super(props);
+        // console.log(props);
+    }
+    componentDidMount() {
+        // To disabled submit button at the beginning.
+        this.props.form.validateFields();
+    }
     handleSubmit = (e: any) => {
         e.preventDefault();
-        this.props.form.validateFields((err: any, values: any) => {
-            if (!err) {
-                console.log('Received values of form: ', values);
-                this.props.tokenFetchRequstedAction({
-                    username: 'values',
-                    password: 'abc',
-                    token: '',
-                    messages: [],
-                });
+        this.props.form.validateFields(
+            // { force: true },    // 让已经校验通过的表单域在触发条件满足时再次检验。
+            (err, values) => {
+                if (!err) {
+                    // console.log(values);
+                    this.props.onSubmit(values);
+                }
             }
-        });
-    };
-
+        )
+    }
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
@@ -61,6 +52,7 @@ class NormalLoginForm extends React.Component<IProps> {
                                 message: 'Please input your username!',
                             },
                         ],
+                        validateTrigger: 'onChange',
                     })(
                         <Input
                             prefix={
@@ -116,11 +108,48 @@ class NormalLoginForm extends React.Component<IProps> {
 }
 
 // 此处的<IProps>可加可不加
-// const WrappedNormalLoginForm = Form.create<IProps>()( NormalLoginForm,);
-const WrappedNormalLoginForm = Form.create({
+// const WrappedLoginForm = Form.create<IProps>()( LoginForm,);
+const WrappedLoginForm = Form.create<ILoginFormProps>({
+    name: 'login_form',
+    mapPropsToFields(props: any) {
+        // console.log(props.fields.username);
+        return {
+            username: Form.createFormField({
+                ...props.fields.username,
+                value: props.fields.username.value,
+            }),
+            password: Form.createFormField({
+                ...props.fields.password,
+                value: props.fields.password.value,
+            }),
+        };
+    },
+    // validateMessages: {
+    //     "username": {
+    //         "errors": [
+    //             {
+    //                 "message": "Please input your username!",
+    //                 "field": "username"
+    //             }
+    //         ]
+    //     },
+    //     "password": {
+    //         "errors": [
+    //             {
+    //                 "message": "Please input your Password!",
+    //                 "field": "password"
+    //             }
+    //         ]
+    //     }
+    // },
+    onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginState) {
+        props.onChange(changedFields);
+    },
+    onValuesChange(_, values) {
+        console.log(values);
+    },
 })(
-    NormalLoginForm,
+    LoginForm,
 );
 
-// export default WrappedNormalLoginForm;
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedNormalLoginForm);
+export default WrappedLoginForm;
