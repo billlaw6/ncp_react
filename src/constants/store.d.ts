@@ -71,7 +71,7 @@ declare interface IStoreState {
     token: ILoginState;
     user: IUserState;
     userList: IUserSearchList;
-    dicom: IDicomState;
+    dicominfo: IDicomInfo;
     dicomList: IDicomSearchState;
     count: ICountState;
     draft: IDraftState;
@@ -83,7 +83,7 @@ export {
     ILoginState,
     IUserState,
     IUserList,
-    IDicomState,
+    IDicomInfo,
     IDicomSearchState,
     ICountState,
     IDraftState,
