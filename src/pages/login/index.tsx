@@ -28,6 +28,7 @@ const mapDispatchToProps = {
     userLogoutAction,
     tokenFetchRequstedAction,
     tokenFetchSucceededAction,
+    tokenFetchFailedAction,
 };
 type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
@@ -52,11 +53,13 @@ class Login extends React.Component<IProps, IState> {
         }
     }
 
-    handleFormChange = (changedFields: ILoginState) => {
-        // this.setState(({ fields }) => ({
-        //     fields: { ...fields, ...changedFields },
-        // }));
-        this.props.tokenFetchSucceededAction(changedFields);
+    handleFormChange = (changedValues: ILoginState) => {
+        // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
+        this.setState(({ fields }) => ({
+            fields: { ...fields, ...changedValues},
+        }));
+        // console.log(changedValues);
+        this.props.tokenFetchSucceededAction(changedValues);
     }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
@@ -65,12 +68,11 @@ class Login extends React.Component<IProps, IState> {
     }
 
     render() {
-        // const fields = this.state.fields;
-        // console.log(fields);
+        const { fields } = this.state;
         return (
             <div className="login-wrapper">
                 <LoginForm
-                    fields={this.props.token}
+                    fields={fields}
                     onChange={this.handleFormChange}
                     onSubmit={this.handleFormSubmit}
                 />

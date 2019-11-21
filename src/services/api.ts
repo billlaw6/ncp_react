@@ -27,10 +27,14 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // console.log(localStorage.getItem('persist:root'));
     const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
     // console.log(persistRoot.token);
-    // console.log(persistRoot.token.length);
+    // 注意对象的多重解析
+    // console.log(JSON.parse(persistRoot.token).token);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
-    if (persistRoot.token.token && persistRoot.token.token.length > 2) {
-        config.headers.Authorization = 'Token ' + persistRoot.token.token;
+    if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
+        console.log('valid token');
+        config.headers.Authorization = 'Token ' + JSON.parse(persistRoot.token).token;
+    } else {
+        console.log('invalide token');
     }
 
     if (config.method === 'post') {

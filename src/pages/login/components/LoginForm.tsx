@@ -106,7 +106,7 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
 const WrappedLoginForm = Form.create<ILoginFormProps>({
     name: 'login_form',
     mapPropsToFields(props: any) {
-        // console.log(props.fields.username);
+        console.log(props.fields.username);
         return {
             username: Form.createFormField({
                 ...props.fields.username,
@@ -122,11 +122,9 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
     //     console.log(changedFields);
     // },
     onValuesChange(props, changedValues, allValues) {
-        console.log(allValues);
+        // console.log(allValues);
         props.onChange(changedValues);
     },
-})(
-    LoginForm,
-);
+})(LoginForm);
 
 export default WrappedLoginForm;

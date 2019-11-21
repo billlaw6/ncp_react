@@ -36,13 +36,14 @@ const tokenReducer = (
         case TOKEN_FETCH_SUCCEEDED_ACTION:
             // 必须得写成后一种形式，返回state同样的数据格式不管用，会报“reducer "token" returned undefined.”类错误
             // console.log(action);
+            // console.log(action.payload);
             // return action.payload;
             return ({
                 ...state,
                 ...action.payload,
             })
         case TOKEN_FETCH_FAILED_ACTION: {
-            // return action.payload;
+            return action.payload;
             return ({
                 ...state,
                 ...action.payload,

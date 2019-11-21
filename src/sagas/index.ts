@@ -24,7 +24,7 @@ declare type ITokenActionType = ReturnType<typeof tokenFetchSucceededAction> &
   ReturnType<typeof tokenFetchRequstedAction>
 function* fetchToken(action: ITokenActionType) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(userLogin, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
@@ -34,16 +34,18 @@ function* fetchToken(action: ITokenActionType) {
       message: '',
     }
     console.log(succeededPayload);
-    yield put({ type: TOKEN_FETCH_SUCCEEDED_ACTION, playload: succeededPayload });
+    yield put({ type: TOKEN_FETCH_SUCCEEDED_ACTION, payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
-    const failedPayload = {
-      ...action.payload,
-      token: '',
-      message: error.response.data.non_field_errors,
+    if (error.response) {
+      const failedPayload = {
+        ...action.payload,
+        token: '',
+        message: error.response.data.non_field_errors,
+      }
+      // console.log(failedPayload);
+      yield put({ type: TOKEN_FETCH_FAILED_ACTION, payload: failedPayload });
     }
-    console.log(failedPayload);
-    yield put({ type: TOKEN_FETCH_FAILED_ACTION, playload: failedPayload });
   }
 }
 
@@ -52,7 +54,7 @@ declare type IDicomInfoActionType = ReturnType<typeof tokenFetchSucceededAction>
   ReturnType<typeof tokenFetchRequstedAction>
 function* fetchDicomInfo(action: IDicomInfoActionType) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(searchDicomInfo, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
@@ -62,7 +64,7 @@ function* fetchDicomInfo(action: IDicomInfoActionType) {
       results: res.data.results,
     }
     console.log(succeededPayload);
-    yield put({ type: TOKEN_FETCH_SUCCEEDED_ACTION, playload: succeededPayload });
+    yield put({ type: DICOM_SEARCH_SUCCEEDED_ACTION , payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
     const failedPayload = {
@@ -71,7 +73,7 @@ function* fetchDicomInfo(action: IDicomInfoActionType) {
       results: [],
     }
     console.log(failedPayload);
-    yield put({ type: TOKEN_FETCH_FAILED_ACTION, playload: failedPayload });
+    yield put({ type: DICOM_SEARCH_FAILED_ACTION, payload: failedPayload });
   }
 }
 

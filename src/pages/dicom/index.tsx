@@ -49,7 +49,7 @@ class Dicom extends React.Component<IProps, IState> {
 
     handleFormSubmit = (submitedFormData: IDicomSearchState) => {
         console.log(submitedFormData);
-        this.props.dicomSearchSucceededAction(submitedFormData);
+        this.props.dicomSearchRequstedAction(submitedFormData);
     }
     render() {
         const { fields } = this.state;
