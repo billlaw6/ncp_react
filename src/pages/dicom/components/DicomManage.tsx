@@ -1,16 +1,12 @@
 import React from 'react';
-import { Form, Icon, Table, Button, Select, Input, DatePicker, TimePicker } from 'antd';
-import { IDicomInfo, IDicomSearchState, IStoreState } from '../../../constants/store.d';
-import { 
-    dicomSearchRequstedAction,
-    dicomSearchSucceededAction
-} from '../../../actions/dicom';
+import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
+import { IDicomInfo, IDicomSearchState } from '../../../constants/store.d';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
-import { connect } from 'react-redux';
+// 组件不直接从redux取数据
+// import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import { array } from 'prop-types';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -31,6 +27,7 @@ class DicomManage extends React.Component<IProps, any> {
     componentDidMount() {
         // To disabled submit button at the beginning.
         this.props.form.validateFields();
+        this.props.onSubmit(this.props.fields);
     }
     handleSubmit = (e: any) => {
         e.preventDefault();
@@ -54,14 +51,6 @@ class DicomManage extends React.Component<IProps, any> {
         });
     }
     render() {
-        const columns = [
-            {
-                title: '联系人',
-                dataIndex: 'userName',
-                key: 'userName',
-            },
-        ];
-
         const { getFieldDecorator, getFieldError, getFieldsError, isFieldTouched } = this.props.form;
         const dtRangeError = isFieldTouched('dtRange') && getFieldError('dtRange');
         const keywordError = isFieldTouched('keyword') && getFieldError('keyword');
@@ -122,7 +111,7 @@ class DicomManage extends React.Component<IProps, any> {
     }
 }
 
-const WrappedDicomManage = Form.create<IProps>({
+export const DicomInfoSearchForm = Form.create<IProps>({
     name: 'dicom_search_form',
     mapPropsToFields(props: any) {
         console.log(props);
@@ -143,4 +132,6 @@ const WrappedDicomManage = Form.create<IProps>({
     }
 })(DicomManage);
 
-export default (WrappedDicomManage);
+export class DicomInfoTable extends Table<IDicomInfo> {}
+
+// export default { DicomInfoSearchForm, DicomInfoTable };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import DicomManage from './components/DicomManage';
+import { DicomInfoSearchForm, DicomInfoTable } from './components/DicomManage';
 import { IDicomInfo, IDicomSearchState, IStoreState } from '../../constants/store.d';
 import {
     dicomSearchRequstedAction,
@@ -10,6 +10,8 @@ import {
     DICOM_SEARCH_REQUESTED_ACTION,
     DICOM_SEARCH_SUCCEEDED_ACTION
 } from '../../actions/dicom';
+import { Table } from 'antd';
+import { ColumnProps } from 'antd/es/table';
 
 const mapStateToProps = (state: IStoreState) => {
     return {
@@ -54,9 +56,116 @@ class Dicom extends React.Component<IProps, IState> {
     render() {
         const { fields } = this.state;
         console.log(fields);
+        const columns: ColumnProps<IDicomInfo>[] = [
+            {
+                title: 'study_uid',
+                width: 150,
+                dataIndex: 'study_uid',
+                key: 'study_uid',
+                fixed: 'left',
+            },
+            {
+                title: 'patient_name',
+                dataIndex: 'patient_name',
+                key: '1',
+            },
+            {
+                title: 'patient_id',
+                dataIndex: 'patient_id',
+                key: '2',
+            },
+            {
+                title: 'birthday',
+                dataIndex: 'birthday',
+                key: '3',
+                width: 200,
+            },
+            {
+                title: 'sex',
+                dataIndex: 'sex',
+                key: '4',
+                filters: [
+                    {
+                        text: 'F',
+                        value: 'F',
+                    },
+                    {
+                        text: 'M',
+                        value: 'M',
+                    },
+                ],
+                onFilter: (value: any, record: any) => {
+                    return (record.sex.trim().indexOf(value) > 0)
+                },
+            },
+            {
+                title: 'institution_name',
+                dataIndex: 'institution_name',
+                key: '5',
+            },
+            {
+                title: 'modality',
+                dataIndex: 'modality',
+                key: '6',
+                filters: [
+                    {
+                        text: 'MR',
+                        value: 'MR',
+                    },
+                    {
+                        text: 'CT',
+                        value: 'CT',
+                    },
+                    {
+                        text: 'XA',
+                        value: 'XA',
+                    },
+                ],
+                onFilter: (value: any, record: any) =>  record.modality.indexOf(value) === 0,
+                sorter: (a: any, b: any) => {
+                    // console.log(a);
+                    return a.modality - b.modality;
+                },
+                sortDirections: ['descend', 'ascend'],
+            },
+            {
+                title: 'series_id',
+                dataIndex: 'series_id',
+                key: '7',
+            },
+            {
+                title: 'window_width',
+                dataIndex: 'window_width',
+                key: '8',
+            },
+            {
+                title: 'window_center',
+                dataIndex: 'window_center',
+                key: '9',
+            },
+            {
+                title: 'instance_id',
+                dataIndex: 'instance_id',
+                key: '10',
+            },
+            {
+                title: 'created_at',
+                dataIndex: 'created_at',
+                key: 'created_at',
+            },
+            {
+                title: 'Action',
+                width: 100,
+                key: 'operation',
+                fixed: 'right',
+                render: () => <a>action</a>
+            }
+        ];
+
         return (
             <>
-                <DicomManage fields={fields} onChange={this.handleFormChange} onSubmit={this.handleFormSubmit} />
+                <DicomInfoSearchForm fields={fields} onChange={this.handleFormChange} onSubmit={this.handleFormSubmit} />
+                <DicomInfoTable rowKey="id" dataSource={this.props.dicomList.results} columns={columns} scroll={{ x: 1800, y: 400 }} />
             </>
         )
     }
