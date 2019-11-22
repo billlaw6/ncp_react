@@ -3,6 +3,7 @@ import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
 import { IDicomInfo, IDicomSearchState } from '../../../constants/store.d';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
+import { Resizable } from 'react-resizable';
 // 组件不直接从redux取数据
 // import { connect } from 'react-redux';
 import moment from 'moment';
@@ -131,6 +132,24 @@ export const DicomInfoSearchForm = Form.create<IProps>({
         props.onChange(changedValues);
     }
 })(DicomManage);
+
+export const ResizableTitle = (props: any) => {
+    const { onResize, width, ...restProps } = props;
+    if (!width) {
+        return <th { ...restProps } />;
+    } 
+
+    return (
+        <Resizable
+            width={width}
+            height={0}
+            onResize={onResize}
+            draggableOpts={{ enableUserSelectHack: false}}
+        >
+            <th {...restProps} />
+        </Resizable>
+    );
+};
 
 export class DicomInfoTable extends Table<IDicomInfo> {}
 

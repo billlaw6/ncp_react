@@ -1448,6 +1448,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-highlight-words@^0.16.0":
+  version "0.16.0"
+  resolved "https://registry.npm.taobao.org/@types/react-highlight-words/download/@types/react-highlight-words-0.16.0.tgz#bcd67e9724fb5f070c955732f604068de5cbe30b"
+  integrity sha1-vNZ+lyT7XwcMlVcy9gQGjeXL4ws=
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-hot-loader@^4.1.0":
   version "4.1.0"
   resolved "https://registry.npm.taobao.org/@types/react-hot-loader/download/@types/react-hot-loader-4.1.0.tgz#8e072b44331ad0182918228c5d2bf514646760de"
@@ -1465,6 +1472,13 @@
     "@types/react" "*"
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
+
+"@types/react-resizable@^1.7.1":
+  version "1.7.1"
+  resolved "https://registry.npm.taobao.org/@types/react-resizable/download/@types/react-resizable-1.7.1.tgz#a9383c488a935e6bca3d845cec10e83218b623a9"
+  integrity sha1-qTg8SIqTXmvKPYRc7BDoMhi2I6k=
+  dependencies:
+    "@types/react" "*"
 
 "@types/react-router-dom@^5.1.2":
   version "5.1.2"
@@ -5033,6 +5047,11 @@ hex-color-regex@^1.1.0:
   resolved "https://registry.npm.taobao.org/hex-color-regex/download/hex-color-regex-1.1.0.tgz#4c06fccb4602fe2602b3c93df82d7e7dbf1a8a8e"
   integrity sha1-TAb8y0YC/iYCs8k9+C1+fb8aio4=
 
+highlight-words-core@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.npm.taobao.org/highlight-words-core/download/highlight-words-core-1.2.2.tgz#1eff6d7d9f0a22f155042a00791237791b1eeaaa"
+  integrity sha1-Hv9tfZ8KIvFVBCoAeRI3eRse6qo=
+
 history@^4.10.1, history@^4.9.0:
   version "4.10.1"
   resolved "https://registry.npm.taobao.org/history/download/history-4.10.1.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fhistory%2Fdownload%2Fhistory-4.10.1.tgz#33371a65e3a83b267434e2b3f3b1b4c58aad4cf3"
@@ -6774,6 +6793,11 @@ mem@^4.0.0:
     map-age-cleaner "^0.1.1"
     mimic-fn "^2.0.0"
     p-is-promise "^2.0.0"
+
+memoize-one@^4.0.0:
+  version "4.1.0"
+  resolved "https://registry.npm.taobao.org/memoize-one/download/memoize-one-4.1.0.tgz#a2387c58c03fff27ca390c31b764a79addf3f906"
+  integrity sha1-ojh8WMA//yfKOQwxt2Snmt3z+QY=
 
 memory-fs@^0.4.1:
   version "0.4.1"
@@ -9339,10 +9363,27 @@ react-dom@^16.11.0:
     prop-types "^15.6.2"
     scheduler "^0.17.0"
 
+react-draggable@^4.0.3:
+  version "4.1.0"
+  resolved "https://registry.npm.taobao.org/react-draggable/download/react-draggable-4.1.0.tgz#e1c5b774001e32f0bff397254e1e9d5448ac92a4"
+  integrity sha1-4cW3dAAeMvC/85clTh6dVEiskqQ=
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.6.0"
+
 react-error-overlay@^6.0.3:
   version "6.0.3"
   resolved "https://registry.npm.taobao.org/react-error-overlay/download/react-error-overlay-6.0.3.tgz?cache=0&sync_timestamp=1571960566169&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Freact-error-overlay%2Fdownload%2Freact-error-overlay-6.0.3.tgz#c378c4b0a21e88b2e159a3e62b2f531fd63bf60d"
   integrity sha1-w3jEsKIeiLLhWaPmKy9TH9Y79g0=
+
+react-highlight-words@^0.16.0:
+  version "0.16.0"
+  resolved "https://registry.npm.taobao.org/react-highlight-words/download/react-highlight-words-0.16.0.tgz#4b4b9824e3d2b98789d3e3b3aedb5e961ae1b7cf"
+  integrity sha1-S0uYJOPSuYeJ0+Ozrttelhrht88=
+  dependencies:
+    highlight-words-core "^1.2.0"
+    memoize-one "^4.0.0"
+    prop-types "^15.5.8"
 
 react-hot-loader@^4.12.15:
   version "4.12.15"
@@ -9406,6 +9447,14 @@ react-redux@^7.1.1:
     loose-envify "^1.4.0"
     prop-types "^15.7.2"
     react-is "^16.9.0"
+
+react-resizable@^1.9.0:
+  version "1.9.0"
+  resolved "https://registry.npm.taobao.org/react-resizable/download/react-resizable-1.9.0.tgz#7426f06852180e6844bbbc32ead67760d2904a65"
+  integrity sha1-dCbwaFIYDmhEu7wy6tZ3YNKQSmU=
+  dependencies:
+    prop-types "15.x"
+    react-draggable "^4.0.3"
 
 react-router-dom@^5.1.2:
   version "5.1.2"
