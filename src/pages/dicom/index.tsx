@@ -1,4 +1,5 @@
 import React from 'react';
+import { createContext } from 'react';
 import { connect } from 'react-redux';
 import { DicomInfoSearchForm, ResizableTitle, DicomInfoTable } from './components/DicomManage';
 import { IDicomInfo, IDicomSearchState, IStoreState } from '../../constants/store.d';
@@ -15,8 +16,9 @@ import { InputSizes } from 'antd/lib/input/Input';
 import moment from 'moment';
 import { Input, Button, Icon } from 'antd';
 import Highlighter from 'react-highlight-words';
-import { DicomPlayer } from './components/DicomPlayer';
+import DicomPlayer from './components/DicomPlayer';
 
+const MyState = createContext(null);
 const mapStateToProps = (state: IStoreState) => {
     return {
         dicomList: state.dicomList,
@@ -259,17 +261,10 @@ class Dicom extends React.Component<IProps, IState> {
         // }));
 
         return (
-            <>
+            <MyState.Provider value={null}>
                 <DicomInfoSearchForm fields={fields} onChange={this.handleFormChange} onSubmit={this.handleFormSubmit} />
-                <DicomInfoTable
-                    bordered
-                    components={this.components}
-                    rowKey="id"
-                    dataSource={this.props.dicomList.results}
-                    columns={columns}
-                    scroll={{ x: 1800, y: 400 }}
-                />
-            </>
+                <DicomPlayer />
+            </MyState.Provider>
         )
     }
 }
