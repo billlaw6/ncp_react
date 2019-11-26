@@ -17,6 +17,7 @@ import moment from 'moment';
 import { Input, Button, Icon } from 'antd';
 import Highlighter from 'react-highlight-words';
 import DicomPlayer from './components/DicomPlayer';
+import DicomUploader from './components/DicomUploader';
 
 const MyState = createContext(null);
 const mapStateToProps = (state: IStoreState) => {
@@ -264,6 +265,7 @@ class Dicom extends React.Component<IProps, IState> {
             <MyState.Provider value={null}>
                 <DicomInfoSearchForm fields={fields} onChange={this.handleFormChange} onSubmit={this.handleFormSubmit} />
                 <DicomPlayer />
+                <DicomUploader />
             </MyState.Provider>
         )
     }

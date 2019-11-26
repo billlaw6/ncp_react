@@ -29,7 +29,7 @@ const DicomPlayer = () => {
         if (canvasRef.current) {
             let context = canvasRef.current.getContext('2d');
             if (imageToShow.playerState) {
-                console.log(imageToShow.imageStack[imageToShow.index].src);
+                // console.log(imageToShow.imageStack[imageToShow.index].src);
                 context!.drawImage(imageToShow.imageStack[imageToShow.index], 0, 0);
                 imageToShow.index++;
                 if (imageToShow.index >= imageToShow.imageStack.length) {
