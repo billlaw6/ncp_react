@@ -1,17 +1,19 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
-import LoginForm from './components/LoginForm';
-import { userLoginAction, userLogoutAction } from '../../actions/user';
-import { ILoginState, IStoreState } from '../../constants/store.d';
-import WxLogin from './components/WxLogin';
+import LoginForm from './login/LoginForm';
+import { userLoginAction, userLogoutAction } from '../../store/actions/user';
+import { ILoginState, IStoreState } from '../../constants/store';
+import WxLogin from './login/WxLogin';
 import './index.less';
 import {
-    TOKEN_FETCH_REQUESTED_ACTION,
     tokenFetchRequstedAction,
     tokenFetchSucceededAction,
     tokenFetchFailedAction,
-} from '../../actions/token';
+} from '../../store/actions/token';
+import Dialog from './login/Dialog';
+import DialogCom from './login/DialogCom';
+import Clock from './login/Clock';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -47,8 +49,8 @@ class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
-            appid: 'wxbdc5610cc59c1631',
-            redirectUri: 'https://passport.yhd.com/wechat/callback.do',
+            appid: 'wx0aee911ac049680c',
+            redirectUri: 'https://mediclouds.cn/wechat/login',
             fields: props.token,
         }
     }
@@ -77,6 +79,9 @@ class Login extends React.Component<IProps, IState> {
                     onSubmit={this.handleFormSubmit}
                 />
                 <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
+                <Dialog type={1} content='我是内容' />
+                <DialogCom type={1} content='我是内容' />
+                <Clock />
             </div>
         );
     }

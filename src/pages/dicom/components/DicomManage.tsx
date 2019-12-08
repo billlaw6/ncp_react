@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
-import { IDicomInfo, IDicomSearchState } from '../../../constants/store.d';
+import { IDicomInfo, IDicomSearchState } from '../../../constants/store';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';

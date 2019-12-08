@@ -4,9 +4,7 @@ import { connectRouter } from 'connected-react-router';
 import tokenReducer from './token';
 import userReducer from './user';
 import dicomListReducer from './dicom-list';
-import draftReducer from './draft';
 import canvasReducer from './canvas';
-import counterReducer from './counter';
 
 // 每个reducer必须都返回state类型的数据！
 const createRootReducer = (history: History) =>
@@ -15,8 +13,6 @@ const createRootReducer = (history: History) =>
         token: tokenReducer,
         user: userReducer,
         dicomList: dicomListReducer,
-        count: counterReducer,
-        draft: draftReducer,
         canvas: canvasReducer,
     });
 

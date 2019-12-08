@@ -1,21 +1,16 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
-  TOKEN_FETCH_REQUESTED_ACTION,
-  TOKEN_FETCH_SUCCEEDED_ACTION,
-  TOKEN_FETCH_FAILED_ACTION,
   tokenFetchRequstedAction,
   tokenFetchSucceededAction,
   tokenFetchFailedAction,
-} from '../actions/token';
+} from '../store/actions/token';
 import { userLogin } from '../services/user';
 import {
   dicomSearchFailedAction,
   dicomSearchRequstedAction,
   dicomSearchSucceededAction,
-  DICOM_SEARCH_FAILED_ACTION,
-  DICOM_SEARCH_REQUESTED_ACTION,
-  DICOM_SEARCH_SUCCEEDED_ACTION,
-} from '../actions/dicom';
+} from '../store/actions/dicom';
+import * as types from '../store/action-types';
 import { searchDicomInfo, searchDicomFile } from '../services/dicom';
 
 // worker Saga : 将在 USER_FETCH_REQUESTED action 被 dispatch 时调用
@@ -34,7 +29,7 @@ function* fetchToken(action: ITokenActionType) {
       message: '',
     }
     console.log(succeededPayload);
-    yield put({ type: TOKEN_FETCH_SUCCEEDED_ACTION, payload: succeededPayload });
+    yield put({ type: types.TOKEN_FETCH_SUCCEEDED_ACTION, payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -44,7 +39,7 @@ function* fetchToken(action: ITokenActionType) {
         message: error.response.data.non_field_errors,
       }
       // console.log(failedPayload);
-      yield put({ type: TOKEN_FETCH_FAILED_ACTION, payload: failedPayload });
+      yield put({ type: types.TOKEN_FETCH_FAILED_ACTION, payload: failedPayload });
     }
   }
 }
@@ -64,7 +59,7 @@ function* fetchDicomInfo(action: IDicomInfoActionType) {
       results: res.data.results,
     }
     console.log(succeededPayload);
-    yield put({ type: DICOM_SEARCH_SUCCEEDED_ACTION , payload: succeededPayload });
+    yield put({ type: types.DICOM_SEARCH_SUCCEEDED_ACTION , payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
     const failedPayload = {
@@ -73,13 +68,13 @@ function* fetchDicomInfo(action: IDicomInfoActionType) {
       results: [],
     }
     console.log(failedPayload);
-    yield put({ type: DICOM_SEARCH_FAILED_ACTION, payload: failedPayload });
+    yield put({ type: types.DICOM_SEARCH_FAILED_ACTION, payload: failedPayload });
   }
 }
 
 function* rootSaga() {
-  yield takeEvery(TOKEN_FETCH_REQUESTED_ACTION, fetchToken);
-  yield takeEvery(DICOM_SEARCH_REQUESTED_ACTION, fetchDicomInfo);
+  yield takeEvery(types.TOKEN_FETCH_REQUESTED_ACTION, fetchToken);
+  yield takeEvery(types.DICOM_SEARCH_REQUESTED_ACTION, fetchDicomInfo);
 }
 
 export default rootSaga;

@@ -1,20 +1,52 @@
 import React from 'react';
 import { Upload, Icon, message } from 'antd';
 import { uploadDicomFile } from '../../../services/dicom';
-import { AxiosResponse } from 'axios';
+import axios from '../../../services/api';
 
 const { Dragger } = Upload;
 
 const DicomUploader = () => {
-  function handleDicomUpload (file: any): string {
-    console.log(file);
-    uploadDicomFile(file);
-    return 'OK';
-  };
+  // function handleDicomUpload(file: any): Promise<string> {
+  //   console.log(file);
+  //   return new Promise((resolve) => {
+  //     let formData = new FormData();
+  //     formData.append('file', file);
+  //     formData.append('filename', file.name);
+  //     console.log(formData);
+  //     uploadDicomFile(formData).then((res) => {
+  //       console.log(res);
+  //       resolve('dicom');
+  //     }, (error) => {
+  //       console.error(error);
+  //     });
+  //   });
+  // };
+  let headersAuthorization = '';
+  const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
+  if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
+      console.log('valid token');
+      headersAuthorization = 'Token ' + JSON.parse(persistRoot.token).token;
+  }
   const props = {
     name: 'file',
     multiple: true,
-    action: handleDicomUpload,
+    // customRequest: handleDicomUpload,
+    action: `${axios.defaults.baseURL}` + 'dicom/upload/',
+    headers: {
+      Authorization: headersAuthorization,
+    },
+    // onStart(file: any) {
+    //   console.log('onStart', file, file.name);
+    // },
+    // onSuccess(ret: any, file: any) {
+    //   console.log('onSuccess', ret, file.name);
+    // },
+    // onError(err: any) {
+    //   console.log('onError', err);
+    // },
+    // onProgress({percent}: any, file: any) {
+    //   console.log('onProgress', `${percent}%`, file.name);
+    // },
     onChange(info: any) {
       const { status } = info.file;
       if (status !== 'uploading') {
@@ -29,7 +61,7 @@ const DicomUploader = () => {
   };
 
   return (
-    <Dragger {...props} method="POST">
+    <Dragger {...props} directory >
       <p className="ant-upload-drag-icon">
         <Icon type="inbox" />
       </p>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { changeCanvasAction } from '../../actions/canvas'
+import { changeCanvasAction } from '../../store/actions/canvas'
 import { IStoreState } from "../../constants/store";
 
 import { DatePicker } from 'antd';

@@ -1,12 +1,12 @@
 import axios from './api';
 
 export const searchDicomInfo = async (params: any) => {
-    const res = await axios.get(`/dicom/search/`, params);
+    const res = await axios.get(`/dicom/search/`, { params: params });
     return res;
 }
 
 export const uploadDicomFile = async (params: any) => {
-    const res = await axios.post(`/dicom/upload/`, { params: params });
+    const res = await axios.post(`/dicom/upload/`, params );
     return res;
 }
 

@@ -1,11 +1,10 @@
-import { IUserState } from '../constants/store.d';
+import { IUserState } from '../../constants/store';
 import { Action } from 'redux';
 import {
     userLoginAction,
-    USER_LOGIN_ACTION_TYPE,
     userLogoutAction,
-    USER_LOGOUT_ACTION_TYPE,
 } from '../actions/user';
+import * as types from '../action-types';
 import { isDebuggerStatement } from '@babel/types';
 
 // type IState = ITokenState & IUserState;
@@ -30,10 +29,10 @@ type ActionType = ReturnType<typeof userLoginAction> &
 
 const userReducer = (state = defaultState, action: ActionType) => {
     switch (action.type) {
-        case USER_LOGIN_ACTION_TYPE: {
+        case types.USER_LOGIN_ACTION_TYPE: {
             return action.payload;
         }
-        case USER_LOGOUT_ACTION_TYPE: {
+        case types.USER_LOGOUT_ACTION_TYPE: {
             return state;
         }
         default:

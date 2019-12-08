@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { AppContainer } from 'react-hot-loader';
 import { ConnectedRouter } from 'connected-react-router';
-import configureStore, { history } from './configureStore';
+import configureStore, { history } from './store/configureStore';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { IntlProvider } from 'react-intl';

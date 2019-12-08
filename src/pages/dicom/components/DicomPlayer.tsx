@@ -79,6 +79,7 @@ const DicomPlayer = () => {
     React.useEffect(() => {
         for (let i = 1; i <= 99; i++) {
             let img = new Image();
+            // let img = new HTMLImageElement();
             img.onload = function () {
                 let dt = new Date();
                 imageToShow.loaded = imageToShow.loaded + 1;

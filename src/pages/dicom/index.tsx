@@ -2,19 +2,16 @@ import React from 'react';
 import { createContext } from 'react';
 import { connect } from 'react-redux';
 import { DicomInfoSearchForm, ResizableTitle, DicomInfoTable } from './components/DicomManage';
-import { IDicomInfo, IDicomSearchState, IStoreState } from '../../constants/store.d';
+import { IDicomInfo, IDicomSearchState, IStoreState } from '../../constants/store';
 import {
     dicomSearchRequstedAction,
     dicomSearchSucceededAction,
     dicomSearchFailedAction,
-    DICOM_SEARCH_FAILED_ACTION,
-    DICOM_SEARCH_REQUESTED_ACTION,
-    DICOM_SEARCH_SUCCEEDED_ACTION
-} from '../../actions/dicom';
+} from '../../store/actions/dicom';
 import { ColumnProps } from 'antd/es/table';
 import { InputSizes } from 'antd/lib/input/Input';
 import moment from 'moment';
-import { Input, Button, Icon } from 'antd';
+import { Table, Input, Button, Icon } from 'antd';
 import Highlighter from 'react-highlight-words';
 import DicomPlayer from './components/DicomPlayer';
 import DicomUploader from './components/DicomUploader';
@@ -67,75 +64,6 @@ class Dicom extends React.Component<IProps, IState> {
         console.log(submitedFormData);
         this.props.dicomSearchRequstedAction(submitedFormData);
     }
-    // handleResize = (index: any) => (e: any, { size: any }) => {
-    //     this.setState(({ columns: any }) => {
-    //         const nextColumns = [...columns];
-    //         nextColumns[index] = {
-    //             ...nextColumns[index],
-    //             width: size.width,
-    //         }
-    //         return { columns: nextColumns };
-    //     })
-    // }
-    // getColumnSearchProps = (dataIndex: any) => ({
-    //     filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters }: any) => (
-    //         <div style={{ padding: 8 }}>
-    //             <Input
-    //                 ref={node => {
-    //                     this.searchInput = node;
-    //                 }}
-    //                 placeholder={`Search ${dataIndex}`}
-    //                 value={selectedKeys[0]}
-    //                 onChange={e => setSelectedKeys(e.target.value ? [e.target.value] : [])}
-    //                 onPressEnter={() => this.handleSearch(selectedKeys, confirm)}
-    //                 style={{ width: 188, marginBottom: 8, display: 'block' }}
-    //             />
-    //             <Button
-    //                 type="primary"
-    //                 onClick={() => this.handleSearch(selectedKeys, confirm)}
-    //                 icon="search"
-    //                 size="small"
-    //                 style={{ width: 90, marginRight: 8 }}
-    //             >
-    //                 Search
-    //         </Button>
-    //             <Button onClick={() => this.handleReset(clearFilters)} size="small" style={{ width: 90 }}>
-    //                 Reset
-    //         </Button>
-    //         </div>
-    //     ),
-    //     filterIcon: (filtered: any) => (
-    //         <Icon type="search" style={{ color: filtered ? '#1890ff' : undefined }} />
-    //     ),
-    //     onFilter: (value: any, record: any) =>
-    //         record[dataIndex]
-    //             .toString()
-    //             .toLowerCase()
-    //             .includes(value.toLowerCase()),
-    //     onFilterDropdownVisibleChange: (visible: any) => {
-    //         if (visible) {
-    //             setTimeout(() => this.searchInput.select());
-    //         }
-    //     },
-    //     render: (text: any) => (
-    //         <Highlighter
-    //             highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-    //             searchWords={[this.state.searchText]}
-    //             autoEscape
-    //             textToHighlight={text.toString()}
-    //         />
-    //     ),
-    // });
-
-    // handleSearch = (selectedKeys: any, confirm: any) => {
-    //     confirm();
-    //     this.setState({ searchText: selectedKeys[0] });
-    // };
-
-    // handleReset = (clearFilters: any) => {
-    //     clearFilters();
-    //     this.setState({ searchText: '' });
-    // };
     render() {
         const { fields } = this.state;
         // console.log(fields);

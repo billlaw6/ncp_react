@@ -1,10 +1,8 @@
 import React from 'react';
 // import { Route, Switch } from 'react-router-dom';
 import Home from '../pages/home';
-import Login from '../pages/login';
+import Login from '../pages/login/login';
 import Dicom from '../pages/dicom';
-import ToDo from '../pages/todo';
-import Counter from '../pages/counter';
 import Canvas from '../pages/canvas';
 
 const routes = [

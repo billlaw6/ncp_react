@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
-import { history } from '../configureStore';
+import { history } from '../store/configureStore';
 
 // let store = configureStore();
 let requestName: string;  // 每次发起请求都会携带这个参数，用于标识这次请求，如果值相等，则取消重复请求
@@ -17,6 +17,8 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // config 代表发起请求的参数的实体(可以发起一个请求在控制台打印一下这个config看看是什么东西)
     // 得到参数中的 requestName 字段，用于决定下次发起请求，取消对应的 相同字段的请求
@@ -31,10 +33,10 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // console.log(JSON.parse(persistRoot.token).token);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
     if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
-        console.log('valid token');
+        // console.log('valid token');
         config.headers.Authorization = 'Token ' + JSON.parse(persistRoot.token).token;
     } else {
-        console.log('invalide token');
+        // console.log('invalide token');
     }
 
     if (config.method === 'post') {
