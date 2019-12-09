@@ -1,6 +1,5 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
-import { useHistory, useLocation } from 'react-router-dom';
 import LoginForm from './login/LoginForm';
 import { userLoginAction, userLogoutAction } from '../../store/actions/user';
 import { ILoginState, IStoreState } from '../../constants/store';
@@ -14,6 +13,9 @@ import {
 import Dialog from './login/Dialog';
 import DialogCom from './login/DialogCom';
 import Clock from './login/Clock';
+import { userWeChatLogin } from '../../services/user';
+import qs from 'qs';
+import { history } from '../../store/configureStore';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -50,9 +52,29 @@ class Login extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             appid: 'wx0aee911ac049680c',
-            redirectUri: 'https://mediclouds.cn/wechat/login',
+            redirectUri: 'https://www.mediclouds.cn/',
             fields: props.token,
         }
+    }
+    
+    componentDidMount() {
+        // console.log('mounted')
+        // console.log(this.props.router.location)
+        let query = this.props.router.location.search.substr(1)
+        let obj = qs.parse(query)
+        console.log(obj);
+        userWeChatLogin(obj).then((res) => {
+            console.log(res);
+            let { data } = res
+            let token = data.token;
+            let user_info = data.user_info;
+            console.log(token);
+            console.log(user_info);
+            history.push('/canvas')
+        }, (err) => {
+            history.push('/')
+            console.log(err);
+        })
     }
 
     handleFormChange = (changedValues: ILoginState) => {

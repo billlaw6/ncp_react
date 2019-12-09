@@ -7,7 +7,8 @@ let requestName: string;  // 每次发起请求都会携带这个参数，用于
 
 switch (process.env.NODE_ENV) {
     case 'development':
-        axios.defaults.baseURL = 'http://123.56.115.20:8083/rest-api/';
+        // axios.defaults.baseURL = 'http://123.56.115.20:8083/rest-api/';
+        axios.defaults.baseURL = 'http://115.29.148.227:8083/rest-api/';
         break;
     case 'production':
         axios.defaults.baseURL = 'rest-api/';
@@ -17,7 +18,7 @@ switch (process.env.NODE_ENV) {
         break;
 }
 
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // config 代表发起请求的参数的实体(可以发起一个请求在控制台打印一下这个config看看是什么东西)
@@ -40,6 +41,8 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     }
 
     if (config.method === 'post') {
+        // console.log(config.data);
+        // console.log(qs.parse(config.data));
         if (config.data && qs.parse(config.data).requestName) {
             requestName = qs.parse(config.data).requestName;
         } else {
@@ -80,7 +83,7 @@ axios.interceptors.response.use((response: any) => {
 }, (error: any) => {
     // 两种错误返回类型
     let { response } = error;
-    // console.log(response);
+    console.log(response);
     if (response) {
         // 服务器返回了结果
         // console.log('response valid');
