@@ -1342,6 +1342,11 @@
   dependencies:
     "@babel/types" "^7.3.0"
 
+"@types/blueimp-md5@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.npm.taobao.org/@types/blueimp-md5/download/@types/blueimp-md5-2.7.0.tgz#404222806800478ca2782e8ad46590aba7f14627"
+  integrity sha1-QEIigGgAR4yieC6K1GWQq6fxRic=
+
 "@types/eslint-visitor-keys@^1.0.0":
   version "1.0.0"
   resolved "https://registry.npm.taobao.org/@types/eslint-visitor-keys/download/@types/eslint-visitor-keys-1.0.0.tgz#1ee30d79544ca84d68d4b3cdb0af4f205663dd2d"
@@ -1528,6 +1533,11 @@
   integrity sha1-suCajBY7Kw9QcualrEFHQADfIRE=
   dependencies:
     redux-devtools-extension "*"
+
+"@types/spark-md5@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.npm.taobao.org/@types/spark-md5/download/@types/spark-md5-3.0.2.tgz#da2e8a778a20335fc4f40b6471c4b0d86b70da55"
+  integrity sha1-2i6Kd4ogM1/E9AtkccSw2Gtw2lU=
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
@@ -2399,6 +2409,11 @@ blueimp-md5@2.10.0:
   version "2.10.0"
   resolved "https://registry.npm.taobao.org/blueimp-md5/download/blueimp-md5-2.10.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fblueimp-md5%2Fdownload%2Fblueimp-md5-2.10.0.tgz#02f0843921f90dca14f5b8920a38593201d6964d"
   integrity sha1-AvCEOSH5DcoU9biSCjhZMgHWlk0=
+
+blueimp-md5@^2.12.0:
+  version "2.12.0"
+  resolved "https://registry.npm.taobao.org/blueimp-md5/download/blueimp-md5-2.12.0.tgz?cache=0&sync_timestamp=1566909644607&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fblueimp-md5%2Fdownload%2Fblueimp-md5-2.12.0.tgz#be7367938a889dec3ffbb71138617c117e9c130a"
+  integrity sha1-vnNnk4qInew/+7cROGF8EX6cEwo=
 
 bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   version "4.11.8"
@@ -10584,6 +10599,11 @@ source-map@^0.7.3:
   version "0.7.3"
   resolved "https://registry.npm.taobao.org/source-map/download/source-map-0.7.3.tgz#5302f8169031735226544092e64981f751750383"
   integrity sha1-UwL4FpAxc1ImVECS5kmB91F1A4M=
+
+spark-md5@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.npm.taobao.org/spark-md5/download/spark-md5-3.0.0.tgz#3722227c54e2faf24b1dc6d933cc144e6f71bfef"
+  integrity sha1-NyIifFTi+vJLHcbZM8wUTm9xv+8=
 
 spdx-correct@^3.0.0:
   version "3.1.0"

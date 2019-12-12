@@ -1,12 +1,13 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import Routes from './routes';
+import { BrowserRouter, HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';
-import MyHeader from './pages/home/components/MyHeader';
+import MyHeader from './components/Header';
+import MyFooter from './components/Footer';
+import './app.less';
 
 const { Header, Footer, Sider, Content } = Layout;
-// const { SubMenu } = Menu;
 
 class App extends React.Component {
     constructor(props: any) {
@@ -14,28 +15,45 @@ class App extends React.Component {
     }
     render() {
         return (
-            <>
-                <Layout className="mediclouds-layout">
-                    <MyHeader />
-                    <Content>
-                        <Router>
+            <Layout className="mediclouds-layout">
+                <MyHeader />
+                <Layout>
+                    <Content id="content-container" className="content-container">
+                        <BrowserRouter>
                             <Switch>
-                                {Routes.map((item, index) => {
+                                {routes.map((item, index) => {
                                     return (
                                         <Route
                                             key={item.name}
                                             path={item.path}
                                             exact
-                                            component={item.component}
+                                            render={
+                                                () => {
+                                                    if (1) {
+                                                        return <item.component />;
+                                                    }
+                                                    return(<div>权限校验失败</div>);
+                                                }
+                                            }
                                         />
                                     );
                                 })}
+                                {/* 错误URL处理 */}
+                                {/*
+                                <Route render={()=>{
+                                    return(<div>Error page</div>);
+                                }} />
+                                */}
+                                <Redirect to={{
+                                    pathname: '/',
+                                    search: '?lx=404',
+                                }} />
                             </Switch>
-                        </Router>
+                        </BrowserRouter>
                     </Content>
-                    <Footer>Footer</Footer>
                 </Layout>
-            </>
+                <MyFooter></MyFooter>
+            </Layout>
         );
     }
 }

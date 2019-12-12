@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
-import { IDicomInfo, IDicomSearchState } from '../../../constants/store';
+import { IDicomInfo, IDicomSearchState } from '../../../constants';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';
@@ -20,7 +20,14 @@ interface IProps extends FormComponentProps {
     onSubmit(fields: IDicomSearchState): void,
 }
 
-class DicomManage extends React.Component<IProps, any> {
+const initialState = {
+    sDate: moment(new Date()).startOf('day'),
+    eDate: moment(new Date()).endOf('day'),
+}
+type IState = Readonly<typeof initialState>
+
+class DicomManage extends React.Component<IProps, IState> {
+    readonly state: IState = initialState;
     constructor(props: IProps) {
         super(props);
         console.log(props);

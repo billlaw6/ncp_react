@@ -2,17 +2,15 @@ import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import LoginForm from './login/LoginForm';
 import { userLoginAction, userLogoutAction } from '../../store/actions/user';
-import { ILoginState, IStoreState } from '../../constants/store';
-import WxLogin from './login/WxLogin';
-import './index.less';
+import { ILoginState, IStoreState } from '../../constants';
+import WeChatLogin from './components/WeChatLogin';
+import './login.less';
 import {
     tokenFetchRequstedAction,
     tokenFetchSucceededAction,
     tokenFetchFailedAction,
 } from '../../store/actions/token';
-import Dialog from './login/Dialog';
-import DialogCom from './login/DialogCom';
-import Clock from './login/Clock';
+import ContentLogo from './components/ContentLogo';
 import { userWeChatLogin } from '../../services/user';
 import qs from 'qs';
 import { history } from '../../store/configureStore';
@@ -52,7 +50,7 @@ class Login extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             appid: 'wx0aee911ac049680c',
-            redirectUri: 'https://www.mediclouds.cn/',
+            redirectUri: 'https://www.mediclouds.cn/login/',
             fields: props.token,
         }
     }
@@ -63,18 +61,20 @@ class Login extends React.Component<IProps, IState> {
         let query = this.props.router.location.search.substr(1)
         let obj = qs.parse(query)
         console.log(obj);
-        userWeChatLogin(obj).then((res) => {
-            console.log(res);
-            let { data } = res
-            let token = data.token;
-            let user_info = data.user_info;
-            console.log(token);
-            console.log(user_info);
-            history.push('/canvas')
-        }, (err) => {
-            history.push('/')
-            console.log(err);
-        })
+        if (obj.code) {
+            userWeChatLogin(obj).then((res) => {
+                console.log(res);
+                let { data } = res
+                let token = data.token;
+                let user_info = data.user_info;
+                console.log(token);
+                console.log(user_info);
+                history.push('/canvas')
+            }, (err) => {
+                console.log(err);
+                history.push('/error')
+            })
+        }
     }
 
     handleFormChange = (changedValues: ILoginState) => {
@@ -95,15 +95,17 @@ class Login extends React.Component<IProps, IState> {
         const { fields } = this.state;
         return (
             <div className="login-wrapper">
-                <LoginForm
+                <ContentLogo />
+                {/* <LoginForm
                     fields={fields}
                     onChange={this.handleFormChange}
                     onSubmit={this.handleFormSubmit}
+                /> */}
+                <WeChatLogin
+                    appid={this.state.appid}
+                    redirectUri={this.state.redirectUri}
+                    href="https://mediclouds-web-style.oss-cn-beijing.aliyuncs.com/qrcode.css"
                 />
-                <WxLogin appid={this.state.appid} redirectUri={this.state.redirectUri} />
-                <Dialog type={1} content='我是内容' />
-                <DialogCom type={1} content='我是内容' />
-                <Clock />
             </div>
         );
     }

@@ -1,5 +1,5 @@
 import * as types from '../action-types';
-import { ILoginState, IStoreState } from '../../constants/store';
+import { ILoginState, IStoreState } from '../../constants';
 
 // 用于在SAGA中触发请求
 export const tokenFetchRequstedAction = (payload: ILoginState) => ({

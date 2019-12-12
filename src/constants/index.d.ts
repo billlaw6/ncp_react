@@ -90,4 +90,5 @@ export {
     IToDoList,
     ICanvasState,
     IStoreState,
+    IRoute,
 };

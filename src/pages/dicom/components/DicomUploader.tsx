@@ -2,6 +2,7 @@ import React from 'react';
 import { Upload, Icon, message } from 'antd';
 import { uploadDicomFile } from '../../../services/dicom';
 import axios from '../../../services/api';
+import md5 from 'blueimp-md5';
 
 const { Dragger } = Upload;
 
@@ -24,8 +25,8 @@ const DicomUploader = () => {
   let headersAuthorization = '';
   const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
   if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
-      console.log('valid token');
-      headersAuthorization = 'Token ' + JSON.parse(persistRoot.token).token;
+    console.log('valid token');
+    headersAuthorization = 'Token ' + JSON.parse(persistRoot.token).token;
   }
   const props = {
     name: 'file',

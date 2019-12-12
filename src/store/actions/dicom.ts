@@ -1,4 +1,4 @@
-import { IDicomSearchState } from '../../constants/store';
+import { IDicomSearchState } from '../../constants';
 import * as types from '../action-types';
 
 // 用于在SAGA中触发请求
