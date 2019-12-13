@@ -45,8 +45,7 @@ type IState = {
         messages: Array<string>,
     }
 }
-// class Login extends React.Component<IProps, IState> {
-class Login extends React.Component<any, any> {
+class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -113,5 +112,5 @@ class Login extends React.Component<any, any> {
     }
 }
 
-export default Login;
-// export default connect(mapStateToProps, mapDispatchToProps)(Login);
+// export default Login;
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -32,8 +32,18 @@ class App extends React.Component {
                             </ul>
                             <Switch>
                                 {routes.map((item, index) => {
-                                    return <RouteWithSubRoutes key={index} {...item} />
+                                    return <Route
+                                        key={index}
+                                        exact={true}
+                                        path={item.path}
+                                        render={(props) => {
+                                            return <item.component routes={item.routes} />
+                                        }}
+                                        />
                                 })}
+                                {/* {routes.map((item, index) => {
+                                    return <RouteWithSubRoutes key={index} {...item} />
+                                })} */}
                                 {/* 错误URL处理 */}
                                 {/*
                                 <Route render={()=>{

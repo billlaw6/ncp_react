@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { createContext } from 'react';
 import { connect } from 'react-redux';
-import { Switch, Route, Link } from 'react-router-dom';
+import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom';
 import { DicomInfoSearchForm, ResizableTitle, DicomInfoTable } from './components/DicomManage';
 import { IDicomInfo, IDicomSearchState, IStoreState, } from '../../constants/interface';
 import {
@@ -17,11 +17,20 @@ import RouteWithSubRoutes from '../../components/RouteWithSubRoutes';
 
 declare interface IProps {
     routes?: Array<any>;
+    // mapStateToProps中的字段不需要在这声明
+    // pathname: string;
+    // search: string;
 }
 
-class Dicom extends React.Component<IProps> {
+const mapStateToProps = (state: IStoreState) => ({
+    pathname: state.router.location.pathname,
+    search: state.router.location.search,
+})
+
+class Dicom extends React.Component<IProps, object> {
     constructor(props: IProps) {
         super(props);
+        console.log(props);
     }
 
     render() {
@@ -36,15 +45,26 @@ class Dicom extends React.Component<IProps> {
                     </li>
                 </ul>
                 <Switch>
-                    <h3>Dicom Content</h3>
-                    {this.props.routes!.map((item: any, index: number) => {
+                    {/* {this.props.routes!.map((item, index) => {
+                        return <Route
+                            key={index}
+                            exact={true}
+                            path={item.path}
+                            render={(props) => {
+                                return <item.component routes={item.routes} />
+                            }}
+                        />
+                    })} */}
+                    <Route path="/dicom/viewer" component={DicomViewer} />
+                    <Route path="/dicom/uploader" component={DicomUploader} />
+                    {/* {this.props.routes!.map((item: any, index: number) => {
                         return <RouteWithSubRoutes key={index} {...item} />
-                    })}
+                    })} */}
                 </Switch>
             </>
         )
     }
 }
 
-// export default connect(mapStateToProps, mapDispatchToProps)(Dicom);
-export default Dicom;
+export default connect(mapStateToProps)(Dicom);
+// export default Dicom;
