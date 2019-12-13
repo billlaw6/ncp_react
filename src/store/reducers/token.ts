@@ -1,4 +1,4 @@
-import { ILoginState } from '../../constants';
+import { ILoginState } from '../../constants/interface';
 import { Action } from 'redux';
 import {
     tokenFetchRequstedAction,

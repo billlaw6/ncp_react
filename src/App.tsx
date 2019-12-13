@@ -1,13 +1,15 @@
 import React from 'react';
-import { BrowserRouter, HashRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Link, Route, Switch, Redirect } from 'react-router-dom';
 import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';
 import MyHeader from './components/Header';
 import MyFooter from './components/Footer';
+import RouteWithSubRoutes from './components/RouteWithSubRoutes';
 import './app.less';
 
 const { Header, Footer, Sider, Content } = Layout;
+
 
 class App extends React.Component {
     constructor(props: any) {
@@ -20,23 +22,17 @@ class App extends React.Component {
                 <Layout>
                     <Content id="content-container" className="content-container">
                         <BrowserRouter>
+                            <ul>
+                                <li>
+                                    <Link to="/login">Login</Link>
+                                </li>
+                                <li>
+                                    <Link to="/dicom">dicom</Link>
+                                </li>
+                            </ul>
                             <Switch>
                                 {routes.map((item, index) => {
-                                    return (
-                                        <Route
-                                            key={item.name}
-                                            path={item.path}
-                                            exact
-                                            render={
-                                                () => {
-                                                    if (1) {
-                                                        return <item.component />;
-                                                    }
-                                                    return(<div>权限校验失败</div>);
-                                                }
-                                            }
-                                        />
-                                    );
+                                    return <RouteWithSubRoutes key={index} {...item} />
                                 })}
                                 {/* 错误URL处理 */}
                                 {/*

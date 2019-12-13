@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Table, Button, Select, Input, DatePicker } from 'antd';
-import { IStoreState } from '../../../constants';
+import { IStoreState } from '../../../constants/interface';
 import { fetchUserListAction } from '../../../store/actions/user';
 
 const FormItem = Form.Item;

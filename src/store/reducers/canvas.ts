@@ -1,4 +1,4 @@
-import { ICanvasState } from '../../constants';
+import { ICanvasState } from '../../constants/interface';
 import { changeCanvasAction, EDIT_CANVAS_ACTION_TYPE } from '../actions/canvas';
 import { statement } from '@babel/template';
 

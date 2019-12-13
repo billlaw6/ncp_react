@@ -1,4 +1,4 @@
-import { IUserState } from '../../constants';
+import { IUserState } from '../../constants/interface';
 import { Action } from 'redux';
 import {
     userLoginAction,

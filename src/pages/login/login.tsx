@@ -2,7 +2,7 @@ import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
 import LoginForm from './login/LoginForm';
 import { userLoginAction, userLogoutAction } from '../../store/actions/user';
-import { ILoginState, IStoreState } from '../../constants';
+import { ILoginState, IStoreState } from '../../constants/interface';
 import WeChatLogin from './components/WeChatLogin';
 import './login.less';
 import {
@@ -45,7 +45,8 @@ type IState = {
         messages: Array<string>,
     }
 }
-class Login extends React.Component<IProps, IState> {
+// class Login extends React.Component<IProps, IState> {
+class Login extends React.Component<any, any> {
     constructor(props: IProps) {
         super(props);
         this.state = {
@@ -57,6 +58,7 @@ class Login extends React.Component<IProps, IState> {
     
     componentDidMount() {
         // console.log('mounted')
+        console.log(this.props)
         // console.log(this.props.router.location)
         let query = this.props.router.location.search.substr(1)
         let obj = qs.parse(query)
@@ -69,22 +71,22 @@ class Login extends React.Component<IProps, IState> {
                 let user_info = data.user_info;
                 console.log(token);
                 console.log(user_info);
-                history.push('/canvas')
+                // history.push('/canvas')
             }, (err) => {
                 console.log(err);
-                history.push('/error')
+                // history.push('/error')
             })
         }
     }
 
-    handleFormChange = (changedValues: ILoginState) => {
-        // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
-        this.setState(({ fields }) => ({
-            fields: { ...fields, ...changedValues},
-        }));
-        // console.log(changedValues);
-        this.props.tokenFetchSucceededAction(changedValues);
-    }
+    // handleFormChange = (changedValues: ILoginState) => {
+    //     // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
+    //     this.setState(({ fields }) => ({
+    //         fields: { ...fields, ...changedValues},
+    //     }));
+    //     // console.log(changedValues);
+    //     this.props.tokenFetchSucceededAction(changedValues);
+    // }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
         // console.log(submitedFormData);
@@ -111,5 +113,5 @@ class Login extends React.Component<IProps, IState> {
     }
 }
 
-// export default Login;
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default Login;
+// export default connect(mapStateToProps, mapDispatchToProps)(Login);

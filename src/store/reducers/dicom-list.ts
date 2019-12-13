@@ -1,4 +1,4 @@
-import { IDicomSearchState } from '../../constants';
+import { IDicomSearchState } from '../../constants/interface';
 import {
     dicomSearchRequstedAction,
     dicomSearchSucceededAction,

@@ -1,5 +1,5 @@
 import { userLogin, userLogout } from '../../services/user';
-import { IUserState, IUserList } from '../../constants';
+import { IUserState, IUserList } from '../../constants/interface';
 import * as types from '../action-types';
 
 // 登录成功后更新state里的user.token

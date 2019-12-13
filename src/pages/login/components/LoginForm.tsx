@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { FormComponentProps } from 'antd/es/form';
-import { ILoginState } from '../../../constants';
+import { ILoginState } from '../../../constants/interface';
 import { userLoginAction } from '../../../store/actions/user';
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
