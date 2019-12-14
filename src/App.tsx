@@ -34,7 +34,7 @@ class App extends React.Component {
                                 {routes.map((item, index) => {
                                     return <Route
                                         key={index}
-                                        exact={true}
+                                        exact={item.exact}
                                         path={item.path}
                                         render={(props) => {
                                             return <item.component routes={item.routes} />

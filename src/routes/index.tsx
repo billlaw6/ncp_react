@@ -10,22 +10,29 @@ import DicomViewer from '../pages/dicom/components/DicomViewer';
 const routes = [
     {
         path: '/',
-        component: Home
+        exact: true,
+        component: Home,
+        routes: [],
     },
     {
         path: '/login',
-        component: Login
+        exact: true,
+        component: Login,
+        routes: [],
     },
     {
         path: '/dicom',
+        exact: false,
         component: Dicom,
         routes: [
             {
                 path: '/dicom/upload',
+                exact: true,
                 component: DicomUploader,
             },
             {
                 path: '/dicom/viewer',
+                exact: true,
                 component: DicomViewer,
             },
         ]

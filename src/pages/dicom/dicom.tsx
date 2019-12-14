@@ -22,11 +22,6 @@ declare interface IProps {
     // search: string;
 }
 
-const mapStateToProps = (state: IStoreState) => ({
-    pathname: state.router.location.pathname,
-    search: state.router.location.search,
-})
-
 class Dicom extends React.Component<IProps, object> {
     constructor(props: IProps) {
         super(props);
@@ -66,5 +61,9 @@ class Dicom extends React.Component<IProps, object> {
     }
 }
 
+const mapStateToProps = (state: IStoreState) => ({
+    pathname: state.router.location.pathname,
+    search: state.router.location.search,
+})
+
 export default connect(mapStateToProps)(Dicom);
-// export default Dicom;
