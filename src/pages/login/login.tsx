@@ -10,6 +10,7 @@ import {
     tokenFetchSucceededAction,
     tokenFetchFailedAction,
 } from '../../store/actions/token';
+import * as types from '../../store/action-types';
 import ContentLogo from './components/ContentLogo';
 import { userWeChatLogin } from '../../services/user';
 import qs from 'qs';
@@ -63,11 +64,19 @@ class Login extends React.Component<IProps, IState> {
         let obj = qs.parse(query)
         console.log(obj);
         if (obj.code) {
+            console.log('loging');
             userWeChatLogin(obj).then((res) => {
                 console.log(res);
                 let { data } = res
                 let token = data.token;
                 let user_info = data.user_info;
+                this.props.tokenFetchSucceededAction(
+                    {
+                        token: token,
+                        username: '',
+                        password: '',
+                        messages: [],
+                    })
                 console.log(token);
                 console.log(user_info);
                 // history.push('/canvas')
@@ -75,6 +84,8 @@ class Login extends React.Component<IProps, IState> {
                 console.log(err);
                 // history.push('/error')
             })
+        } else {
+            console.log('no code');
         }
     }
 
