@@ -7,21 +7,21 @@ import md5 from 'blueimp-md5';
 const { Dragger } = Upload;
 
 const DicomUploader = () => {
-  function handleDicomUpload(file: any): Promise<string> {
-    console.log(file);
-    return new Promise((resolve) => {
-      let formData = new FormData();
-      formData.append('file', file);
-      formData.append('filename', file.name);
-      console.log(formData);
-      uploadDicomFile(formData).then((res) => {
-        console.log(res);
-        resolve('dicom');
-      }, (error) => {
-        console.error(error);
-      });
-    });
-  };
+  // function handleDicomUpload(file: any): Promise<string> {
+  //   console.log(file);
+  //   return new Promise((resolve) => {
+  //     let formData = new FormData();
+  //     formData.append('file', file);
+  //     formData.append('filename', file.name);
+  //     console.log(formData);
+  //     uploadDicomFile(formData).then((res) => {
+  //       console.log(res);
+  //       resolve('dicom');
+  //     }, (error) => {
+  //       console.error(error);
+  //     });
+  //   });
+  // };
   let headersAuthorization = '';
   const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
   if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
@@ -31,7 +31,7 @@ const DicomUploader = () => {
   const props = {
     name: 'file',
     multiple: true,
-    customRequest: handleDicomUpload,
+    // customRequest: handleDicomUpload,
     action: `${axios.defaults.baseURL}` + 'dicom/upload/',
     // method: 'post',
     headers: {

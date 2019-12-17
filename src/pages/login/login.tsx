@@ -69,6 +69,7 @@ class Login extends React.Component<IProps, IState> {
                 console.log(res);
                 let { data } = res
                 let token = data.token;
+                console.log(token);
                 let user_info = data.user_info;
                 this.props.tokenFetchSucceededAction(
                     {
@@ -89,14 +90,14 @@ class Login extends React.Component<IProps, IState> {
         }
     }
 
-    // handleFormChange = (changedValues: ILoginState) => {
-    //     // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
-    //     this.setState(({ fields }) => ({
-    //         fields: { ...fields, ...changedValues},
-    //     }));
-    //     // console.log(changedValues);
-    //     this.props.tokenFetchSucceededAction(changedValues);
-    // }
+    handleFormChange = (changedValues: ILoginState) => {
+        // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
+        this.setState(({ fields }) => ({
+            fields: { ...fields, ...changedValues},
+        }));
+        // console.log(changedValues);
+        this.props.tokenFetchSucceededAction(changedValues);
+    }
 
     handleFormSubmit = (submitedFormData: ILoginState) => {
         // console.log(submitedFormData);
@@ -108,11 +109,11 @@ class Login extends React.Component<IProps, IState> {
         return (
             <div className="login-wrapper">
                 <ContentLogo />
-                {/* <LoginForm
+                <LoginForm
                     fields={fields}
                     onChange={this.handleFormChange}
                     onSubmit={this.handleFormSubmit}
-                /> */}
+                />
                 <WeChatLogin
                     appid={this.state.appid}
                     redirectUri={this.state.redirectUri}
