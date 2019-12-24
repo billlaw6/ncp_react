@@ -5,7 +5,7 @@ import { IStoreState } from "../../constants/interface";
 import { DatePicker } from 'antd';
 
 const mapStateToProps = (storeState: IStoreState) => ({
-    canvas: storeState.canvas
+    // canvas: storeState.canvas
 })
 
 type IStateProps = ReturnType<typeof mapStateToProps>;

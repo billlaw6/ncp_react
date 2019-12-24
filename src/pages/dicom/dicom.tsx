@@ -1,14 +1,8 @@
 import React, { FC } from 'react';
-import { createContext } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom';
-import { DicomInfoSearchForm, ResizableTitle, DicomInfoTable } from './components/DicomManage';
-import { IDicomInfo, IDicomSearchState, IStoreState, } from '../../constants/interface';
-import {
-    dicomSearchRequstedAction,
-    dicomSearchSucceededAction,
-    dicomSearchFailedAction,
-} from '../../store/actions/dicom';
+import { DicomInfoSearchForm, ResizableTitle, ExamIndexTable } from './components/DicomManage';
+import { IExamIndexList, ISearchForm, IStoreState, } from '../../constants/interface';
 import { Table, Input, Button, Icon } from 'antd';
 import DicomViewer from './components/DicomViewer';
 import DicomUploader from './components/DicomUploader';

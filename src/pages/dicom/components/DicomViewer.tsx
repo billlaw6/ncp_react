@@ -119,7 +119,7 @@ class DicomPlayer extends React.Component <IProps, IState, any> {
                 <h3>Viewer</h3>
                 <div style={{ width: '100%', height: 'auto' }} id={'scrollBOx'}>
                     <canvas ref={this.state.canvasRef} width="1024" height="768"></canvas>
-                    <Button type="primary" onClick={this.handleClick}></Button>
+                    <Button type="primary" onClick={this.handleClick}>Button Here</Button>
                 </div>
             </>
         );

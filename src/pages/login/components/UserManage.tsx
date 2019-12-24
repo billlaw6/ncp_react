@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Table, Button, Select, Input, DatePicker } from 'antd';
 import { IStoreState } from '../../../constants/interface';
-import { fetchUserListAction } from '../../../store/actions/user';
+import { setUserListAction } from '../../../store/actions/user';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -9,13 +9,13 @@ const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围
 
 const mapStateToProps = (state: IStoreState) => {
     return {
-        userList: state.userList,
+        userList: state.userInfoList,
     };
 };
 type IStateProps = ReturnType<typeof mapStateToProps>;
 
 const mapDispatchToProps = {
-    fetchUserListAction,
+    setUserListAction,
 };
 
 class UserManage extends React.Component {

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
-import { IDicomInfo, IDicomSearchState } from '../../../constants/interface';
+import { IExamIndexList, ISearchForm } from '../../../constants/interface';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';
@@ -15,9 +15,9 @@ const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围
 
 // 组件不直接从reducer取数，通过父项传进来。
 interface IProps extends FormComponentProps {
-    fields: IDicomSearchState,
-    onChange(fields: IDicomSearchState): void,
-    onSubmit(fields: IDicomSearchState): void,
+    fields: ISearchForm,
+    onChange(fields: ISearchForm): void,
+    onSubmit(fields: ISearchForm): void,
 }
 
 const initialState = {
@@ -158,6 +158,6 @@ export const ResizableTitle = (props: any) => {
     );
 };
 
-export class DicomInfoTable extends Table<IDicomInfo> {}
+export class ExamIndexTable extends Table<IExamIndexList> {}
 
 // export default { DicomInfoSearchForm, DicomInfoTable };

@@ -1,25 +1,20 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { FormComponentProps } from 'antd/es/form';
-import { ILoginState } from '../../../constants/interface';
-import { userLoginAction } from '../../../store/actions/user';
+import { ILoginForm } from '../../../constants/interface';
 import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
 interface ILoginFormProps extends FormComponentProps {
-    fields: ILoginState,
-    onChange(fields: ILoginState): void,
-    onSubmit(fields: ILoginState): void,
+    fields: ILoginForm,
+    onChange(fields: ILoginForm): void,
+    onSubmit(fields: ILoginForm): void,
 }
 
 class LoginForm extends React.Component<ILoginFormProps, any> {
-    constructor(props: ILoginFormProps) {
-        super(props);
-        // console.log(props);
-    }
     componentDidMount() {
         // To disabled submit button at the beginning.
-        this.props.form.validateFields();
+        // this.props.form.validateFields();
     }
     handleSubmit = (e: any) => {
         e.preventDefault();
@@ -83,9 +78,9 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
                 <Form.Item>
                     {getFieldDecorator('remember', {
                         valuePropName: 'checked',
-                        initialValue: true,
+                        initialValue: false,
                     })(<Checkbox>Remember me</Checkbox>)}
-                    <a className="login-form-forgot" href="">
+                    <a className="login-form-forgot" href="/password/reset/">
                         Forgot password
                     </a>
                     <Button
@@ -94,7 +89,6 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
                         className="login-form-button">
                         Log in
                     </Button>
-                    Or <a href="">register now!</a>
                 </Form.Item>
             </Form>
         );
@@ -116,9 +110,13 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
                 ...props.fields.password,
                 value: props.fields.password,
             }),
+            remember: Form.createFormField({
+                ...props.fields.remember,
+                value: props.fields.remember,
+            }),
         };
     },
-    // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginState) {
+    // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginForm) {
     //     console.log(changedFields);
     // },
     onValuesChange(props, changedValues, allValues) {

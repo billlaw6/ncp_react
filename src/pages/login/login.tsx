@@ -1,58 +1,53 @@
 import React, { ChangeEventHandler } from 'react';
 import { connect } from 'react-redux';
-import LoginForm from './login/LoginForm';
-import { userLoginAction, userLogoutAction } from '../../store/actions/user';
-import { ILoginState, IStoreState } from '../../constants/interface';
+import LoginForm from './components/LoginForm';
+import { setWeChatCodeAction, setLoginFormAction, submitLoginFormAction, setCurrentUserAction } from '../../store/actions/user';
+import { ILoginForm, IStoreState } from '../../constants/interface';
 import WeChatLogin from './components/WeChatLogin';
 import './login.less';
-import {
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction,
-} from '../../store/actions/token';
-import * as types from '../../store/action-types';
 import ContentLogo from './components/ContentLogo';
-import { userWeChatLogin } from '../../services/user';
 import qs from 'qs';
-import { history } from '../../store/configureStore';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
     return {
         router: state.router,
-        user: state.user,
-        token: state.token,
+        loginForm: state.loginForm,
+        currentUser: state.currentUser,
     };
 };
 type IStateProps = ReturnType<typeof mapStateToProps>;
 
 const mapDispatchToProps = {
-    userLoginAction,
-    userLogoutAction,
-    tokenFetchRequstedAction,
-    tokenFetchSucceededAction,
-    tokenFetchFailedAction,
+    setWeChatCodeAction,
+    setLoginFormAction,
+    submitLoginFormAction,
+    setCurrentUserAction,
 };
 type IDispatchProps = typeof mapDispatchToProps;
 type IProps = IStateProps & IDispatchProps;
 
 type IState = {
-    appid: string,
-    redirectUri: string,
+    // LoginForm用的组件内State
     fields: {
         username: string,
         password: string,
-        token: string,
+        remember: boolean,
         messages: Array<string>,
     }
+    // 微信扫码用的State
+    appid: string,
+    redirectUri: string,
 }
+
 class Login extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
         this.state = {
             appid: 'wx0aee911ac049680c',
             redirectUri: 'https://www.mediclouds.cn/login/',
-            fields: props.token,
+            // 使用Reducer里设置的初始值
+            fields: props.loginForm,
         }
     }
     
@@ -64,44 +59,24 @@ class Login extends React.Component<IProps, IState> {
         let obj = qs.parse(query)
         console.log(obj);
         if (obj.code) {
+            this.props.setWeChatCodeAction(obj.code)
             console.log('loging');
-            userWeChatLogin(obj).then((res) => {
-                console.log(res);
-                let { data } = res
-                let token = data.token;
-                console.log(token);
-                let user_info = data.user_info;
-                this.props.tokenFetchSucceededAction(
-                    {
-                        token: token,
-                        username: '',
-                        password: '',
-                        messages: [],
-                    })
-                console.log(token);
-                console.log(user_info);
-                // history.push('/canvas')
-            }, (err) => {
-                console.log(err);
-                // history.push('/error')
-            })
         } else {
             console.log('no code');
         }
     }
 
-    handleFormChange = (changedValues: ILoginState) => {
+    handleFormChange = (changedValues: ILoginForm) => {
         // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
         this.setState(({ fields }) => ({
             fields: { ...fields, ...changedValues},
         }));
         // console.log(changedValues);
-        this.props.tokenFetchSucceededAction(changedValues);
+        this.props.setLoginFormAction(changedValues);
     }
 
-    handleFormSubmit = (submitedFormData: ILoginState) => {
-        // console.log(submitedFormData);
-        this.props.tokenFetchRequstedAction(submitedFormData);
+    handleFormSubmit = (submitedFormData: ILoginForm) => {
+        this.props.submitLoginFormAction(submitedFormData);
     }
 
     render() {

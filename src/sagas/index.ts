@@ -1,26 +1,16 @@
 import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
 import {
-  tokenFetchRequstedAction,
-  tokenFetchSucceededAction,
-  tokenFetchFailedAction,
-} from '../store/actions/token';
-import { userLogin } from '../services/user';
-import {
-  dicomSearchFailedAction,
-  dicomSearchRequstedAction,
-  dicomSearchSucceededAction,
-} from '../store/actions/dicom';
+  setCurrentUserAction,
+  setWeChatCodeAction,
+} from '../store/actions/user';
+import { userWeChatLogin, userLogin } from '../services/user';
 import * as types from '../store/action-types';
-import { searchDicomInfo, searchDicomFile } from '../services/dicom';
 
-// worker Saga : 将在 USER_FETCH_REQUESTED action 被 dispatch 时调用
-declare type ITokenActionType = ReturnType<typeof tokenFetchSucceededAction> &
-  ReturnType<typeof tokenFetchFailedAction> &
-  ReturnType<typeof tokenFetchRequstedAction>
-function* fetchToken(action: ITokenActionType) {
+// worker Saga : 将在 action 被 dispatch 时调用
+function* weChatLogin(action: any) {
   try {
     // console.log(action.payload);
-    const res = yield call(userLogin, action.payload);
+    const res = yield call(userWeChatLogin, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
     const succeededPayload = {
@@ -29,7 +19,7 @@ function* fetchToken(action: ITokenActionType) {
       message: '',
     }
     console.log(succeededPayload);
-    yield put({ type: types.TOKEN_FETCH_SUCCEEDED_ACTION, payload: succeededPayload });
+    yield put({ type: types.SET_CURRENT_USER, payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -39,42 +29,41 @@ function* fetchToken(action: ITokenActionType) {
         message: error.response.data.non_field_errors,
       }
       // console.log(failedPayload);
-      yield put({ type: types.TOKEN_FETCH_FAILED_ACTION, payload: failedPayload });
+      yield put({ type: types.SET_CURRENT_USER, payload: failedPayload });
     }
   }
 }
 
-declare type IDicomInfoActionType = ReturnType<typeof tokenFetchSucceededAction> &
-  ReturnType<typeof tokenFetchFailedAction> &
-  ReturnType<typeof tokenFetchRequstedAction>
-function* fetchDicomInfo(action: IDicomInfoActionType) {
+function* formLogin(action: any) {
   try {
-    // console.log(action.payload);
-    const res = yield call(searchDicomInfo, action.payload);
+    const res = yield call(userLogin, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
     const succeededPayload = {
       ...action.payload,
-      count: res.data.count,
-      results: res.data.results,
+      token: res.data.key,
+      message: '',
     }
     console.log(succeededPayload);
-    yield put({ type: types.DICOM_SEARCH_SUCCEEDED_ACTION , payload: succeededPayload });
+    yield put({ type: types.SET_CURRENT_USER, payload: succeededPayload });
   } catch (error) {
     console.log(error.response);
-    const failedPayload = {
-      ...action.payload,
-      count: 0,
-      results: [],
+    if (error.response) {
+      const failedPayload = {
+        ...action.payload,
+        token: '',
+        message: error.response.data.non_field_errors,
+      }
+      // console.log(failedPayload);
+      yield put({ type: types.SET_CURRENT_USER, payload: failedPayload });
     }
-    console.log(failedPayload);
-    yield put({ type: types.DICOM_SEARCH_FAILED_ACTION, payload: failedPayload });
   }
 }
 
+
 function* rootSaga() {
-  yield takeEvery(types.TOKEN_FETCH_REQUESTED_ACTION, fetchToken);
-  yield takeEvery(types.DICOM_SEARCH_REQUESTED_ACTION, fetchDicomInfo);
+  yield takeEvery(types.SET_WECHAT_CODE, weChatLogin);
+  yield takeEvery(types.SUBMIT_LOGIN_FORM, formLogin);
 }
 
 export default rootSaga;

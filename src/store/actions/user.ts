@@ -1,23 +1,33 @@
-import { userLogin, userLogout } from '../../services/user';
-import { IUserState, IUserList } from '../../constants/interface';
+import { ILoginForm, IUserInfo, ICurrentUser } from '../../constants/interface';
 import * as types from '../action-types';
 
-// 登录成功后更新state里的user.token
 
-export const userLoginAction = (payload: IUserState) => ({
-    type: types.USER_LOGIN_ACTION_TYPE,
+export const setWeChatCodeAction = (payload: string) => ({
+    type: types.SET_WECHAT_CODE,
     payload,
 })
 
-export const userLogoutAction = () => ({
-    type: types.USER_LOGOUT_ACTION_TYPE,
-});
-
-export const fetchUserListAction = () => ({
-    type: types.FETCH_USER_ACTION_TYPE,
-});
-
-export const fetchUserListSuccess = (payload: IUserList) => ({
-    type: types.FETCH_USER_LIST_SUCCESS_TYPE,
+export const setCurrentUserAction = (payload: ICurrentUser) => ({
+    type: types.SET_CURRENT_USER,
     payload,
 })
+
+export const setLoginFormAction = (payload: ILoginForm) => ({
+    type: types.SET_LOGIN_FORM,
+    payload,
+})
+
+export const submitLoginFormAction = (payload: ILoginForm) => ({
+    type: types.SUBMIT_LOGIN_FORM,
+    payload,
+})
+
+export const setUserInfoAction = (payload: IUserInfo) => ({
+    type: types.SET_USER_INFO,
+    payload,
+});
+
+export const setUserListAction = (payload: IUserInfo[]) => ({
+    type: types.SET_USER_LIST,
+    payload,
+});
