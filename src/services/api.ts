@@ -7,11 +7,10 @@ let requestName: string;  // 每次发起请求都会携带这个参数，用于
 
 switch (process.env.NODE_ENV) {
     case 'development':
-        // axios.defaults.baseURL = 'http://123.56.115.20:8083/rest-api/';
         axios.defaults.baseURL = 'http://115.29.148.227:8083/rest-api/';
         break;
     case 'production':
-        axios.defaults.baseURL = 'rest-api/';
+        axios.defaults.baseURL = 'https://www.mediclouds.cn/rest-api/';
         break;
     default:
         axios.defaults.baseURL = 'rest-api/';
@@ -31,13 +30,13 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
     // console.log(persistRoot.token);
     // 注意对象的多重解析
-    // console.log(JSON.parse(persistRoot.token).token);
+    console.log(JSON.parse(persistRoot.currentUser).token);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
-    if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
-        // console.log('valid token');
-        config.headers.Authorization = 'Token ' + JSON.parse(persistRoot.token).token;
+    if (persistRoot.currentUser && JSON.parse(persistRoot.currentUser).token.length > 2) {
+        console.log('valid token' + JSON.parse(persistRoot.currentUser).token);
+        config.headers.Authorization = 'Token ' + JSON.parse(persistRoot.currentUser).token;
     } else {
-        // console.log('invalide token');
+        console.log('invalide token');
     }
 
     if (config.method === 'post') {

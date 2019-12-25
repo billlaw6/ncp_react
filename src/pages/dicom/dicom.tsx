@@ -24,26 +24,13 @@ class Dicom extends React.Component<IProps, object> {
         return (
             <>
                 <ul>
-                    <li>
-                        <Link to="/dicom/viewer">viewer</Link>
-                    </li>
-                    <li>
-                        <Link to="/dicom/uploader">uploader</Link>
-                    </li>
+                    {this.props.routes!.map((item, index) => {
+                        return <li key={index}>
+                            <Link to={item.path}>{item.name}</Link>
+                        </li>
+                    })}
                 </ul>
                 <Switch>
-                    {/* {this.props.routes!.map((item, index) => {
-                        return <Route
-                            key={index}
-                            exact={true}
-                            path={item.path}
-                            render={(props) => {
-                                return <item.component routes={item.routes} />
-                            }}
-                        />
-                    })} */}
-                    <Route path="/dicom/viewer" component={DicomViewer} />
-                    <Route path="/dicom/uploader" component={DicomUploader} />
                     {this.props.routes!.map((item: any, index: number) => {
                         return <RouteWithSubRoutes key={index} {...item} />
                     })}

@@ -24,9 +24,9 @@ const DicomUploader = () => {
   // };
   let headersAuthorization = '';
   const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
-  if (persistRoot.token && JSON.parse(persistRoot.token).token.length > 2) {
+  if (persistRoot.currentUser && JSON.parse(persistRoot.currentUser).token.length > 2) {
     console.log('valid token');
-    headersAuthorization = 'Token ' + JSON.parse(persistRoot.token).token;
+    headersAuthorization = 'Token ' + JSON.parse(persistRoot.currentUser).token;
   }
   const props = {
     name: 'file',

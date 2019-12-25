@@ -20,24 +20,13 @@ class App extends React.Component {
                     <Content id="content-container" className="content-container">
                         <BrowserRouter>
                             <ul>
-                                <li>
-                                    <Link to="/login">Login</Link>
-                                </li>
-                                <li>
-                                    <Link to="/dicom">dicom</Link>
-                                </li>
+                                {routes.map((item, index) => {
+                                    return <li key={index}>
+                                        <Link to={item.path}>{item.name}</Link>
+                                    </li>
+                                })}
                             </ul>
                             <Switch>
-                                {/* {routes.map((item, index) => {
-                                    return <Route
-                                        key={index}
-                                        exact={item.exact}
-                                        path={item.path}
-                                        render={(props) => {
-                                            return <item.component routes={item.routes} />
-                                        }}
-                                        />
-                                })} */}
                                 {routes.map((item, index) => {
                                     return <RouteWithSubRoutes key={index} {...item} />
                                 })}
