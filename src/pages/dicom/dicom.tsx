@@ -10,10 +10,8 @@ import RouteWithSubRoutes from '../../components/RouteWithSubRoutes';
 
 
 declare interface IProps {
+    // 父项传进来的本模块的子路由
     routes?: Array<any>;
-    // mapStateToProps中的字段不需要在这声明
-    // pathname: string;
-    // search: string;
 }
 
 class Dicom extends React.Component<IProps, object> {
@@ -46,9 +44,9 @@ class Dicom extends React.Component<IProps, object> {
                     })} */}
                     <Route path="/dicom/viewer" component={DicomViewer} />
                     <Route path="/dicom/uploader" component={DicomUploader} />
-                    {/* {this.props.routes!.map((item: any, index: number) => {
+                    {this.props.routes!.map((item: any, index: number) => {
                         return <RouteWithSubRoutes key={index} {...item} />
-                    })} */}
+                    })}
                 </Switch>
             </>
         )

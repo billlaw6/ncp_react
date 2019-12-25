@@ -12,9 +12,6 @@ const { Header, Footer, Sider, Content } = Layout;
 
 
 class App extends React.Component {
-    constructor(props: any) {
-        super(props);
-    }
     render() {
         return (
             <Layout className="mediclouds-layout">
@@ -31,7 +28,7 @@ class App extends React.Component {
                                 </li>
                             </ul>
                             <Switch>
-                                {routes.map((item, index) => {
+                                {/* {routes.map((item, index) => {
                                     return <Route
                                         key={index}
                                         exact={item.exact}
@@ -40,10 +37,11 @@ class App extends React.Component {
                                             return <item.component routes={item.routes} />
                                         }}
                                         />
-                                })}
-                                {/* {routes.map((item, index) => {
-                                    return <RouteWithSubRoutes key={index} {...item} />
                                 })} */}
+                                {routes.map((item, index) => {
+                                    return <RouteWithSubRoutes key={index} {...item} />
+                                })}
+
                                 {/* 错误URL处理 */}
                                 {/*
                                 <Route render={()=>{

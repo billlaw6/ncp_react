@@ -77,7 +77,7 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
                 </Form.Item>
                 <Form.Item>
                     {getFieldDecorator('remember', {
-                        valuePropName: 'checked',
+                        valuePropName: 'remember',
                         initialValue: false,
                     })(<Checkbox>Remember me</Checkbox>)}
                     <a className="login-form-forgot" href="/password/reset/">
@@ -99,19 +99,16 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
 // const WrappedLoginForm = Form.create<IProps>()( LoginForm,);
 const WrappedLoginForm = Form.create<ILoginFormProps>({
     name: 'login_form',
-    mapPropsToFields(props: any) {
-        console.log(props.fields.username);
+    mapPropsToFields(props: ILoginFormProps) {
+        console.log(props.fields);
         return {
             username: Form.createFormField({
-                ...props.fields.username,
                 value: props.fields.username,
             }),
             password: Form.createFormField({
-                ...props.fields.password,
                 value: props.fields.password,
             }),
             remember: Form.createFormField({
-                ...props.fields.remember,
                 value: props.fields.remember,
             }),
         };

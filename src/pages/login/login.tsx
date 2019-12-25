@@ -72,10 +72,11 @@ class Login extends React.Component<IProps, IState> {
             fields: { ...fields, ...changedValues},
         }));
         // console.log(changedValues);
-        this.props.setLoginFormAction(changedValues);
+        // this.props.setLoginFormAction(changedValues);
     }
 
     handleFormSubmit = (submitedFormData: ILoginForm) => {
+        // this.props.setLoginFormAction(submitedFormData);
         this.props.submitLoginFormAction(submitedFormData);
     }
 
