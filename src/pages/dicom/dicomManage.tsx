@@ -1,11 +1,9 @@
 import React, { FC } from 'react';
 import { connect } from 'react-redux';
 import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom';
-import { DicomInfoSearchForm, ResizableTitle, ExamIndexTable } from './components/DicomManage';
+import ExamIndexTable from './components/ExamIndexTable';
 import { IExamIndexList, ISearchForm, IStoreState, } from '../../constants/interface';
 import { Table, Input, Button, Icon } from 'antd';
-import DicomViewer from './components/DicomViewer';
-import DicomUploader from './components/DicomUploader';
 import RouteWithSubRoutes from '../../components/RouteWithSubRoutes';
 
 

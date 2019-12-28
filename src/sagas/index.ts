@@ -3,11 +3,15 @@ import {
   setWeChatCodeAction,
   submitLoginFormAction,
 } from '../store/actions/user';
+import {
+  submitExamIndexSearchAction,
+} from '../store/actions/dicom';
 import { userWeChatLogin, userLogin } from '../services/user';
 import * as types from '../store/action-types';
+import { push } from 'connected-react-router';
 
 // worker Saga : 将在 action 被 dispatch 时调用
-function* weChatLogin(action: ReturnType <typeof setWeChatCodeAction>) {
+function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
   try {
     // console.log(action.payload);
     const res = yield call(userWeChatLogin, action.payload);
@@ -20,20 +24,45 @@ function* weChatLogin(action: ReturnType <typeof setWeChatCodeAction>) {
     }
     console.log(succeededPayload);
     yield put({ type: types.SET_CURRENT_USER, payload: succeededPayload });
+    // history.push('/dicom/upload/')
+    yield put(push('/dicom/upload/'))
   } catch (error) {
     console.log(error.response);
     if (error.response) {
-      yield put({ type: types.SET_CURRENT_USER, payload: {token: ''}});
+      yield put({ type: types.SET_CURRENT_USER, payload: { token: '' } });
     }
   }
 }
 
-function* formLogin(action: ReturnType <typeof submitLoginFormAction>) {
+function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
+  try {
+    const res = yield call(userLogin, action.payload);
+    console.log(res);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_CURRENT_USER, payload: { token: res.data.key } });
+    // 只变了URL没渲染页面
+    // history.push('/dicom/upload/')
+    yield put(push('/dicom/upload/'))
+  } catch (error) {
+    console.log(error.response);
+    if (error.response) {
+      const failedPayload = {
+        ...action.payload,
+        message: error.response.data.non_field_errors,
+      }
+      console.log(failedPayload);
+      yield put({ type: types.SET_LOGIN_FORM, payload: failedPayload });
+    }
+  }
+}
+
+function* searchExamIndex(action: ReturnType <typeof submitExamIndexSearchAction>) {
   try {
     const res = yield call(userLogin, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_CURRENT_USER, payload: {token: res.data.key}});
+    yield put(push('/dicom/upload/'))
   } catch (error) {
     console.log(error.response);
     if (error.response) {
@@ -51,6 +80,7 @@ function* formLogin(action: ReturnType <typeof submitLoginFormAction>) {
 function* rootSaga() {
   yield takeEvery(types.SET_WECHAT_CODE, weChatLogin);
   yield takeEvery(types.SUBMIT_LOGIN_FORM, formLogin);
+  yield takeEvery(types.SUBMIT_EXAM_INDEX_SEARCH_FORM, searchExamIndex);
 }
 
 export default rootSaga;

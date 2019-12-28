@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Table, Icon, Button, Select, Input, DatePicker } from 'antd';
-import { IExamIndexList, ISearchForm } from '../../../constants/interface';
 import { FormComponentProps } from 'antd/es/form';
 import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';
@@ -8,55 +7,66 @@ import { Resizable } from 'react-resizable';
 // import { connect } from 'react-redux';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
+import { IExamIndexList, ISearchForm } from '../../../constants/interface';
+import { submitExamIndexSearchAction } from '../../../store/actions/dicom';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围控件
 
+// 组件不直接从redux取数据
+// FORM封装的组件里取不到state和action
+// const mapDispatchToProps = {
+//     submitExamIndexSearchAction,
+// }
+// type IDispatchProps = typeof mapDispatchToProps;
+
 // 组件不直接从reducer取数，通过父项传进来。
-interface IProps extends FormComponentProps {
-    fields: ISearchForm,
-    onChange(fields: ISearchForm): void,
+interface IFormProps extends FormComponentProps {
+    // fields: ISearchForm,
     onSubmit(fields: ISearchForm): void,
 }
 
 const initialState = {
-    sDate: moment(new Date()).startOf('day'),
-    eDate: moment(new Date()).endOf('day'),
+    dtRange: [moment(new Date()).startOf('day'), moment(new Date()).endOf('day')],
+    keyword: '',
+    fields: ['patient_name'],
 }
 type IState = Readonly<typeof initialState>
 
-class DicomManage extends React.Component<IProps, IState> {
+// class SearchForm extends React.Component<IFormProps, object> {
+class SearchForm extends React.Component<IFormProps, IState> {
+    // 不需要从props取数初始化state的写法
     readonly state: IState = initialState;
-    constructor(props: IProps) {
-        super(props);
-        console.log(props);
-    }
+    // 需要从props取数初始化state的写法
+    // constructor(props: IFormProps) {
+    //     super(props);
+    //     this.state = {
+    //         dtRange: [moment(new Date()).startOf('day'), moment(new Date()).endOf('day')],
+    //         keyword: '',
+    //         fields: ['patient_name'],
+    //     }
+    // }
     componentDidMount() {
-        // To disabled submit button at the beginning.
-        this.props.form.validateFields();
-        this.props.onSubmit(this.props.fields);
+        console.log(this.state);
     }
     handleSubmit = (e: any) => {
         e.preventDefault();
 
-        this.props.form.validateFields((err, fieldsValues) => {
-            if (err) {
-                return;
-            }
-            // Should format date value before submit.
-            console.log(fieldsValues);
-            const dtRangeValue = fieldsValues['dtRange'];
-            const values = {
-                ...fieldsValues,
-                'dtRange': [
-                    dtRangeValue[0].format('YYYY-MM-DD HH:mm:ss'),
-                    dtRangeValue[1].format('YYYY-MM-DD HH:mm:ss'),
-                ],
-            };
-            console.log('Received values of form: ', values);
-            this.props.onSubmit(values);
-        });
+        this.props.form.validateFields(
+            (err, fieldsValues) => {
+                if (err) {
+                    return;
+                }
+                // Should format date value before submit.
+                console.log(fieldsValues);
+                const values = {
+                    ...fieldsValues,
+                };
+                // 此处的props里没有action
+                // console.log(this.props);
+                this.props.onSubmit(values);
+            });
     }
     render() {
         const { getFieldDecorator, getFieldError, getFieldsError, isFieldTouched } = this.props.form;
@@ -75,7 +85,7 @@ class DicomManage extends React.Component<IProps, IState> {
                                 {
                                     type: 'array',
                                     required: true,
-                                    message: 'Please input your Password!',
+                                    message: '请选择检查时间范围',
                                 },
                             ],
                         })(
@@ -89,7 +99,7 @@ class DicomManage extends React.Component<IProps, IState> {
                             rules: [
                                 {
                                     required: true,
-                                    message: 'Please input your Password!',
+                                    message: '请输入检索关键词',
                                 },
                             ],
                         })(
@@ -110,7 +120,7 @@ class DicomManage extends React.Component<IProps, IState> {
                             type="primary"
                             htmlType="submit"
                             className="login-form-button">
-                            Log in
+                            检索
                     </Button>
                     </Form.Item>
                 </Form>
@@ -119,45 +129,9 @@ class DicomManage extends React.Component<IProps, IState> {
     }
 }
 
-export const DicomInfoSearchForm = Form.create<IProps>({
+export const WrappedSearchForm = Form.create<IFormProps>({
     name: 'dicom_search_form',
-    mapPropsToFields(props: any) {
-        console.log(props);
-        return {
-            dtRange: Form.createFormField({
-                ...props.fields.dtRange,
-                value: [moment(props.fields.dtRange[0]).startOf('day'), moment(props.fields.dtRange[1]).endOf('day')],
-            }),
-            keyword: Form.createFormField({
-                ...props.fields.keyword,
-                value: props.fields.keyword,
-            }),
-        };
-    },
-    onValuesChange(props, changedValues, allValues) {
-        console.log(props);
-        props.onChange(changedValues);
-    }
-})(DicomManage);
+})(SearchForm);
 
-export const ResizableTitle = (props: any) => {
-    const { onResize, width, ...restProps } = props;
-    if (!width) {
-        return <th { ...restProps } />;
-    } 
 
-    return (
-        <Resizable
-            width={width}
-            height={0}
-            onResize={onResize}
-            draggableOpts={{ enableUserSelectHack: false}}
-        >
-            <th {...restProps} />
-        </Resizable>
-    );
-};
-
-export class ExamIndexTable extends Table<IExamIndexList> {}
-
-// export default { DicomInfoSearchForm, DicomInfoTable };
+export default WrappedSearchForm;

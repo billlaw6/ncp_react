@@ -13,10 +13,16 @@ const defaultLoginForm: ILoginForm = {
     remember: false,
     messages: [],
 };
-const loginFormReducer = (state = defaultLoginForm, action: ReturnType<typeof setLoginFormAction>) => {
+const loginFormReducer = (
+    state = defaultLoginForm,
+    action: ReturnType<typeof setLoginFormAction>
+) => {
     switch (action.type) {
         case types.SET_LOGIN_FORM: {
-            return action.payload;
+            return {
+                ...defaultLoginForm,
+                ...action.payload,
+            };
         }
         default: {
             return state;
@@ -41,7 +47,10 @@ const defaultCurrentUser: ICurrentUser = {
 const currentUserReducer = (state = defaultCurrentUser, action: ReturnType<typeof setCurrentUserAction>) => {
     switch (action.type) {
         case types.SET_CURRENT_USER: {
-            return action.payload;
+            return {
+                ...defaultCurrentUser,
+                ...action.payload,
+            };
         }
         default: {
             return state;
@@ -69,7 +78,10 @@ const defaultUserInfo: IUserInfo = {
 const userInfoReducer = (state = defaultUserInfo, action: ReturnType<typeof setUserInfoAction>) => {
     switch (action.type) {
         case types.SET_USER_INFO: {
-            return action.payload;
+            return {
+                ...defaultUserInfo,
+                ...action.payload,
+            };
         }
         default: {
             return state;
@@ -81,7 +93,10 @@ const defaultUserList: IUserInfo[] = []
 const userListReducer = (state = defaultUserList, action: ReturnType<typeof setUserListAction>) => {
     switch (action.type) {
         case types.SET_USER_LIST: {
-            return action.payload;
+            return {
+                ...defaultUserList,
+                ...action.payload,
+            };
         }
         default: {
             return state;

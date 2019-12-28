@@ -76,7 +76,6 @@ class Login extends React.Component<IProps, IState> {
     }
 
     handleFormSubmit = (submitedFormData: ILoginForm) => {
-        // this.props.setLoginFormAction(submitedFormData);
         this.props.submitLoginFormAction(submitedFormData);
     }
 

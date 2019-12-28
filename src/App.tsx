@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, HashRouter, Link, Route, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, HashRouter, Link, withRouter, Switch, Redirect } from 'react-router-dom';
 import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';
@@ -9,8 +9,6 @@ import RouteWithSubRoutes from './components/RouteWithSubRoutes';
 import './app.less';
 
 const { Header, Footer, Sider, Content } = Layout;
-
-
 class App extends React.Component {
     render() {
         return (
@@ -51,4 +49,4 @@ class App extends React.Component {
     }
 }
 
-export default App;
+export default withRouter(App as any);

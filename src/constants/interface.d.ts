@@ -43,14 +43,14 @@ declare interface IUserInfo {
 }
 
 declare interface ISearchForm {
-    sDate: Date;
-    eDate: Date;
+    dtRange: [Date, Date];
     keyword: string;
-    fields: string[];
+    fields?: string[];
 }
 
 declare interface ICollection {
     id: string;
+    type: string;
     data: any;
 }
 
@@ -123,11 +123,12 @@ declare interface IStoreState {
     router: { location: Location; };
     loginForm: ILoginForm;
     currentUser: ICurrentUser;
-    // userInfo: IUserInfo;
+    userInfo: IUserInfo;
     userInfoList: IUserInfo[];
-    // examIndexList: IExamIndexList;
-    // dicomSeriesList: IDicomSeriesList;
-    // dicomPicture: IDicomPictureList;
+    examSearchForm: ISearchForm;
+    examIndexList: IExamIndexList;
+    dicomSeriesList: IDicomSeriesList;
+    dicomPicture: IDicomPictureList;
 }
 
 export {
