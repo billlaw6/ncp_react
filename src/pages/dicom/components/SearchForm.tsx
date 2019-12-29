@@ -5,6 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';
 // 组件不直接从redux取数据
 // import { connect } from 'react-redux';
+import moment from 'moment';
 import { ISearchForm } from '../../../constants/interface';
 
 const FormItem = Form.Item;
@@ -13,7 +14,7 @@ const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围
 
 // 组件不直接从reducer取数，通过父项传进来。
 interface IFormProps extends FormComponentProps {
-    fields: ISearchForm,
+    fields: any,
     onSubmit(fields: ISearchForm): void,
 }
 
@@ -61,6 +62,10 @@ class SearchForm extends React.Component<IFormProps, any> {
                                 },
                             ],
                             validateTrigger: 'onChange',
+                            initialValue: [
+                                moment('2019-12-12').startOf('day'),
+                                moment('2019-12-25').endOf('day'),
+                            ],
                         })(
                             <RangePicker
                                 showTime
@@ -76,6 +81,7 @@ class SearchForm extends React.Component<IFormProps, any> {
                                     message: '请输入检索关键词',
                                 },
                             ],
+                            initialValue: 'abc',
                         })(
                             <Input
                                 prefix={
@@ -111,14 +117,15 @@ export const WrappedSearchForm = Form.create<IFormProps>({
     mapPropsToFields(props) {
         console.log(props.fields);
         return {
-            // dtRange: Form.createFormField({
-            //     ...props.fields.dtRange,
-            //     value: props.fields.dtRange,
-            // }),
-            // keyword: Form.createFormField({
-            //     ...props.fields.keyword,
-            //     value: props.fields.keyword,
-            // }),
+            dtRange: Form.createFormField({
+                ...props.fields.dtRange,
+                value: props.fields.dtRange.value,
+            }),
+            // 优先级比initialValue高
+            keyword: Form.createFormField({
+                ...props.fields.keyword,
+                value: props.fields.keyword.value,
+            }),
         };
     },
     onValuesChange(_, values) {

@@ -24,11 +24,15 @@ type IProps = ReturnType<typeof mapStateToProps> & IDispatchProps;
 class ExamIndexManage extends React.Component<IProps, object> {
     readonly state = {
         fields: {
-            dtRange: [
-                new Date(moment('2019-12-12').format('YYYY-MM-dd')),
-                new Date(moment('2019-12-25').format('YYYY-MM-DD')),
-            ],
-            keyword: '',
+            dtRange: {
+                value: [
+                    moment('2019-12-22').startOf('day'),
+                    moment('2019-12-25').endOf('day'),
+                ]
+            },
+            keyword: {
+                value: '',
+            },
         },
         examIndexData: [],
     }
