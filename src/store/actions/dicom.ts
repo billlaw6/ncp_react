@@ -1,4 +1,4 @@
-import { ISearchForm } from '../../constants/interface';
+import { ISearchForm, IExamIndexList } from '../../constants/interface';
 import * as types from '../action-types';
 
 // 用于在SAGA中触发请求
@@ -7,7 +7,7 @@ export const submitExamIndexSearchAction = (payload: ISearchForm) => ({
     payload,
 })
 
-export const setExamIndexListAction = (payload: ISearchForm) => ({
+export const setExamIndexListAction = (payload: IExamIndexList[]) => ({
     type: types.SET_EXAM_INDEX_LIST,
     payload,
 })

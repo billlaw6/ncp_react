@@ -37,24 +37,23 @@ class ExamIndexManage extends React.Component<IProps, object> {
         examIndexData: [],
     }
     componentDidMount() {
-        console.log(this.props);
         console.log(this.props.examIndexList);
+        console.log(Array.isArray(this.props.examIndexList));
+        this.props.examIndexList.forEach(element => {
+           console.log(element); 
+        });
     }
     handleFormSubmit = (submitedFormData: ISearchForm) => {
         console.log('handle submit');
         this.props.submitExamIndexSearchAction(submitedFormData);
     }
     render() {
-        console.log(this.state);
+        console.log(this.props);
         const { fields } = this.state;
         return (
             <div>
-                ExamIndexManage
                 <SearchForm fields={fields} onSubmit={this.handleFormSubmit}></SearchForm>
-                {/* {this.props.examIndexList.map((item, index) => {
-                    console.log(item);
-                })} */}
-                <ExamIndexTable examIndexData={this.state.examIndexData}></ExamIndexTable>
+                <ExamIndexTable examIndexData={this.props.examIndexList}></ExamIndexTable>
             </div>
         )
     }

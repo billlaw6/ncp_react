@@ -126,9 +126,9 @@ declare interface IStoreState {
     userInfo: IUserInfo;
     userInfoList: IUserInfo[];
     examSearchForm: ISearchForm;
-    examIndexList: IExamIndexList;
-    dicomSeriesList: IDicomSeriesList;
-    dicomPicture: IDicomPictureList;
+    examIndexList: IExamIndexList[];
+    dicomSeriesList: IDicomSeriesList[];
+    dicomPictureList: IDicomPictureList[];
 }
 
 export {

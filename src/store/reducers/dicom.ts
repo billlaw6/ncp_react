@@ -26,20 +26,18 @@ const examSearchReducer = (
     }
 };
 
-const defaultExamIndexList: IExamIndexList[]= [];
+const defaultExamIndexList: IExamIndexList[] = [];
 const examIndexListReducer = (
     state = defaultExamIndexList,
     action: ReturnType<typeof setExamIndexListAction>,
 ) => {
     if (!action) return state;
-
     switch (action.type) {
         // 全部CASE必须返回STATE类型的数据，以替换原来的STATE。actions文件中已经指定了payload的类型。
         case types.SET_EXAM_INDEX_LIST:
-            return ({
-                ...state,
-                ...action.payload,
-            })
+            return (
+                action.payload
+            )
         default: {
             return state;
         }

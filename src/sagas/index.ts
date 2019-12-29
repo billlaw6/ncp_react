@@ -60,7 +60,9 @@ function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
 function* searchExamIndex(action: ReturnType <typeof submitExamIndexSearchAction>) {
   try {
     const res = yield call(getExamIndex, action.payload);
-    console.log(res);
+    // console.log(typeof JSON.parse(res.data));
+    console.log(Array.isArray(res.data));
+    console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_EXAM_INDEX_LIST, payload: res.data});
   } catch (error) {

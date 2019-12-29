@@ -45,6 +45,20 @@ class SearchForm extends React.Component<IFormProps, any> {
         const { getFieldDecorator, getFieldError, getFieldsError, isFieldTouched } = this.props.form;
         const dtRangeError = isFieldTouched('dtRange') && getFieldError('dtRange');
         const keywordError = isFieldTouched('keyword') && getFieldError('keyword');
+        const dtRangeValidator = (rule: any, value: any, callback: any) => {
+            // console.log(rule);
+            // console.log(value);
+            try {
+                // throw new Error('Error Message!');
+                if (value.length === 2) {
+                    callback();
+                } else {
+                    throw new Error('length error!');
+                }
+            } catch (err) {
+                callback(err);
+            }
+        }
         return (
             <div>
                 <Form onSubmit={this.handleSubmit} layout="inline" className="dicom-search-form">
@@ -53,15 +67,19 @@ class SearchForm extends React.Component<IFormProps, any> {
                         help={dtRangeError || ''}
                         label={<FormattedMessage id="welcome" />}
                     >
+                        {/* getFieldDecorator(id, options) */}
                         {getFieldDecorator('dtRange', {
                             rules: [
                                 {
                                     type: 'array',
+                                    len: 2,
                                     required: true,
+                                    validator: dtRangeValidator,
                                     message: '请选择检查时间范围',
                                 },
                             ],
                             validateTrigger: 'onChange',
+                            // 优先级不如mapPropsToFields中的value高
                             initialValue: [
                                 moment('2019-12-12').startOf('day'),
                                 moment('2019-12-25').endOf('day'),
@@ -77,11 +95,15 @@ class SearchForm extends React.Component<IFormProps, any> {
                         {getFieldDecorator('keyword', {
                             rules: [
                                 {
-                                    required: true,
+                                    required: false,
+                                    max: 64,
+                                    type: 'string',
+                                    whitespace: false,
                                     message: '请输入检索关键词',
                                 },
                             ],
-                            initialValue: 'abc',
+                            // 优先级不如mapPropsToFields中的value高
+                            initialValue: 'keyword',
                         })(
                             <Input
                                 prefix={
@@ -111,8 +133,13 @@ class SearchForm extends React.Component<IFormProps, any> {
 
 export const WrappedSearchForm = Form.create<IFormProps>({
     name: 'exam_search_form',
+    // 当 Form.Item 子节点的值（包括 error）发生改变时触发，可以把对应的值转存到 Redux store
     onFieldsChange(props, changedFields) {
         // props.onChange(changedFields);
+    },
+    // 任一表单域的值发生改变时的回调
+    onValuesChange(_, values) {
+        console.log(values);
     },
     mapPropsToFields(props) {
         console.log(props.fields);
@@ -127,9 +154,6 @@ export const WrappedSearchForm = Form.create<IFormProps>({
                 value: props.fields.keyword.value,
             }),
         };
-    },
-    onValuesChange(_, values) {
-        console.log(values);
     },
 })(SearchForm);
 

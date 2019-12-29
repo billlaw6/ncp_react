@@ -54,12 +54,13 @@ class ExamIndexTable extends React.Component<IProps, any> {
         const { examIndexColumns } = this.state;
         return (
             <div>
+                ExamIndexTable
                 <Table
                     columns={examIndexColumns}
                     dataSource={examIndexData}
                     pagination={{ pageSize: 10 }}
                     scroll={{ y: 240 }}
-                    rowKey={item => item.id}
+                    rowKey={item=> item.id}
                 >
                 </Table>
             </div>
