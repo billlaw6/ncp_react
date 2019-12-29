@@ -7,6 +7,7 @@ import {
   submitExamIndexSearchAction,
 } from '../store/actions/dicom';
 import { userWeChatLogin, userLogin } from '../services/user';
+import { getExamIndex } from '../services/dicom';
 import * as types from '../store/action-types';
 import { push } from 'connected-react-router';
 
@@ -58,11 +59,10 @@ function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
 
 function* searchExamIndex(action: ReturnType <typeof submitExamIndexSearchAction>) {
   try {
-    const res = yield call(userLogin, action.payload);
+    const res = yield call(getExamIndex, action.payload);
     console.log(res);
     // put对应redux中的dispatch。
-    yield put({ type: types.SET_CURRENT_USER, payload: {token: res.data.key}});
-    yield put(push('/dicom/upload/'))
+    yield put({ type: types.SET_EXAM_INDEX_LIST, payload: res.data});
   } catch (error) {
     console.log(error.response);
     if (error.response) {

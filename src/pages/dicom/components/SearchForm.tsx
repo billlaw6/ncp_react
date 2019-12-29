@@ -5,50 +5,22 @@ import { FormattedMessage } from 'react-intl';
 import { Resizable } from 'react-resizable';
 // 组件不直接从redux取数据
 // import { connect } from 'react-redux';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
-import { IExamIndexList, ISearchForm } from '../../../constants/interface';
-import { submitExamIndexSearchAction } from '../../../store/actions/dicom';
+import { ISearchForm } from '../../../constants/interface';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
 const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围控件
 
-// 组件不直接从redux取数据
-// FORM封装的组件里取不到state和action
-// const mapDispatchToProps = {
-//     submitExamIndexSearchAction,
-// }
-// type IDispatchProps = typeof mapDispatchToProps;
-
 // 组件不直接从reducer取数，通过父项传进来。
 interface IFormProps extends FormComponentProps {
-    // fields: ISearchForm,
+    fields: ISearchForm,
     onSubmit(fields: ISearchForm): void,
 }
 
-const initialState = {
-    dtRange: [moment(new Date()).startOf('day'), moment(new Date()).endOf('day')],
-    keyword: '',
-    fields: ['patient_name'],
-}
-type IState = Readonly<typeof initialState>
-
-// class SearchForm extends React.Component<IFormProps, object> {
-class SearchForm extends React.Component<IFormProps, IState> {
+class SearchForm extends React.Component<IFormProps, any> {
     // 不需要从props取数初始化state的写法
-    readonly state: IState = initialState;
-    // 需要从props取数初始化state的写法
-    // constructor(props: IFormProps) {
-    //     super(props);
-    //     this.state = {
-    //         dtRange: [moment(new Date()).startOf('day'), moment(new Date()).endOf('day')],
-    //         keyword: '',
-    //         fields: ['patient_name'],
-    //     }
-    // }
     componentDidMount() {
-        console.log(this.state);
+        console.log(this.props);
     }
     handleSubmit = (e: any) => {
         e.preventDefault();
@@ -88,9 +60,11 @@ class SearchForm extends React.Component<IFormProps, IState> {
                                     message: '请选择检查时间范围',
                                 },
                             ],
+                            validateTrigger: 'onChange',
                         })(
                             <RangePicker
-                                showTime format="YYYY-MM-DD HH:mm:ss"
+                                showTime
+                                format="YYYY-MM-DD HH:mm:ss"
                             />
                         )}
                     </Form.Item>
@@ -121,7 +95,7 @@ class SearchForm extends React.Component<IFormProps, IState> {
                             htmlType="submit"
                             className="login-form-button">
                             检索
-                    </Button>
+                        </Button>
                     </Form.Item>
                 </Form>
             </div>
@@ -130,7 +104,26 @@ class SearchForm extends React.Component<IFormProps, IState> {
 }
 
 export const WrappedSearchForm = Form.create<IFormProps>({
-    name: 'dicom_search_form',
+    name: 'exam_search_form',
+    onFieldsChange(props, changedFields) {
+        // props.onChange(changedFields);
+    },
+    mapPropsToFields(props) {
+        console.log(props.fields);
+        return {
+            // dtRange: Form.createFormField({
+            //     ...props.fields.dtRange,
+            //     value: props.fields.dtRange,
+            // }),
+            // keyword: Form.createFormField({
+            //     ...props.fields.keyword,
+            //     value: props.fields.keyword,
+            // }),
+        };
+    },
+    onValuesChange(_, values) {
+        console.log(values);
+    },
 })(SearchForm);
 
 

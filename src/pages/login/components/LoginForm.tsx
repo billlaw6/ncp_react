@@ -62,6 +62,7 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
                                 message: 'Please input your Password!',
                             },
                         ],
+                        validateTrigger: 'onChange',
                     })(
                         <Input
                             prefix={

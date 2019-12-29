@@ -1,9 +1,10 @@
 import React from 'react';
-import { IStoreState, IExamIndexList } from '../../constants/interface';
+import { IStoreState, IExamIndexList, ISearchForm } from '../../constants/interface';
 import { submitExamIndexSearchAction, setExamIndexListAction } from '../../store/actions/dicom';
 import ExamIndexTable from './components/ExamIndexTable';
 import SearchForm from './components/SearchForm';
 import { connect } from 'react-redux';
+import moment from 'moment';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -20,29 +21,32 @@ type IDispatchProps = typeof mapDispatchToProps
 
 type IProps = ReturnType<typeof mapStateToProps> & IDispatchProps;
 
-type IState = {
-    examIndexData: IExamIndexList[];
-}
-
-class ExamIndexManage extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
-        super(props);
-        this.state = {
-            examIndexData: []
-        }
+class ExamIndexManage extends React.Component<IProps, object> {
+    readonly state = {
+        fields: {
+            dtRange: [
+                new Date(moment('2019-12-12').format('YYYY-MM-dd')),
+                new Date(moment('2019-12-25').format('YYYY-MM-DD')),
+            ],
+            keyword: '',
+        },
+        examIndexData: [],
     }
     componentDidMount() {
         console.log(this.props);
         console.log(this.props.examIndexList);
     }
-    handleSubmit() {
+    handleFormSubmit = (submitedFormData: ISearchForm) => {
         console.log('handle submit');
+        this.props.submitExamIndexSearchAction(submitedFormData);
     }
     render() {
+        console.log(this.state);
+        const { fields } = this.state;
         return (
             <div>
                 ExamIndexManage
-                <SearchForm onSubmit={this.handleSubmit}></SearchForm>
+                <SearchForm fields={fields} onSubmit={this.handleFormSubmit}></SearchForm>
                 {/* {this.props.examIndexList.map((item, index) => {
                     console.log(item);
                 })} */}

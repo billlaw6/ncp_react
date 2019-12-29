@@ -43,7 +43,7 @@ declare interface IUserInfo {
 }
 
 declare interface ISearchForm {
-    dtRange: [Date, Date];
+    dtRange: Date[];
     keyword: string;
     fields?: string[];
 }
