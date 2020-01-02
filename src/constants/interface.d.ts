@@ -96,25 +96,33 @@ declare interface IDicomSeries {
 
 declare interface IExamIndexList {
     id: string;
+    modality: string;
     patient_name: string;
+    created_at: Date;
+    desc: string;
     patient_id: string;
     institution_name: string;
     study_date: string;
     thumbnail: string;
-    series: IDicomSeriesList[];
 }
 
 declare interface IExamIndex {
     id: string;
+    modality: string;
     patient_name: string;
+    created_at: Date;
+    desc: string;
     patient_id: string;
     institution_name: string;
     study_date: string;
     thumbnail: string;
-    modality: string;
-    study_id: string;
     display_frame_rate: number;
     series: IDicomSeriesList[];
+}
+
+declare interface IExamIndexForm {
+    id: string;
+    desc: string;
 }
 
 // 创建store时要遵循的rootState接口，不能使用rootReducers的类型
@@ -137,6 +145,7 @@ export {
     IUserInfo,
     ISearchForm,
     IExamIndex,
+    IExamIndexForm,
     IExamIndexList,
     IDicomSeries,
     IDicomSeriesList,

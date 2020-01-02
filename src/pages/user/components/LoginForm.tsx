@@ -6,7 +6,7 @@ import { FormattedMessage } from 'react-intl';
 import './login-form.less'
 
 interface ILoginFormProps extends FormComponentProps {
-    fields: ILoginForm,
+    fields: any,
     onChange(fields: ILoginForm): void,
     onSubmit(fields: ILoginForm): void,
 }
@@ -104,13 +104,16 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
         console.log(props.fields);
         return {
             username: Form.createFormField({
-                value: props.fields.username,
+                ...props.fields,
+                value: props.fields.username.value,
             }),
             password: Form.createFormField({
-                value: props.fields.password,
+                ...props.fields,
+                value: props.fields.password.value,
             }),
             remember: Form.createFormField({
-                value: props.fields.remember,
+                ...props.fields,
+                value: props.fields.remember.value,
             }),
         };
     },

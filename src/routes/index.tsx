@@ -1,7 +1,8 @@
 import React from 'react';
 // import { Route, Switch } from 'react-router-dom';
 import Home from '../pages/home';
-import Login from '../pages/login/login';
+import Login from '../pages/user/login';
+import Profile from '../pages/user/profile';
 import DicomManage from '../pages/dicom/dicomManage';
 import DicomUploader from '../pages/dicom/components/DicomUploader';
 import DicomViewer from '../pages/dicom/components/DicomViewer';
@@ -21,6 +22,13 @@ const routes = [
         path: '/login',
         exact: true,
         component: Login,
+        routes: [],
+    },
+    {
+        name: 'profile',
+        path: '/profile',
+        exact: true,
+        component: Profile,
         routes: [],
     },
     {

@@ -14,12 +14,13 @@ const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围
 
 // 组件不直接从reducer取数，通过父项传进来。
 interface IFormProps extends FormComponentProps {
+    // fields和纯数据不一样，传给Form的fields需要重新定义类型，增加value的子节点。
+    // fields: ISearchForm,
     fields: any,
     onSubmit(fields: ISearchForm): void,
 }
 
 class SearchForm extends React.Component<IFormProps, any> {
-    // 不需要从props取数初始化state的写法
     componentDidMount() {
         console.log(this.props);
     }
@@ -156,6 +157,5 @@ export const WrappedSearchForm = Form.create<IFormProps>({
         };
     },
 })(SearchForm);
-
 
 export default WrappedSearchForm;

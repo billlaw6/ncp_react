@@ -2,6 +2,7 @@ import React from 'react';
 import { IStoreState, IExamIndexList, ISearchForm } from '../../constants/interface';
 import { submitExamIndexSearchAction, setExamIndexListAction } from '../../store/actions/dicom';
 import ExamIndexTable from './components/ExamIndexTable';
+import ExamIndexList from './components/ExamIndexList';
 import SearchForm from './components/SearchForm';
 import { connect } from 'react-redux';
 import moment from 'moment';
@@ -21,7 +22,12 @@ type IDispatchProps = typeof mapDispatchToProps
 
 type IProps = ReturnType<typeof mapStateToProps> & IDispatchProps;
 
-class ExamIndexManage extends React.Component<IProps, object> {
+// type IState = {
+//     fields: ISearchForm;
+//     examIndexData: IExamIndexList[];
+// }
+
+class ExamIndexManage extends React.Component<IProps, any> {
     readonly state = {
         fields: {
             dtRange: {
@@ -54,6 +60,7 @@ class ExamIndexManage extends React.Component<IProps, object> {
             <div>
                 <SearchForm fields={fields} onSubmit={this.handleFormSubmit}></SearchForm>
                 <ExamIndexTable examIndexData={this.props.examIndexList}></ExamIndexTable>
+                <ExamIndexList examIndexData={this.props.examIndexList}></ExamIndexList>
             </div>
         )
     }

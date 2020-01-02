@@ -16,7 +16,7 @@ class App extends React.Component {
                 <MyHeader />
                 <Layout>
                     <Content id="content-container" className="content-container">
-                        <BrowserRouter>
+                        <HashRouter>
                             <ul>
                                 {routes.map((item, index) => {
                                     return <li key={index}>
@@ -40,7 +40,7 @@ class App extends React.Component {
                                     search: '?lx=404',
                                 }} />
                             </Switch>
-                        </BrowserRouter>
+                        </HashRouter>
                     </Content>
                 </Layout>
                 <MyFooter></MyFooter>

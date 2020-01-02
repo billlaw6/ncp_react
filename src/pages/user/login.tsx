@@ -30,10 +30,18 @@ type IProps = IStateProps & IDispatchProps;
 type IState = {
     // LoginForm用的组件内State
     fields: {
-        username: string,
-        password: string,
-        remember: boolean,
-        messages: Array<string>,
+        username: {
+            value: string,
+        },
+        password: {
+            value: string,
+        },
+        remember: {
+            value: boolean,
+        },
+        messages: {
+            value: Array<string>,
+        },
     }
     // 微信扫码用的State
     appid: string,
@@ -47,7 +55,20 @@ class Login extends React.Component<IProps, IState> {
             appid: 'wx0aee911ac049680c',
             redirectUri: 'https://www.mediclouds.cn/login/',
             // 使用Reducer里设置的初始值
-            fields: props.loginForm,
+            fields: {
+                username: {
+                    value: props.loginForm.username,
+                },
+                password: {
+                    value: props.loginForm.password,
+                },
+                remember: {
+                    value: props.loginForm.remember,
+                },
+                messages: {
+                    value: props.loginForm.messages,
+                },
+            }
         }
     }
     
@@ -68,10 +89,10 @@ class Login extends React.Component<IProps, IState> {
 
     handleFormChange = (changedValues: ILoginForm) => {
         // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
-        this.setState(({ fields }) => ({
-            fields: { ...fields, ...changedValues},
-        }));
-        // console.log(changedValues);
+        // this.setState(({ fields }) => ({
+        //     fields: { ...fields, ...changedValues},
+        // }));
+        console.log(changedValues);
         // this.props.setLoginFormAction(changedValues);
     }
 

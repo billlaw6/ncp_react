@@ -13,10 +13,10 @@ declare interface IProps {
 }
 
 class Dicom extends React.Component<IProps, object> {
-    constructor(props: IProps) {
-        super(props);
-        console.log(props);
-    }
+    // constructor(props: IProps) {
+    //     super(props);
+    //     console.log(props);
+    // }
 
     render() {
         return (
