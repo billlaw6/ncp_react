@@ -51,12 +51,6 @@ const routes = [
                 component: DicomUploader,
             },
             {
-                name: 'dicom manage',
-                path: '/dicom/manage',
-                exact: true,
-                component: SearchForm,
-            },
-            {
                 name: 'dicom viewer',
                 path: '/dicom/viewer',
                 exact: true,

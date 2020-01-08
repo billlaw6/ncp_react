@@ -1,17 +1,17 @@
 import React from 'react';
 import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { FormComponentProps } from 'antd/es/form';
-import { ILoginForm } from '../../../constants/interface';
+import { IProfileForm } from '../../../constants/interface';
 import { FormattedMessage } from 'react-intl';
-import './login-form.less'
+import './profile-form.less'
 
-interface ILoginFormProps extends FormComponentProps {
+interface IProfileFormProps extends FormComponentProps {
     fields: any,
-    onChange(fields: ILoginForm): void,
-    onSubmit(fields: ILoginForm): void,
+    onChange(fields: IProfileForm): void,
+    onSubmit(fields: IProfileForm): void,
 }
 
-class LoginForm extends React.Component<ILoginFormProps, any> {
+class ProfileForm extends React.Component<IProfileFormProps, any> {
     componentDidMount() {
         // To disabled submit button at the beginning.
         // this.props.form.validateFields();
@@ -31,7 +31,7 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
     render() {
         const { getFieldDecorator } = this.props.form;
         return (
-            <Form onSubmit={this.handleSubmit} className="login-form">
+            <Form onSubmit={this.handleSubmit} className="profile-form">
                 <FormattedMessage id='welcome' />
                 <Form.Item>
                     {getFieldDecorator('username', {
@@ -81,13 +81,13 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
                         valuePropName: 'remember',
                         initialValue: false,
                     })(<Checkbox>Remember me</Checkbox>)}
-                    <a className="login-form-forgot" href="/password/reset/">
+                    <a className="profile-form-forgot" href="/password/reset/">
                         Forgot password
                     </a>
                     <Button
                         type="primary"
                         htmlType="submit"
-                        className="login-form-button">
+                        className="profile-form-button">
                         Log in
                     </Button>
                 </Form.Item>
@@ -97,10 +97,10 @@ class LoginForm extends React.Component<ILoginFormProps, any> {
 }
 
 // 此处的<IProps>可加可不加
-// const WrappedLoginForm = Form.create<IProps>()( LoginForm,);
-const WrappedLoginForm = Form.create<ILoginFormProps>({
-    name: 'login_form',
-    mapPropsToFields(props: ILoginFormProps) {
+// const WrappedProfileForm = Form.create<IProps>()( ProfileForm,);
+const WrappedProfileForm = Form.create<IProfileFormProps>({
+    name: 'profile_form',
+    mapPropsToFields(props: IProfileFormProps) {
         // console.log(props.fields);
         return {
             username: Form.createFormField({
@@ -117,13 +117,13 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
             }),
         };
     },
-    // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginForm) {
+    // onFieldsChange(props: IProfileFormProps, changedFields: any, allFields: IProfileForm) {
     //     console.log(changedFields);
     // },
     onValuesChange(props, changedValues, allValues) {
         // console.log(allValues);
         props.onChange(changedValues);
     },
-})(LoginForm);
+})(ProfileForm);
 
-export default WrappedLoginForm;
+export default WrappedProfileForm;

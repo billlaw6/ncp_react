@@ -43,14 +43,10 @@ class ExamIndexManage extends React.Component<IProps, any> {
         examIndexData: [],
     }
     componentDidMount() {
-        console.log(this.props.examIndexList);
-        console.log(Array.isArray(this.props.examIndexList));
-        this.props.examIndexList.forEach(element => {
-           console.log(element); 
-        });
     }
     handleFormSubmit = (submitedFormData: ISearchForm) => {
-        console.log('handle submit');
+        console.log('submit');
+        console.log(submitedFormData);
         this.props.submitExamIndexSearchAction(submitedFormData);
     }
     render() {

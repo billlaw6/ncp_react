@@ -8,6 +8,17 @@ declare interface ILoginForm {
     messages: Array<string>;
 }
 
+declare interface IProfileForm {
+    id: number;
+    gender: number;
+    birthday: Date;
+    sign: string;
+    address: string;
+    username: string;
+    unit: string;
+    cell_phone: string;
+}
+
 declare interface ICurrentUser {
     id: number;
     token: string;
@@ -143,6 +154,7 @@ export {
     ILoginForm,
     ICurrentUser,
     IUserInfo,
+    IProfileForm,
     ISearchForm,
     IExamIndex,
     IExamIndexForm,

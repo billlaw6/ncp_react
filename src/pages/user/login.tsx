@@ -7,6 +7,8 @@ import WeChatLogin from './components/WeChatLogin';
 import './login.less';
 import ContentLogo from './components/ContentLogo';
 import qs from 'qs';
+import { stringify } from 'querystring';
+import { message } from 'antd';
 
 const mapStateToProps = (state: IStoreState) => {
     // console.log(state);
@@ -81,23 +83,41 @@ class Login extends React.Component<IProps, IState> {
         console.log(obj);
         if (obj.code) {
             this.props.setWeChatCodeAction(obj.code)
-            console.log('loging');
+            console.log('wechat oauth2 login');
         } else {
             console.log('no code');
         }
     }
 
     handleFormChange = (changedValues: ILoginForm) => {
+        // 下面两个操作都加和都不加效果一样，表单Input刷新后也没从localstorage取值展示
         // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
-        // this.setState(({ fields }) => ({
-        //     fields: { ...fields, ...changedValues},
-        // }));
-        console.log(changedValues);
+        // Object.keys(changedValues).forEach((key) => {
+        //     if (key === 'username') {
+        //         this.setState({
+        //             fields: {...this.state.fields, ...{ username: { value: changedValues[key]}}},
+        //         });
+        //         console.log('set username');
+        //     } else if (key === 'password') {
+        //         this.setState({
+        //             fields: {...this.state.fields, ...{ password: { value: changedValues[key]}}},
+        //         });
+        //         console.log('set username');
+        //     } else if (key === 'remember') {
+        //         this.setState({
+        //             fields: {...this.state.fields, ...{ remember: { value: changedValues[key]}}},
+        //         });
+        //         console.log('set username');
+        //     } else {
+        //         console.log('no matched key');
+        //     }
+        // })
         // this.props.setLoginFormAction(changedValues);
     }
 
     handleFormSubmit = (submitedFormData: ILoginForm) => {
         this.props.submitLoginFormAction(submitedFormData);
+        console.log(submitedFormData);
     }
 
     render() {

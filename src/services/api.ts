@@ -10,7 +10,7 @@ switch (process.env.NODE_ENV) {
         axios.defaults.baseURL = 'http://115.29.148.227:8083/rest-api/';
         break;
     case 'production':
-        axios.defaults.baseURL = 'https://www.mediclouds.cn/rest-api/';
+        axios.defaults.baseURL = 'https://mi.mediclouds.cn/rest-api/';
         break;
     default:
         axios.defaults.baseURL = 'rest-api/';
@@ -88,6 +88,7 @@ axios.interceptors.response.use((response: any) => {
         // console.log('response valid');
         switch (response.status) {
             case 400:
+                
                 history.push('/login');
                 return Promise.reject(error);
             case 401:   // 当前请求用户需要验证，未登录；
