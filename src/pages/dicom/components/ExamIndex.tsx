@@ -1,7 +1,7 @@
 import React from 'react';
 import { IExamIndexList } from '../../../constants/interface';
 import { Icon } from 'antd';
-import "./exam-index.less";
+import "./ExamIndex.less";
 
 class ExamIndex extends React.Component <IExamIndexList, object> {
     render () {

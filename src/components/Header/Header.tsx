@@ -1,9 +1,9 @@
 import React from 'react';
 import { Menu, Icon } from 'antd';
 import { NavLink, Link, withRouter, RouteComponentProps } from "react-router-dom";
-import { history } from '../store/configureStore';
-import logo from '../assets/images/logo.svg';
-import '../assets/images/0.png';
+import { history } from '../../store/configureStore';
+import logo from '../../assets/images/logo.svg';
+import '../../assets/images/0.png';
 
 const { SubMenu } = Menu;
 

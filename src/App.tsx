@@ -3,8 +3,8 @@ import { BrowserRouter, HashRouter, Link, withRouter, Switch, Redirect } from 'r
 import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';
-import MyHeader from './components/Header';
-import MyFooter from './components/Footer';
+import MyHeader from './components/Header/Header';
+import MyFooter from './components/Footer/Footer';
 import RouteWithSubRoutes from './components/RouteWithSubRoutes';
 import './app.less';
 
