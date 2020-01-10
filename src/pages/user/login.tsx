@@ -55,7 +55,7 @@ class Login extends React.Component<IProps, IState> {
         super(props);
         this.state = {
             appid: 'wx0aee911ac049680c',
-            redirectUri: 'https://www.mediclouds.cn/login/',
+            redirectUri: 'https://mi.mediclouds.cn/login/',
             // 使用Reducer里设置的初始值
             fields: {
                 username: {

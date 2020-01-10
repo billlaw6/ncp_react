@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, HashRouter, Link, withRouter, Switch, Redirect } from 'react-router-dom';
+import { HashRouter, Link, withRouter, Switch, Redirect } from 'react-router-dom';
 import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';

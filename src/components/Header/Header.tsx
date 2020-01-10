@@ -4,12 +4,9 @@ import { NavLink, Link, withRouter, RouteComponentProps } from "react-router-dom
 import { history } from '../../store/configureStore';
 import logo from '../../assets/images/logo.svg';
 import '../../assets/images/0.png';
+import './Header.less';
 
 const { SubMenu } = Menu;
-
-// declare interface IProps extends RouteComponentProps<any> {
-//   title?: string;
-// }
 
 // class Header extends React.Component<IProps> {
 class Header extends React.Component {
