@@ -1,5 +1,5 @@
 import React from 'react';
-import './wechat-login.less';
+import './WeChatLogin.less';
 import scan_demo from '../../../assets/images/scan_demo.jpeg';
 
 declare interface IProps {

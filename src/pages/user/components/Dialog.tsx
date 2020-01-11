@@ -1,5 +1,5 @@
 import React from 'react';
-import './dialog.less';
+import './Dialog.less';
 
 const Dialog = (props: any) => {
     let { type, content } = props;

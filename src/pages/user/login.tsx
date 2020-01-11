@@ -73,20 +73,26 @@ class Login extends React.Component<IProps, IState> {
             }
         }
     }
-    
-    componentDidMount() {
-        console.log(this.props)
-        console.log(this.props.router.location)
-        let query = this.props.router.location.search.substr(1)
+
+    static getDerivedStateFromProps(nextProps: IProps, preState: IState) {
+        console.log(nextProps);
+        console.log(preState);
+        let query = nextProps.router.location.search.substr(1)
         console.log(query)
         let obj = qs.parse(query)
         console.log(obj);
         if (obj.code) {
-            this.props.setWeChatCodeAction(obj)
+            nextProps.setWeChatCodeAction(obj)
             console.log('wechat oauth2 login');
         } else {
             console.log('no code');
         }
+        return null;
+    }
+    
+    componentDidMount() {
+        console.log(this.props)
+        console.log(this.props.router.location)
     }
 
     handleFormChange = (changedValues: ILoginForm) => {

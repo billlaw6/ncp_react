@@ -3,7 +3,7 @@ import { Form, Icon, Input, Button, Checkbox } from 'antd';
 import { FormComponentProps } from 'antd/es/form';
 import { ILoginForm } from '../../../constants/interface';
 import { FormattedMessage } from 'react-intl';
-import './login-form.less'
+import './LoginForm.less'
 
 interface ILoginFormProps extends FormComponentProps {
     fields: any,

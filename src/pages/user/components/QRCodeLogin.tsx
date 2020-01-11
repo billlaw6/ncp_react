@@ -1,6 +1,6 @@
 import React from 'react';
 import QRCode from 'qrcode.react';
-import './qrcode-login.css';
+import './QRCodeLogin.css';
 
 const QRCodeLogin = function (props: {appid: string; redirectUri: string}) {
     const parsedRedirectUri = encodeURI(props.redirectUri);
