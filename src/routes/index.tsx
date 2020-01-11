@@ -2,6 +2,7 @@ import React from 'react';
 // import { Route, Switch } from 'react-router-dom';
 import Home from '../pages/home';
 import Login from '../pages/user/login';
+import Oauth from '../pages/user/oauth';
 import Profile from '../pages/user/profile';
 import DicomManage from '../pages/dicom/dicomManage';
 import DicomUploader from '../pages/dicom/components/DicomUploader';
@@ -22,6 +23,13 @@ const routes = [
         path: '/login',
         exact: true,
         component: Login,
+        routes: [],
+    },
+    {
+        name: 'oauth',
+        path: '/oauth',
+        exact: true,
+        component: Oauth,
         routes: [],
     },
     {
