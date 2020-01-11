@@ -32,7 +32,9 @@ axios.interceptors.request.use((config: AxiosRequestConfig) => {
     // 注意对象的多重解析
     console.log(JSON.parse(persistRoot.currentUser).token);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
-    if (persistRoot.currentUser && JSON.parse(persistRoot.currentUser).token.length > 2) {
+    if (persistRoot.currentUser
+        && JSON.parse(persistRoot.currentUser).token
+        && JSON.parse(persistRoot.currentUser).token.length > 2) {
         console.log('valid token' + JSON.parse(persistRoot.currentUser).token);
         config.headers.Authorization = 'Token ' + JSON.parse(persistRoot.currentUser).token;
     } else {
@@ -88,7 +90,7 @@ axios.interceptors.response.use((response: any) => {
         // console.log('response valid');
         switch (response.status) {
             case 400:
-                
+
                 history.push('/login');
                 return Promise.reject(error);
             case 401:   // 当前请求用户需要验证，未登录；

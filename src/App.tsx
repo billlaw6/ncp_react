@@ -6,7 +6,7 @@ import { Layout, Menu, Icon } from 'antd';
 import MyHeader from './components/Header/Header';
 import MyFooter from './components/Footer/Footer';
 import RouteWithSubRoutes from './components/RouteWithSubRoutes';
-import './app.less';
+import './App.less';
 
 const { Header, Footer, Sider, Content } = Layout;
 class App extends React.Component {

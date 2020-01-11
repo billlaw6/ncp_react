@@ -14,7 +14,7 @@ import { push } from 'connected-react-router';
 // worker Saga : 将在 action 被 dispatch 时调用
 function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
   try {
-    // console.log(action.payload);
+    console.log(action.payload);
     const res = yield call(userWeChatLogin, action.payload);
     console.log(res);
     // put对应redux中的dispatch。

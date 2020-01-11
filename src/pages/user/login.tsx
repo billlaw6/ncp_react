@@ -75,14 +75,14 @@ class Login extends React.Component<IProps, IState> {
     }
     
     componentDidMount() {
-        // console.log('mounted')
         console.log(this.props)
-        // console.log(this.props.router.location)
+        console.log(this.props.router.location)
         let query = this.props.router.location.search.substr(1)
+        console.log(query)
         let obj = qs.parse(query)
         console.log(obj);
         if (obj.code) {
-            this.props.setWeChatCodeAction(obj.code)
+            this.props.setWeChatCodeAction(obj)
             console.log('wechat oauth2 login');
         } else {
             console.log('no code');
