@@ -7,7 +7,6 @@ import Profile from '../pages/user/profile';
 import DicomManage from '../pages/dicom/dicomManage';
 import DicomUploader from '../pages/dicom/components/DicomUploader';
 import DicomViewer from '../pages/dicom/components/DicomViewer';
-import SearchForm from '../pages/dicom/components/SearchForm';
 import ExamIndexManage from '../pages/dicom/examIndexManage';
 
 const routes = [

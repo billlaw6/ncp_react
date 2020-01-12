@@ -32,6 +32,7 @@ function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
     if (error.response) {
       yield put({ type: types.SET_CURRENT_USER, payload: { token: '' } });
     }
+    yield put(push('/login/'))
   }
 }
 

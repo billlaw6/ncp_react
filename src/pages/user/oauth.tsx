@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import qs from 'qs';
 import { connect } from 'react-redux';
 import { IStoreState } from '../../constants/interface';
+import { setWeChatCodeAction, setLoginFormAction, submitLoginFormAction, setCurrentUserAction } from '../../store/actions/user';
+
 
 class Oauth extends React.Component<any, any> {
     static getDerivedStateFromProps(nextProps: any, preState: any) {
@@ -50,5 +52,10 @@ const mapStateToProps = (state: IStoreState) => {
         router: state.router,
     };
 };
-
-export default connect(mapStateToProps)(Oauth);
+const mapDispatchToProps = {
+    setWeChatCodeAction,
+    setLoginFormAction,
+    submitLoginFormAction,
+    setCurrentUserAction,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(Oauth);
