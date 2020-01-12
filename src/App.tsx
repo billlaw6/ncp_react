@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Link, withRouter, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router, Link, withRouter, Switch, Redirect } from 'react-router-dom';
 import routes from './routes';
 // import { routerActions } from 'connected-react-router';
 import { Layout, Menu, Icon } from 'antd';
@@ -16,7 +16,7 @@ class App extends React.Component {
                 <MyHeader />
                 <Layout>
                     <Content id="content-container" className="content-container">
-                        <HashRouter>
+                        <Router>
                             <ul>
                                 {routes.map((item, index) => {
                                     return <li key={index}>
@@ -40,7 +40,7 @@ class App extends React.Component {
                                     search: '?lx=404',
                                 }} />
                             </Switch>
-                        </HashRouter>
+                        </Router>
                     </Content>
                 </Layout>
                 <MyFooter></MyFooter>

@@ -7,9 +7,9 @@ import createRootReducer from './reducers';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from '../sagas';
 
-// export const history = createBrowserHistory();
 // 此处的History类型必须和Router类型匹配：createHashHistory匹配HashRouter; createBrowerHistory匹配BrowserHistory
-export const history = createHashHistory();
+// export const history = createHashHistory();
+export const history = createBrowserHistory();
 const sagaMiddleware = createSagaMiddleware();
 
 const persistConfig = {
