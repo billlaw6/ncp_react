@@ -1,44 +1,68 @@
-import React from "react";
-import { Menu, Icon } from "antd";
-import { NavLink, Link, withRouter, RouteComponentProps } from "react-router-dom";
-import { history } from "../../store/configureStore";
-import logo from "../../assets/images/logo.svg";
-import "../../assets/images/0.png";
+import React, { ReactElement } from "react";
+import { Menu, Layout, Avatar, Dropdown } from "antd";
+import { ClickParam } from "antd/lib/menu";
+
+import { HeaderPropsI } from "./type";
+
+import logo from "../../assets/images/logo_temp.png";
 import "./Header.less";
 
-const { SubMenu } = Menu;
+const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
+const { Header: AntdHeader } = Layout;
 
-// class Header extends React.Component<IProps> {
-class Header extends React.Component {
-  state = {
-    current: "mail",
+const getAvatarMenu = (props: HeaderPropsI): ReactElement => {
+  const { username, cellPhone, logout } = props;
+
+  const onClick = (e: ClickParam): void => {
+    const { key } = e;
+    if (key === "logout" && logout) logout();
   };
 
-  handleClick = (e: any) => {
-    console.log("click ", e);
-    this.setState({
-      current: e.key,
-    });
-    history.push("/login");
-  };
+  return (
+    <Menu className="header-avatar-menu" onClick={onClick}>
+      <MenuItemGroup>
+        <ul className="user">
+          <li className="user-name">{username || "张三"}</li>
+          <li className="user-cell-phone">{cellPhone || "138*****110"}</li>
+        </ul>
+      </MenuItemGroup>
+      <Divider></Divider>
+      <MenuItemGroup>
+        <MenuItem className="edit-user-info" key="editUserInfo">
+          <a href="#">个人信息编辑</a>
+        </MenuItem>
+        <MenuItem className="logout" key="logout">
+          退出
+        </MenuItem>
+      </MenuItemGroup>
+    </Menu>
+  );
+};
 
-  render() {
-    return (
-      <nav className="header">
-        <div className="header-logo">Logo</div>
-        <div className="header-menu">
-          <ul className="header-menu-ul">
-            <li>
-              <NavLink to="/dicom" exact>
-                影像
-              </NavLink>
-            </li>
-          </ul>
-        </div>
-      </nav>
-    );
-  }
-}
+const Header = (props: HeaderPropsI): ReactElement => {
+  const { avatar } = props;
 
-// export default withRouter(Header);
+  return (
+    <AntdHeader id="header">
+      <div className="header-content">
+        <a className="logo" href="/">
+          <img src={logo}></img>
+        </a>
+        <Dropdown
+          className="avatar"
+          overlay={getAvatarMenu(props)}
+          overlayClassName="avatar-dropdown"
+          placement="bottomRight"
+        >
+          {avatar ? (
+            <Avatar size="default" src={avatar}></Avatar>
+          ) : (
+            <Avatar size="default" icon="user"></Avatar>
+          )}
+        </Dropdown>
+      </div>
+    </AntdHeader>
+  );
+};
+
 export default Header;
