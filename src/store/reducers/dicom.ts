@@ -1,9 +1,9 @@
-import { ISearchForm, IExamIndexList } from "../../constants/interface";
+import { SearchFormI, ExamIndexListI } from "../../constants/interface";
 import * as types from "../action-types";
 import moment from "moment";
 import { submitExamIndexSearchAction, setExamIndexListAction } from "../actions/dicom";
 
-const defaultExamIndexSearch: ISearchForm = {
+const defaultExamIndexSearch: SearchFormI = {
   dtRange: [new Date(new Date().getTime() - 6 * 24 * 3600 * 1000), new Date()],
   keyword: "exam index",
   fields: ["patient_name"],
@@ -25,7 +25,7 @@ const examSearchReducer = (
   }
 };
 
-const defaultExamIndexList: IExamIndexList[] = [];
+const defaultExamIndexList: ExamIndexListI[] = [];
 const examIndexListReducer = (
   state = defaultExamIndexList,
   action: ReturnType<typeof setExamIndexListAction>,

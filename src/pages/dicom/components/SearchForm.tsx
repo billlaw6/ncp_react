@@ -6,7 +6,7 @@ import { Resizable } from "react-resizable";
 // 组件不直接从redux取数据
 // import { connect } from 'react-redux';
 import moment from "moment";
-import { ISearchForm } from "../../../constants/interface";
+import { SearchFormI } from "../../../constants/interface";
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -15,9 +15,9 @@ const { RangePicker } = DatePicker; //获取日期选择控件中的日期范围
 // 组件不直接从reducer取数，通过父项传进来。
 interface IFormProps extends FormComponentProps {
   // fields和纯数据不一样，传给Form的fields需要重新定义类型，增加value的子节点。
-  // fields: ISearchForm,
+  // fields: SearchFormI,
   fields: any;
-  onSubmit(fields: ISearchForm): void;
+  onSubmit(fields: SearchFormI): void;
 }
 
 class SearchForm extends React.Component<IFormProps, any> {

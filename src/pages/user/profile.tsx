@@ -1,9 +1,9 @@
 import React from "react";
-import { IStoreState } from "../../constants/interface";
+import { StoreStateI } from "../../constants/interface";
 import { connect } from "react-redux";
 import { setCurrentUserAction } from "../../store/actions/user";
 
-const mapStateToProps = (state: IStoreState) => {
+const mapStateToProps = (state: StoreStateI) => {
   return {
     currentUser: state.currentUser,
   };

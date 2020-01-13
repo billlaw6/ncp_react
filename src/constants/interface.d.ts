@@ -1,14 +1,14 @@
 // Store相关接口
 // 本地变量遵循js规范使用驼峰式全名，需要与后台数据库字段对应的变量使用下划线风格。
 
-declare interface ILoginForm {
+export declare interface LoginFormI {
   username: string;
   password: string;
   remember: boolean;
   messages: Array<string>;
 }
 
-declare interface IProfileForm {
+export declare interface ProfileFormI {
   id: number;
   gender: number;
   birthday: Date;
@@ -19,7 +19,7 @@ declare interface IProfileForm {
   cell_phone: string;
 }
 
-declare interface ICurrentUser {
+export declare interface CurrentUserI {
   id: number;
   token: string;
   username: string;
@@ -35,7 +35,7 @@ declare interface ICurrentUser {
   // user_permissions?: Array<number>;
 }
 
-declare interface IUserInfo {
+export declare interface UserInfoI {
   id: number;
   username: string;
   email: string;
@@ -53,41 +53,41 @@ declare interface IUserInfo {
   user_permissions: Array<number>;
 }
 
-declare interface ISearchForm {
+export declare interface SearchFormI {
   dtRange: Date[];
   keyword: string;
   fields?: string[];
 }
 
-declare interface ICollection {
+export declare interface CollectionI {
   id: string;
   type: string;
   data: any;
 }
 
-declare interface IDicomPictureList {
+export declare interface DicomPictureListI {
   id: string;
   mpr_order: number;
   frame_order: number;
   url: string;
 }
 
-declare interface IDicomPicture {
+export declare interface DicomPictureI {
   id: string;
   mpr_order: number;
   frame_order: number;
-  collections: ICollection[];
+  collections: CollectionI[];
   url: string;
 }
 
-declare interface IDicomSeriesList {
+export declare interface DicomSeriesListI {
   id: string;
   series_number: number;
   mpr_flag: number;
   thumbnail: string;
 }
 
-declare interface IDicomSeries {
+export declare interface DicomSeriesI {
   id: string;
   thumbnail: string;
   study_id: string;
@@ -102,10 +102,10 @@ declare interface IDicomSeries {
   display_frame_rate: number;
   series_number: number;
   mpr_flag: number;
-  pictures: IDicomPictureList[];
+  pictures: DicomPictureListI[];
 }
 
-declare interface IExamIndexList {
+export declare interface ExamIndexListI {
   id: string;
   modality: string;
   patient_name: string;
@@ -117,7 +117,7 @@ declare interface IExamIndexList {
   thumbnail: string;
 }
 
-declare interface IExamIndex {
+export declare interface ExamIndexI {
   id: string;
   modality: string;
   patient_name: string;
@@ -128,41 +128,24 @@ declare interface IExamIndex {
   study_date: string;
   thumbnail: string;
   display_frame_rate: number;
-  series: IDicomSeriesList[];
+  series: DicomSeriesListI[];
 }
 
-declare interface IExamIndexForm {
+export declare interface ExamIndexFormI {
   id: string;
   desc: string;
 }
 
 // 创建store时要遵循的rootState接口，不能使用rootReducers的类型
 // 作为组件创建时props类型！！！必须用store.d里定义的！三天的教训！
-declare interface IStoreState {
+export declare interface StoreStateI {
   router: { location: Location };
-  loginForm: ILoginForm;
-  currentUser: ICurrentUser;
-  userInfo: IUserInfo;
-  userInfoList: IUserInfo[];
-  examSearchForm: ISearchForm;
-  examIndexList: IExamIndexList[];
-  dicomSeriesList: IDicomSeriesList[];
-  dicomPictureList: IDicomPictureList[];
+  loginForm: LoginFormI;
+  currentUser: CurrentUserI;
+  userInfo: UserInfoI;
+  userInfoList: UserInfoI[];
+  examSearchForm: SearchFormI;
+  examIndexList: ExamIndexListI[];
+  dicomSeriesList: DicomSeriesListI[];
+  dicomPictureList: DicomPictureListI[];
 }
-
-export {
-  ILoginForm,
-  ICurrentUser,
-  IUserInfo,
-  IProfileForm,
-  ISearchForm,
-  IExamIndex,
-  IExamIndexForm,
-  IExamIndexList,
-  IDicomSeries,
-  IDicomSeriesList,
-  IDicomPicture,
-  IDicomPictureList,
-  //
-  IStoreState,
-};

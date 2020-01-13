@@ -1,12 +1,12 @@
 import React from "react";
 import { Form, Icon, Input, Button } from "antd";
 import { FormComponentProps } from "antd/es/form";
-import { IExamIndexForm } from "../../../constants/interface";
+import { ExamIndexFormI } from "../../../constants/interface";
 
 interface IExamIndexDescFormProps extends FormComponentProps {
   fields: any;
-  onChange(fields: IExamIndexForm): void;
-  onSubmit(fields: IExamIndexForm): void;
+  onChange(fields: ExamIndexFormI): void;
+  onSubmit(fields: ExamIndexFormI): void;
 }
 
 class ExamIndexDescForm extends React.Component<IExamIndexDescFormProps, any> {
@@ -79,7 +79,7 @@ const WrappedExamIndexDescForm = Form.create<IExamIndexDescFormProps>({
       }),
     };
   },
-  // onFieldsChange(props: IExamIndexDescFormProps, changedFields: any, allFields: IExamIndexForm) {
+  // onFieldsChange(props: IExamIndexDescFormProps, changedFields: any, allFields: ExamIndexFormI) {
   //     console.log(changedFields);
   // },
   onValuesChange(props, changedValues, allValues) {

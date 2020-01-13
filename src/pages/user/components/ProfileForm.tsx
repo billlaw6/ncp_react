@@ -1,14 +1,14 @@
 import React from "react";
 import { Form, Icon, Input, Button, Checkbox } from "antd";
 import { FormComponentProps } from "antd/es/form";
-import { IProfileForm } from "../../../constants/interface";
+import { ProfileFormI } from "../../../constants/interface";
 import { FormattedMessage } from "react-intl";
 import "./ProfileForm.less";
 
 interface IProfileFormProps extends FormComponentProps {
   fields: any;
-  onChange(fields: IProfileForm): void;
-  onSubmit(fields: IProfileForm): void;
+  onChange(fields: ProfileFormI): void;
+  onSubmit(fields: ProfileFormI): void;
 }
 
 class ProfileForm extends React.Component<IProfileFormProps, any> {
@@ -104,7 +104,7 @@ const WrappedProfileForm = Form.create<IProfileFormProps>({
       }),
     };
   },
-  // onFieldsChange(props: IProfileFormProps, changedFields: any, allFields: IProfileForm) {
+  // onFieldsChange(props: IProfileFormProps, changedFields: any, allFields: ProfileFormI) {
   //     console.log(changedFields);
   // },
   onValuesChange(props, changedValues, allValues) {

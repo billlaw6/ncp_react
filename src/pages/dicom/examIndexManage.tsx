@@ -1,5 +1,5 @@
 import React from "react";
-import { IStoreState, IExamIndexList, ISearchForm } from "../../constants/interface";
+import { StoreStateI, ExamIndexListI, SearchFormI } from "../../constants/interface";
 import { submitExamIndexSearchAction, setExamIndexListAction } from "../../store/actions/dicom";
 import ExamIndexTable from "./components/ExamIndexTable";
 import ExamIndexList from "./components/ExamIndexList";
@@ -7,7 +7,7 @@ import SearchForm from "./components/SearchForm";
 import { connect } from "react-redux";
 import moment from "moment";
 
-const mapStateToProps = (state: IStoreState) => {
+const mapStateToProps = (state: StoreStateI) => {
   // console.log(state);
   return {
     searchForm: state.examSearchForm,
@@ -23,8 +23,8 @@ type IDispatchProps = typeof mapDispatchToProps;
 type IProps = ReturnType<typeof mapStateToProps> & IDispatchProps;
 
 // type IState = {
-//     fields: ISearchForm;
-//     examIndexData: IExamIndexList[];
+//     fields: SearchFormI;
+//     examIndexData: ExamIndexListI[];
 // }
 
 class ExamIndexManage extends React.Component<IProps, any> {
@@ -40,7 +40,7 @@ class ExamIndexManage extends React.Component<IProps, any> {
     examIndexData: [],
   };
   componentDidMount() {}
-  handleFormSubmit = (submitedFormData: ISearchForm) => {
+  handleFormSubmit = (submitedFormData: SearchFormI) => {
     console.log("submit");
     console.log(submitedFormData);
     this.props.submitExamIndexSearchAction(submitedFormData);

@@ -1,14 +1,14 @@
 import React from "react";
 import { Form, Icon, Input, Button, Checkbox } from "antd";
 import { FormComponentProps } from "antd/es/form";
-import { ILoginForm } from "../../../constants/interface";
+import { LoginFormI } from "../../../constants/interface";
 import { FormattedMessage } from "react-intl";
 import "./LoginForm.less";
 
 interface ILoginFormProps extends FormComponentProps {
   fields: any;
-  onChange(fields: ILoginForm): void;
-  onSubmit(fields: ILoginForm): void;
+  onChange(fields: LoginFormI): void;
+  onSubmit(fields: LoginFormI): void;
 }
 
 class LoginForm extends React.Component<ILoginFormProps, any> {
@@ -104,7 +104,7 @@ const WrappedLoginForm = Form.create<ILoginFormProps>({
       }),
     };
   },
-  // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: ILoginForm) {
+  // onFieldsChange(props: ILoginFormProps, changedFields: any, allFields: LoginFormI) {
   //     console.log(changedFields);
   // },
   onValuesChange(props, changedValues, allValues) {

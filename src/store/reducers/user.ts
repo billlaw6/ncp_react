@@ -1,4 +1,4 @@
-import { ICurrentUser, IUserInfo, ILoginForm } from "../../constants/interface";
+import { CurrentUserI, UserInfoI, LoginFormI } from "../../constants/interface";
 import {
   setCurrentUserAction,
   setLoginFormAction,
@@ -7,7 +7,7 @@ import {
 } from "../actions/user";
 import * as types from "../action-types";
 
-const defaultLoginForm: ILoginForm = {
+const defaultLoginForm: LoginFormI = {
   username: "",
   password: "",
   remember: false,
@@ -30,7 +30,7 @@ const loginFormReducer = (
   }
 };
 
-const defaultCurrentUser: ICurrentUser = {
+const defaultCurrentUser: CurrentUserI = {
   id: -1,
   token: "",
   username: "",
@@ -61,7 +61,7 @@ const currentUserReducer = (
   }
 };
 
-const defaultUserInfo: IUserInfo = {
+const defaultUserInfo: UserInfoI = {
   id: -1,
   username: "",
   email: "",
@@ -92,7 +92,7 @@ const userInfoReducer = (state = defaultUserInfo, action: ReturnType<typeof setU
   }
 };
 
-const defaultUserList: IUserInfo[] = [];
+const defaultUserList: UserInfoI[] = [];
 const userListReducer = (state = defaultUserList, action: ReturnType<typeof setUserListAction>) => {
   switch (action.type) {
     case types.SET_USER_LIST: {

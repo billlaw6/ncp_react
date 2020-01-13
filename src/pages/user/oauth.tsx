@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import qs from "qs";
 import { connect } from "react-redux";
-import { IStoreState } from "../../constants/interface";
+import { StoreStateI } from "../../constants/interface";
 import {
   setWeChatCodeAction,
   setLoginFormAction,
@@ -50,7 +50,7 @@ class Oauth extends React.Component<any, any> {
   }
 }
 
-const mapStateToProps = (state: IStoreState) => {
+const mapStateToProps = (state: StoreStateI) => {
   // console.log(state);
   return {
     router: state.router,

@@ -1,10 +1,10 @@
 import React from "react";
 import { changeCanvasAction } from "../../store/actions/canvas";
-import { IStoreState } from "../../constants/interface";
+import { StoreStateI } from "../../constants/interface";
 
 import { DatePicker } from "antd";
 
-const mapStateToProps = (storeState: IStoreState) => ({
+const mapStateToProps = (storeState: StoreStateI) => ({
   // canvas: storeState.canvas
 });
 
@@ -16,7 +16,7 @@ const mapDispatchToProps = {
 
 type IDispatchProps = typeof mapDispatchToProps;
 
-type IProps = IStoreState & IDispatchProps;
+type IProps = StoreStateI & IDispatchProps;
 class Canvas extends React.Component<IProps> {
   render() {
     return (

@@ -1,9 +1,9 @@
 import React from "react";
-import { IExamIndexList } from "../../../constants/interface";
+import { ExamIndexListI } from "../../../constants/interface";
 import { Icon } from "antd";
 import "./ExamIndex.less";
 
-class ExamIndex extends React.Component<IExamIndexList, object> {
+class ExamIndex extends React.Component<ExamIndexListI, object> {
   render() {
     const { thumbnail, patient_name, study_date, modality } = this.props;
     return (

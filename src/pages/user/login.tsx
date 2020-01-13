@@ -7,7 +7,7 @@ import {
   submitLoginFormAction,
   setCurrentUserAction,
 } from "../../store/actions/user";
-import { ILoginForm, IStoreState } from "../../constants/interface";
+import { LoginFormI, StoreStateI } from "../../constants/interface";
 import WeChatLogin from "./components/WeChatLogin";
 import "./login.less";
 import ContentLogo from "./components/ContentLogo";
@@ -15,7 +15,7 @@ import qs from "qs";
 import { stringify } from "querystring";
 import { message } from "antd";
 
-const mapStateToProps = (state: IStoreState) => {
+const mapStateToProps = (state: StoreStateI) => {
   // console.log(state);
   return {
     router: state.router,
@@ -100,7 +100,7 @@ class Login extends React.Component<IProps, IState> {
     console.log(this.props.router.location);
   }
 
-  handleFormChange = (changedValues: ILoginForm) => {
+  handleFormChange = (changedValues: LoginFormI) => {
     // 下面两个操作都加和都不加效果一样，表单Input刷新后也没从localstorage取值展示
     // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
     // Object.keys(changedValues).forEach((key) => {
@@ -126,7 +126,7 @@ class Login extends React.Component<IProps, IState> {
     // this.props.setLoginFormAction(changedValues);
   };
 
-  handleFormSubmit = (submitedFormData: ILoginForm) => {
+  handleFormSubmit = (submitedFormData: LoginFormI) => {
     this.props.submitLoginFormAction(submitedFormData);
     console.log(submitedFormData);
   };
