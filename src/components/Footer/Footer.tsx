@@ -1,20 +1,20 @@
-import React, { FC } from "react";
+import React, { ReactElement } from "react";
 import { Layout } from "antd";
-const { Footer } = Layout;
 
-declare interface IFooterProps {
-  className?: string;
-  style?: React.CSSProperties;
-}
+import "./Footer.less";
 
-class MyFooter extends React.Component {
-  constructor(props: any) {
-    super(props);
-  }
+const { Footer: AntdFooter } = Layout;
 
-  render() {
-    return <Footer className="footer">&copy;2019 医影云</Footer>;
-  }
-}
+const Footer = (): ReactElement => (
+  <AntdFooter id="footer">
+    <div>
+      <span>&#169;2019医影云</span>
+      <span>
+        <a href="#">隐私政策</a>
+      </span>
+    </div>
+    <div>网站备案号</div>
+  </AntdFooter>
+);
 
-export default MyFooter;
+export default Footer;

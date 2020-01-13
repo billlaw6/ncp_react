@@ -14,39 +14,37 @@ class App extends React.Component {
     return (
       <Layout className="mediclouds-layout">
         <MyHeader />
-        <Layout>
-          <Content id="content-container" className="content-container">
-            <Router>
-              <ul>
-                {routes.map((item, index) => {
-                  return (
-                    <li key={index}>
-                      <Link to={item.path}>{item.name}</Link>
-                    </li>
-                  );
-                })}
-              </ul>
-              <Switch>
-                {routes.map((item, index) => {
-                  return <RouteWithSubRoutes key={index} {...item} />;
-                })}
+        <Content id="content-container" className="content-container">
+          <Router>
+            <ul>
+              {routes.map((item, index) => {
+                return (
+                  <li key={index}>
+                    <Link to={item.path}>{item.name}</Link>
+                  </li>
+                );
+              })}
+            </ul>
+            <Switch>
+              {routes.map((item, index) => {
+                return <RouteWithSubRoutes key={index} {...item} />;
+              })}
 
-                {/* 错误URL处理 */}
-                {/*
+              {/* 错误URL处理 */}
+              {/*
                                 <Route render={()=>{
                                     return(<div>Error page</div>);
                                 }} />
                                 */}
-                <Redirect
-                  to={{
-                    pathname: "/",
-                    search: "?lx=404",
-                  }}
-                />
-              </Switch>
-            </Router>
-          </Content>
-        </Layout>
+              <Redirect
+                to={{
+                  pathname: "/",
+                  search: "?lx=404",
+                }}
+              />
+            </Switch>
+          </Router>
+        </Content>
         <MyFooter></MyFooter>
       </Layout>
     );
