@@ -1,5 +1,5 @@
 const en_US = {
-    welcome: 'Welcome!',
+  welcome: "Welcome!",
 };
 
 export default en_US;

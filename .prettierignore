@@ -1,0 +1,13 @@
+# Dir
+node_modules
+lib
+__tests__
+example
+assets
+
+# file
+*.lock
+*.html
+*.hbs
+*.json
+*.text

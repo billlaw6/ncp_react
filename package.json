@@ -32,7 +32,7 @@
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-16": "^1.15.2",
     "history": "^4.10.1",
-    "husky": "^3.0.9",
+    "husky": "^4.0.7",
     "less": "^3.10.3",
     "less-loader": "^5.0.0",
     "moment": "^2.24.0",
@@ -65,7 +65,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "format": "prettier --check --write './src/**/*'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -84,7 +85,14 @@
   },
   "devDependencies": {
     "@types/react-router": "^5.1.2",
-    "eslint-plugin-prettier": "^3.1.1",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "precise-commits": "^1.0.2",
     "prettier": "^1.19.1"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "precise-commits"
+    }
   }
 }

@@ -1,25 +1,25 @@
-import React from 'react';
-import { Menu, Icon } from 'antd';
+import React from "react";
+import { Menu, Icon } from "antd";
 import { NavLink, Link, withRouter, RouteComponentProps } from "react-router-dom";
-import { history } from '../../store/configureStore';
-import logo from '../../assets/images/logo.svg';
-import '../../assets/images/0.png';
-import './Header.less';
+import { history } from "../../store/configureStore";
+import logo from "../../assets/images/logo.svg";
+import "../../assets/images/0.png";
+import "./Header.less";
 
 const { SubMenu } = Menu;
 
 // class Header extends React.Component<IProps> {
 class Header extends React.Component {
   state = {
-    current: 'mail',
+    current: "mail",
   };
 
   handleClick = (e: any) => {
-    console.log('click ', e);
+    console.log("click ", e);
     this.setState({
       current: e.key,
     });
-    history.push('/login');
+    history.push("/login");
   };
 
   render() {
@@ -28,7 +28,11 @@ class Header extends React.Component {
         <div className="header-logo">Logo</div>
         <div className="header-menu">
           <ul className="header-menu-ul">
-            <li><NavLink to="/dicom" exact>影像</NavLink></li>
+            <li>
+              <NavLink to="/dicom" exact>
+                影像
+              </NavLink>
+            </li>
           </ul>
         </div>
       </nav>

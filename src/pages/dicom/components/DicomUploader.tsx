@@ -1,8 +1,8 @@
-import React from 'react';
-import { Upload, Icon, message } from 'antd';
-import { uploadDicomFile } from '../../../services/dicom';
-import axios from '../../../services/api';
-import md5 from 'blueimp-md5';
+import React from "react";
+import { Upload, Icon, message } from "antd";
+import { uploadDicomFile } from "../../../services/dicom";
+import axios from "../../../services/api";
+import md5 from "blueimp-md5";
 
 const { Dragger } = Upload;
 
@@ -22,19 +22,21 @@ const DicomUploader = () => {
   //     });
   //   });
   // };
-  let headersAuthorization = '';
-  const persistRoot = JSON.parse(localStorage.getItem('persist:root')!);
-  if (persistRoot.currentUser
-    && JSON.parse(persistRoot.currentUser).token
-    && JSON.parse(persistRoot.currentUser).token.length > 2) {
-    console.log('valid token');
-    headersAuthorization = 'Token ' + JSON.parse(persistRoot.currentUser).token;
+  let headersAuthorization = "";
+  const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
+  if (
+    persistRoot.currentUser &&
+    JSON.parse(persistRoot.currentUser).token &&
+    JSON.parse(persistRoot.currentUser).token.length > 2
+  ) {
+    console.log("valid token");
+    headersAuthorization = "Token " + JSON.parse(persistRoot.currentUser).token;
   }
   const props = {
-    name: 'file',
+    name: "file",
     multiple: true,
     // customRequest: handleDicomUpload,
-    action: `${axios.defaults.baseURL}` + 'dicom/upload/',
+    action: `${axios.defaults.baseURL}` + "dicom/upload/",
     // method: 'post',
     headers: {
       Authorization: headersAuthorization,
@@ -65,7 +67,7 @@ const DicomUploader = () => {
   };
 
   return (
-    <Dragger {...props} directory >
+    <Dragger {...props} directory>
       <p className="ant-upload-drag-icon">
         <Icon type="inbox" />
       </p>
@@ -73,9 +75,9 @@ const DicomUploader = () => {
       <p className="ant-upload-hint">
         Support for a single or bulk upload. Strictly prohibit from uploading company data or other
         band files
-    </p>
+      </p>
     </Dragger>
   );
-}
+};
 
 export default DicomUploader;
