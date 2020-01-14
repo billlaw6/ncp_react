@@ -23,7 +23,7 @@ const mapStateToProps = (state: StoreStateI) => {
     currentUser: state.currentUser,
   };
 };
-type IStateProps = ReturnType<typeof mapStateToProps>;
+type StatePropsI = ReturnType<typeof mapStateToProps>;
 
 const mapDispatchToProps = {
   setWeChatCodeAction,
@@ -31,10 +31,10 @@ const mapDispatchToProps = {
   submitLoginFormAction,
   setCurrentUserAction,
 };
-type IDispatchProps = typeof mapDispatchToProps;
-type IProps = IStateProps & IDispatchProps;
+type DispatchPropsI = typeof mapDispatchToProps;
+type PropsI = StatePropsI & DispatchPropsI;
 
-type IState = {
+type StateI = {
   // LoginForm用的组件内State
   fields: {
     username: {
@@ -55,8 +55,8 @@ type IState = {
   redirectUri: string;
 };
 
-class Login extends React.Component<IProps, IState> {
-  constructor(props: IProps) {
+class Login extends React.Component<PropsI, StateI> {
+  constructor(props: PropsI) {
     super(props);
     this.state = {
       appid: "wx0aee911ac049680c",
@@ -79,7 +79,7 @@ class Login extends React.Component<IProps, IState> {
     };
   }
 
-  static getDerivedStateFromProps(nextProps: IProps, preState: IState) {
+  static getDerivedStateFromProps(nextProps: PropsI, preState: StateI) {
     console.log(nextProps);
     console.log(preState);
     let query = nextProps.router.location.search.substr(1);
@@ -101,29 +101,6 @@ class Login extends React.Component<IProps, IState> {
   }
 
   handleFormChange = (changedValues: LoginFormI) => {
-    // 下面两个操作都加和都不加效果一样，表单Input刷新后也没从localstorage取值展示
-    // setState非常重要，不设置页面值不能更新，因为后面form item赋值走的state，不是props，以后可以去掉state试试。
-    // Object.keys(changedValues).forEach((key) => {
-    //     if (key === 'username') {
-    //         this.setState({
-    //             fields: {...this.state.fields, ...{ username: { value: changedValues[key]}}},
-    //         });
-    //         console.log('set username');
-    //     } else if (key === 'password') {
-    //         this.setState({
-    //             fields: {...this.state.fields, ...{ password: { value: changedValues[key]}}},
-    //         });
-    //         console.log('set username');
-    //     } else if (key === 'remember') {
-    //         this.setState({
-    //             fields: {...this.state.fields, ...{ remember: { value: changedValues[key]}}},
-    //         });
-    //         console.log('set username');
-    //     } else {
-    //         console.log('no matched key');
-    //     }
-    // })
-    // this.props.setLoginFormAction(changedValues);
   };
 
   handleFormSubmit = (submitedFormData: LoginFormI) => {

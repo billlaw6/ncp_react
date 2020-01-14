@@ -1,28 +1,39 @@
-#root {
-  height: 100%;
-}
+#content-container {
+  width: 100%;
+  height: 748;
+  .content {
+    &-container {
+      width: 80%;
+      height: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    &-router-link {
+      display: none;
+    }
+    .login-wrapper {
+      margin: 6px 24px;
+      height: 100%;
+      .content-logo {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+      }
+      .wechat-login {
+        text-align: center;
+        width: 100%;
+        height: 100%;
+        .wechat-qrcode .wechat-demo {
+          display: inline;
+        }
+      }
+    }
 
-.content-container {
-  height: 2564px;
-}
-.login-wrapper {
-  margin: 6px 24px;
-  height: 100%;
-  .content-logo {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-  }
-  .wechat-login {
-    text-align: center;
-    width: 100%;
-    height: 100%;
-    .wechat-qrcode .wechat-demo {
-      display: inline;
+    .footer {
+      text-align: center;
     }
   }
-}
-
-.footer {
-  text-align: center;
 }
