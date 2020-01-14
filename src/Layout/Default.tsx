@@ -3,9 +3,9 @@ import { Layout } from "antd";
 import { connect } from "react-redux";
 
 /* components */
-import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
-import { StoreStateI } from "../constants/interface";
+import Header from "_components/Header/Header";
+import Footer from "_components/Footer/Footer";
+import { StoreStateI } from "_constants/interface";
 
 /* style */
 import "./Default.less";

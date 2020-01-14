@@ -1,7 +1,7 @@
 import React, { ReactElement, FunctionComponent, useState } from "react";
 import { Card, Input } from "antd";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import holdimg from "../../assets/images/placeholder_270x262.png";
+import holdimg from "_images/placeholder_270x262.png";
 import "./DicomCard.less";
 
 interface DicomCardPropsI {

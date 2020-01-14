@@ -1,16 +1,11 @@
 import React, { Component, ReactElement } from "react";
-import { BrowserRouter as Router, Link, withRouter, Switch, Redirect } from "react-router-dom";
+import { BrowserRouter as Router, Switch, Redirect } from "react-router-dom";
 import routes from "./routes";
-// import { routerActions } from 'connected-react-router';
-import { Layout, Menu, Icon } from "antd";
-import MyHeader from "./components/Header/Header";
-import MyFooter from "./components/Footer/Footer";
-import RouteWithSubRoutes from "./components/RouteWithSubRoutes";
 
-import DefaultLayout from "./Layout/Default";
+import DefaultLayout from "_layout/Default";
+import RouteWithSubRoutes from "_components/RouteWithSubRoutes";
+
 import "./App.less";
-
-const { Header, Footer, Sider, Content } = Layout;
 
 class App extends Component {
   render(): ReactElement {
