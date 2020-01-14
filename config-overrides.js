@@ -12,7 +12,7 @@ module.exports = override(
   }),
   addLessLoader({
     javascriptEnable: true,
-    // modifyVars: { '@primary-color': '#1DA57A'}, // 不注释掉不能修改主题色
+    // modifyVars: { "@primary-color": "#7398FF" }, // 不注释掉不能修改主题色
   }),
   addWebpackAlias({
     ["_components"]: path.join(SRC, "components"),
@@ -20,5 +20,6 @@ module.exports = override(
     ["_constants"]: path.join(SRC, "constants"),
     ["_layout"]: path.join(SRC, "Layout"),
     ["_images"]: path.join(SRC, "assets", "images"),
+    ["_actions"]: path.join(SRC, "store", "actions"),
   }),
 );

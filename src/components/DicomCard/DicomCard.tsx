@@ -18,7 +18,7 @@ const DicomCard: FunctionComponent<DicomCardPropsI & RouteComponentProps> = (
   props,
 ): ReactElement => {
   const { history, thumbnail, patientName, studyDate, modality = "未知", desc, updateDesc } = props;
-
+  console.log("props: ", props);
   const [inputValue, changeInputValue] = useState(desc || "");
   const [showEditor, editDesc] = useState(false);
 
@@ -26,7 +26,6 @@ const DicomCard: FunctionComponent<DicomCardPropsI & RouteComponentProps> = (
     <article className="dicom-card">
       <Card
         className="dicom-card-content"
-        hoverable
         onClick={(): void => history.push("/player")}
         cover={<img src={thumbnail || holdimg}></img>}
       >
@@ -37,13 +36,15 @@ const DicomCard: FunctionComponent<DicomCardPropsI & RouteComponentProps> = (
         <div className="dicom-card-type">{modality}</div>
       </Card>
       <div className={`dicom-card-desc ${showEditor ? "dicom-card-desc-editing" : ""}`}>
-        <div className="dicom-card-desc-text">{desc || "备注"}</div>
-        <span
-          className="dicom-card-desc-edit iconfont icon_ic-edit"
-          onClick={(): void => editDesc(true)}
-        >
-          +
-        </span>
+        <div className="dicom-card-desc-text">
+          <div>{desc || "备注"}</div>
+          <span
+            className="dicom-card-desc-edit iconfont icon_ic-edit"
+            onClick={(): void => editDesc(true)}
+          >
+            +
+          </span>
+        </div>
         <Input
           className="dicom-card-desc-editor"
           value={inputValue || ""}

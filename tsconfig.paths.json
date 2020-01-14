@@ -6,7 +6,8 @@
       "_pages/*": ["pages/*"],
       "_constants/*": ["constants/*"],
       "_layout/*": ["Layout/*"],
-      "_images/*": ["assets/images/*"]
+      "_images/*": ["assets/images/*"],
+      "_actions/*": ["store/actions/*"]
     }
   }
 }
