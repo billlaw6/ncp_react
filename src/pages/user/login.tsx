@@ -100,8 +100,7 @@ class Login extends React.Component<PropsI, StateI> {
     console.log(this.props.router.location);
   }
 
-  handleFormChange = (changedValues: LoginFormI) => {
-  };
+  handleFormChange = (changedValues: LoginFormI) => {};
 
   handleFormSubmit = (submitedFormData: LoginFormI) => {
     this.props.submitLoginFormAction(submitedFormData);
