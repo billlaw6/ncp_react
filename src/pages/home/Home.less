@@ -12,7 +12,13 @@
     align-items: center;
     margin-bottom: 28px;
     .iconfont {
-      color: @activeColor;
+      font-size: 22px;
+      cursor: pointer;
+      transition: color 200ms;
+      &:hover {
+        color: @activeColor;
+        transition: color 200ms;
+      }
     }
   }
 
@@ -28,6 +34,8 @@
     }
 
     &-upload {
+      width: 110px;
+      height: 38px;
       margin-right: 40px;
       color: @activeColor;
       border-color: @activeColor;
@@ -42,6 +50,15 @@
 
     &-select-sort {
       margin-right: 26px;
+    }
+  }
+
+  .dicom-list {
+    &-square {
+      .ant-pagination {
+        text-align: center;
+        margin-top: 50px;
+      }
     }
   }
 }

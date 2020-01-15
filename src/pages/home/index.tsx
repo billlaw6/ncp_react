@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
-import { Row, Col, Button, Dropdown, Menu } from "antd";
+import { Row, Col, Button, Dropdown, Menu, Icon, Pagination, Table } from "antd";
 import DicomCard from "_components/DicomCard/DicomCard";
-import { StoreStateI } from "_constants/interface";
+import { StoreStateI, ExamIndexListI } from "_constants/interface";
 
 import {
   MapStateToPropsI,
@@ -19,6 +19,8 @@ import "./Home.less";
 import mockData from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 
+const DEFAULT_PAGE_SIZE = 12;
+
 class Home extends Component<HomePropsI, HomeStateI> {
   constructor(props: HomePropsI) {
     super(props);
@@ -27,6 +29,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
       viewType: ViewTypeEnum.GRID,
       sortType: SortTypeEnum.TIME,
       isSelectable: false,
+      page: 1,
+      selections: [],
     };
   }
 
@@ -35,9 +39,30 @@ class Home extends Component<HomePropsI, HomeStateI> {
     // getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
   }
 
+  list = (): ReactElement | undefined => {
+    const { selections } = this.state;
+    const renderList = this.getCurrentItem();
+    const columns = [
+      { title: "类型", dataIndex: "modality" },
+      { title: "姓名", dataIndex: "patient_name" },
+      { title: "上传日期", dataIndex: "study_date" },
+      { title: "备注", dataIndex: "desc" },
+      { title: "", dataIndex: "ctl" },
+    ];
+
+    const rowSelection = {
+      selectedRowKeys: selections,
+      // onChange: this.onSelectChange,
+    };
+
+    return <Table columns={columns}></Table>;
+  };
+
   dicoms = (): ReactElement | undefined => {
     const { examIndexList } = this.props;
-    console.log("examIndexList", examIndexList);
+    const { page } = this.state;
+    const renderList = this.getCurrentItem();
+    console.log("renderList", renderList);
 
     if (!examIndexList || !examIndexList.length) {
       const rows: ReactElement[] = [];
@@ -49,12 +74,12 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
       let count = 0;
 
-      mockData.forEach(item => {
+      renderList.forEach(item => {
         const { id, patient_name, study_date, desc, thumbnail, modality } = item;
         if (count >= 4) {
           count = 0;
           rows.push(
-            <Row type="flex" gutter={gutter} align="middle">
+            <Row key={rows.length} type="flex" gutter={gutter} align="middle">
               {cols}
             </Row>,
           );
@@ -62,9 +87,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
         }
 
         cols.push(
-          <Col xs={24} md={12} lg={8} xl={6}>
+          <Col key={id} xs={24} md={12} lg={8} xl={6}>
             <DicomCard
-              key={id}
               id={id}
               patientName={patient_name}
               studyDate={study_date}
@@ -77,13 +101,31 @@ class Home extends Component<HomePropsI, HomeStateI> {
       });
 
       rows.push(
-        <Row type="flex" gutter={gutter} align="middle">
+        <Row key={rows.length} type="flex" gutter={gutter} align="top">
           {cols}
         </Row>,
       );
 
-      return <div className="dicom-list">{rows}</div>;
+      return (
+        <div className="dicom-list dicom-list-square">
+          {rows}
+          <Pagination
+            hideOnSinglePage={false}
+            current={page}
+            defaultPageSize={DEFAULT_PAGE_SIZE}
+            total={mockData.length}
+            onChange={(page): void => {
+              this.setState({ page });
+            }}
+          ></Pagination>
+        </div>
+      );
     }
+  };
+
+  getCurrentItem = (): ExamIndexListI[] => {
+    const { page } = this.state;
+    return mockData.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
   };
 
   controller = (): ReactElement => {
@@ -94,13 +136,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
           <Button icon="cloud-upload" shape="round" className="controller-upload">
             上传
           </Button>
-          <span className="controller-del iconfont">删除</span>
+          <Icon className="controller-del iconfont" type="delete" />
         </div>
         <div className="controller-right">
           <Dropdown overlay={this.dropdownContent()} placement="bottomRight">
-            <span className="controller-select-sort iconfont">Dropdown</span>
+            <Icon className="controller-select-sort iconfont" type="sort-ascending" />
           </Dropdown>
-          <span className="controller-select-view iconfont">改变显示类型</span>
+          <Icon className="controller-select-view iconfont" type="appstore" />
         </div>
       </div>
     );

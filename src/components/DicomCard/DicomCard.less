@@ -6,12 +6,12 @@
   display: inline-block;
   width: 100%;
   &-content {
-    // max-width: 270px;
     position: relative;
     box-shadow: 0px 2px 6px 0px rgba(144, 144, 144, 0.5);
     width: 100%;
     border-radius: @borderRadius;
     overflow: hidden;
+    border: none;
     &::after {
       position: absolute;
       content: "";
@@ -33,6 +33,10 @@
     .ant-card {
       &-cover {
         position: relative;
+        min-height: 200px;
+        img {
+          width: 100%;
+        }
       }
       &-body {
         position: absolute;
@@ -70,7 +74,7 @@
     display: flex;
     margin-top: 8px;
     padding: 8px;
-    height: 36px;
+    // height: 36px;
     width: 100%;
     border-radius: @borderRadius;
     color: @fontColor;
@@ -84,6 +88,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-right: 10px;
     }
     &-edit {
       color: transparent;
@@ -111,10 +116,16 @@
           background-color: @activeColor;
         }
       }
+      .iconfont {
+        color: @activeColor;
+        &:first-child {
+          margin-right: 8px;
+        }
+      }
     }
 
     .iconfont {
-      // font-size: 22px;
+      font-size: 20px;
       cursor: pointer;
       display: inline-block;
     }
@@ -136,6 +147,11 @@
           display: inline-block;
         }
       }
+    }
+
+    &-ctl {
+      display: flex;
+      align-items: center;
     }
   }
 }
