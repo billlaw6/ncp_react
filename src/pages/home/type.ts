@@ -1,5 +1,6 @@
 import { ExamIndexListI } from "_constants/interface";
 import { submitExamIndexSearchAction } from "_actions/dicom";
+import { RouteComponentProps } from "react-router";
 
 export interface MapStateToPropsI {
   examIndexList: ExamIndexListI[];
@@ -8,7 +9,7 @@ export interface MapDispatchToPropsI {
   getList: typeof submitExamIndexSearchAction;
 }
 
-export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI;
+export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
 export interface HomeStateI {
   viewType: ViewTypeEnum; // 视图模式
   sortType: SortTypeEnum; // 排序规则

@@ -3,6 +3,7 @@
 @activeColor: #7398ff;
 
 .dicom-card {
+  position: relative;
   display: inline-block;
   width: 100%;
   &-content {
@@ -153,5 +154,12 @@
       display: flex;
       align-items: center;
     }
+  }
+
+  &-checkbox {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 50;
   }
 }

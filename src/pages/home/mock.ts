@@ -27,7 +27,7 @@ const generateData = (count: number): ExamIndexListI[] => {
 };
 
 // console.log(generateData(5));
-export default generateData(15);
+export default generateData(25);
 
 // export default [
 //   {
