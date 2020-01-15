@@ -1,4 +1,5 @@
 import React from "react";
+import './ContentLogo.less';
 
 class ContentLogo extends React.Component {
   constructor(props: any) {
@@ -6,7 +7,7 @@ class ContentLogo extends React.Component {
   }
 
   render() {
-    return <div className="content-logo">Content Logo</div>;
+    return <div className="content-logo"> Content Logo </div>
   }
 }
 

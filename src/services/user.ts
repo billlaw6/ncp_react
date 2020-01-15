@@ -11,6 +11,11 @@ export const userLogin = async (params: any) => {
   return res;
 };
 
+export const getUserInfo = async (params: any) => {
+  const res = await axios.post(`/user/info/`, params);
+  return res;
+};
+
 export const userLogout = async (params: any) => {
   const res = await axios.post(`/auth/logout/`, { params: params });
   return res;

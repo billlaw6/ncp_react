@@ -59,7 +59,8 @@ class Login extends React.Component<PropsI, StateI> {
   constructor(props: PropsI) {
     super(props);
     this.state = {
-      appid: "wx0aee911ac049680c",
+      // appid: "wx0aee911ac049680c",
+      appid: "wxed42db352deaa115",
       redirectUri: "https://mi.mediclouds.cn/oauth/",
       // 使用Reducer里设置的初始值
       fields: {

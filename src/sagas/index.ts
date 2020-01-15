@@ -37,8 +37,10 @@ function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
 
 function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
   try {
+    // 登录前先清空本地token，防止无效token判定。
+    yield put({ type: types.SET_CURRENT_USER, payload: { token: "" } });
     const res = yield call(userLogin, action.payload);
-    console.log(res);
+    // console.log(res);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_CURRENT_USER, payload: { token: res.data.key } });
     // 只变了URL没渲染页面
