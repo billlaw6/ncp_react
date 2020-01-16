@@ -11,8 +11,8 @@ export const userLogin = async (params: any) => {
   return res;
 };
 
-export const getUserInfo = async (params: any) => {
-  const res = await axios.post(`/user/info/`, params);
+export const getUserInfo = async () => {
+  const res = await axios.get(`/user/user-info/`);
   return res;
 };
 

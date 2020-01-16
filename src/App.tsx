@@ -1,10 +1,7 @@
 import React, { Component } from "react";
 import { Router, Link, withRouter, Switch, Redirect } from "react-router-dom";
 import routes from "./routes";
-// import { routerActions } from 'connected-react-router';
 import { Layout } from "antd";
-import MyHeader from "./components/Header/Header";
-import MyFooter from "./components/Footer/Footer";
 import RouteWithSubRoutes from "./components/RouteWithSubRoutes";
 import { history } from "./store/configureStore";
 

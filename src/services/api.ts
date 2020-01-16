@@ -11,7 +11,6 @@ switch (process.env.NODE_ENV) {
     break;
   case "production":
     axios.defaults.baseURL = "https://mi.mediclouds.cn/rest-api/";
-    // axios.defaults.baseURL = 'http://115.29.148.227:8083/rest-api/';
     break;
   default:
     axios.defaults.baseURL = "rest-api/";
@@ -26,14 +25,16 @@ axios.interceptors.request.use(
     // 得到参数中的 requestName 字段，用于决定下次发起请求，取消对应的 相同字段的请求
     // 如果没有 requestName 就默认添加一个 不同的时间戳
     config.headers["X-Requested-With"] = "XMLHttpRequest";
-    let regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookies中匹配csrftoken值
+    const regex = /.*csrftoken=([^;.]*).*$/; // 用于从cookies中匹配csrftoken值
     config.headers["X-CSRFToken"] =
       document.cookie.match(regex) === null ? null : document.cookie.match(regex)![1];
     // console.log(localStorage.getItem('persist:root'));
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
     // console.log(persistRoot.token);
     // 注意对象的多重解析
+    console.log(persistRoot.currentUser);
     console.log(JSON.parse(persistRoot.currentUser).token);
+    console.log(JSON.parse(persistRoot.currentUser).token.length);
     // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
     if (
       persistRoot.currentUser &&
@@ -99,7 +100,7 @@ axios.interceptors.response.use(
       // console.log('response valid');
       switch (response.status) {
         case 400:
-          history.push("/login");
+          // history.push("/login");
           return Promise.reject(error);
         case 401: // 当前请求用户需要验证，未登录；
           // 跳转路由或弹出蒙层
@@ -128,6 +129,7 @@ axios.interceptors.response.use(
         return Promise.reject(error);
       }
       // 服务器无响应又没断网，返回报错
+      history.push("/error");
       return Promise.reject(error);
     }
   },
