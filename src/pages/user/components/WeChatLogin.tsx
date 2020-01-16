@@ -9,7 +9,7 @@ declare interface PropsI {
   href?: string;
 }
 
-const WeChatLogin = function (props: PropsI) {
+const WeChatLogin = function(props: PropsI) {
   const parsedRedirectUri = encodeURI(props.redirectUri);
   const style = props.style || "black";
   const href = props.href;
