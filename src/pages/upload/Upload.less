@@ -13,6 +13,8 @@
     padding: 28px 0 18px;
     h1 {
       margin: 0;
+      font-size: 22px;
+      font-weight: 500;
     }
   }
 
@@ -40,8 +42,20 @@
   }
 
   &-uploader {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     flex-grow: 1;
     margin-right: 24px;
+    border: 1px dashed #ccc;
+    cursor: pointer;
+    transition: border-color 300ms;
+    border-radius: 8px;
+    &:hover {
+      border-color: @primaryColor;
+      transition: border-color 300ms;
+    }
     .ant-upload {
       background-color: #fff;
     }

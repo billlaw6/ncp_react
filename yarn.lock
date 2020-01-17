@@ -2243,6 +2243,11 @@ atob@^2.1.1:
   resolved "https://registry.npm.taobao.org/atob/download/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha1-bZUX654DDSQ2ZmZR6GvZ9vE1M8k=
 
+attr-accept@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.npm.taobao.org/attr-accept/download/attr-accept-2.0.0.tgz#8422fef5ee4a511c207796c888227ab5de03306f"
+  integrity sha1-hCL+9e5KURwgd5bIiCJ6td4DMG8=
+
 autoprefixer@^9.6.1:
   version "9.7.0"
   resolved "https://registry.npm.taobao.org/autoprefixer/download/autoprefixer-9.7.0.tgz?cache=0&sync_timestamp=1571921725686&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fautoprefixer%2Fdownload%2Fautoprefixer-9.7.0.tgz#905ec19e50f04545fe9ff131182cc9ab25246901"
@@ -4844,6 +4849,13 @@ file-loader@3.0.1:
   dependencies:
     loader-utils "^1.0.2"
     schema-utils "^1.0.0"
+
+file-selector@^0.1.12:
+  version "0.1.12"
+  resolved "https://registry.npm.taobao.org/file-selector/download/file-selector-0.1.12.tgz#fe726547be219a787a9dcc640575a04a032b1fd0"
+  integrity sha1-/nJlR74hmnh6ncxkBXWgSgMrH9A=
+  dependencies:
+    tslib "^1.9.0"
 
 filesize@3.6.1:
   version "3.6.1"
@@ -10055,6 +10067,15 @@ react-draggable@^4.0.3:
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.6.0"
+
+react-dropzone@^10.2.1:
+  version "10.2.1"
+  resolved "https://registry.npm.taobao.org/react-dropzone/download/react-dropzone-10.2.1.tgz#b7520124c4a3b66f96d49f7879027c7a475eaa20"
+  integrity sha1-t1IBJMSjtm+W1J94eQJ8ekdeqiA=
+  dependencies:
+    attr-accept "^2.0.0"
+    file-selector "^0.1.12"
+    prop-types "^15.7.2"
 
 react-error-overlay@^6.0.3:
   version "6.0.3"
