@@ -1,5 +1,5 @@
-import React, { Component, useState, FunctionComponent } from "react";
-import { Icon, Switch, Result } from "antd";
+import React, { useState, FunctionComponent } from "react";
+import { Icon, Switch } from "antd";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 
@@ -10,7 +10,6 @@ import FileProgress from "_components/FileProgress/FileProgress";
 import "./Upload.less";
 import { Link } from "react-router-dom";
 import { FileProgressStatusEnum } from "_components/FileProgress/type";
-import { isNull } from "util";
 
 // let headersAuthorization = "";
 // const persistRootStr = localStorage.getItem("persist:root");
@@ -26,9 +25,28 @@ import { isNull } from "util";
 //   }
 // }
 
-const Upload: FunctionComponent<{}> = props => {
+const Upload: FunctionComponent = () => {
+  const [currentLoad, updateCurrentLoad] = useState<UploadStatusI | undefined>(undefined);
   const [uploadList, updateLoadList] = useState<UploadStatusI[]>([]);
   const [delPrivacy, changeDelPrivacy] = useState(true);
+
+  const _updateLoadList = (item: UploadStatusI): void => {
+    const { id, status } = item;
+    const nextupLoadList = uploadList.map(sub => {
+      if (sub.id === id) {
+        if (status === FileProgressStatusEnum.FAIL) {
+          item.progress = sub.progress;
+        }
+
+        return item;
+      }
+      return sub;
+    });
+
+    updateLoadList(nextupLoadList);
+    updateCurrentLoad(undefined);
+  };
+
   const { getRootProps, getInputProps } = useDropzone({
     onDropAccepted: files => {
       if (files && files.length) {
@@ -43,25 +61,52 @@ const Upload: FunctionComponent<{}> = props => {
         updateLoadList(nextUploadList);
 
         const formData = new FormData();
-        const filesBlob = new Blob(files);
-        formData.append("file", filesBlob);
+        files.map(item => {
+          formData.append("file", item);
+        });
 
         axios
-          .post(`/`, formData, {
+          // .post(`http://173.242.127.101:30178/upload`, formData, {
+          .post(`http://192.168.1.220:3002/upload`, formData, {
             // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
               // Authorization: headersAuthorization,
             },
-            onUploadProgress: progressEvent => {
-              console.log("progress event", progressEvent);
+            onUploadProgress: function(progressEvent: any) {
+              console.log("progressEvent: ", progressEvent);
+              const { loaded, total } = progressEvent;
+              updateCurrentLoad(
+                Object.assign({}, progressInfo, {
+                  progress: (loaded / total) * 100,
+                }),
+              );
             },
           })
-          .then(result => {})
-          .catch();
+          .then(result => {
+            // console.log("result: ", uploadList);
+            updateCurrentLoad(
+              Object.assign({}, progressInfo, {
+                progress: 100,
+                status: FileProgressStatusEnum.SUCCESS,
+              }),
+            );
+          })
+          .catch(err => {
+            updateCurrentLoad(
+              Object.assign({}, progressInfo, {
+                status: FileProgressStatusEnum.FAIL,
+              }),
+            );
+          });
       }
     },
   });
+
+  console.log("updateLoadList", uploadList);
+  if (currentLoad && currentLoad.id) {
+    _updateLoadList(currentLoad);
+  }
 
   return (
     <section className="upload">
@@ -74,7 +119,7 @@ const Upload: FunctionComponent<{}> = props => {
       </div>
       <div className="upload-content">
         <div {...getRootProps({ className: "upload-uploader" })}>
-          <input {...getInputProps()} />
+          <input {...getInputProps({ name: "file", multiple: true })} />
           <Icon className="iconfont" type="inbox" />
           <p>点击或将文件拖拽到这里上传</p>
           <small>系统自动整理影像种类</small>

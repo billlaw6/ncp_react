@@ -356,6 +356,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const { sortType } = this.state;
     return (
       <Menu
+        className="home-dicom-sort"
         onClick={(data): void => {
           this.setState({ sortType: data.key as SortTypeEnum });
         }}
