@@ -12,7 +12,7 @@ import en_US from "./locales/en_US";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/es/integration/react";
 
-const store = configureStore();
+export const store = configureStore();
 const persistor = persistStore(store);
 
 // 下面两种模式有区别，原因未知。

@@ -80,32 +80,24 @@ class Login extends React.Component<PropsI, StateI> {
     };
   }
 
-  static getDerivedStateFromProps(nextProps: PropsI, preState: StateI) {
-    console.log(nextProps);
-    console.log(preState);
-    let query = nextProps.router.location.search.substr(1);
-    console.log(query);
-    let obj = qs.parse(query);
-    console.log(obj);
-    if (obj.code) {
-      nextProps.setWeChatCodeAction(obj);
-      console.log("wechat oauth2 login");
-    } else {
-      console.log("no code");
-    }
-    return null;
-  }
-
-  componentDidMount() {
-    console.log(this.props);
-    console.log(this.props.router.location);
-  }
+  // componentDidMount() {
+  //   const query = this.props.router.location.search.substr(1);
+  //   // console.log(query);
+  //   const obj = qs.parse(query);
+  //   // console.log(obj);
+  //   if (obj.code) {
+  //     this.props.setWeChatCodeAction(obj);
+  //     console.log("wechat oauth2 login");
+  //   } else {
+  //     console.log("no weChat code");
+  //   }
+  // }
 
   handleFormChange = (changedValues: LoginFormI) => {};
 
   handleFormSubmit = (submitedFormData: LoginFormI) => {
     this.props.submitLoginFormAction(submitedFormData);
-    console.log(submitedFormData);
+    // console.log(submitedFormData);
   };
 
   render() {
@@ -121,7 +113,7 @@ class Login extends React.Component<PropsI, StateI> {
         <WeChatLogin
           appid={this.state.appid}
           redirectUri={this.state.redirectUri}
-          href="https://mediclouds-web-style.oss-cn-beijing.aliyuncs.com/qrcode.css"
+          href="https://mi.mediclouds.cn/static/css/qrcode.css"
         />
       </div>
     );

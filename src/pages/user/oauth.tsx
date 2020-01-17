@@ -11,26 +11,26 @@ import {
 } from "../../store/actions/user";
 
 class Oauth extends React.Component<any, any> {
-  static getDerivedStateFromProps(nextProps: any, preState: any) {
-    console.log(nextProps);
-    console.log(preState);
-    let query = nextProps.router.location.search.substr(1);
-    console.log(query);
-    let obj = qs.parse(query);
-    console.log(obj);
-    if (obj.code) {
-      nextProps.setWeChatCodeAction(obj);
-      console.log("wechat oauth2 login");
-    } else {
-      console.log("no code");
-    }
-    return null;
-  }
+  // static getDerivedStateFromProps(nextProps: any, preState: any) {
+  //   console.log(nextProps);
+  //   console.log(preState);
+  //   const query = nextProps.router.location.search.substr(1);
+  //   console.log(query);
+  //   const obj = qs.parse(query);
+  //   console.log(obj);
+  //   if (obj.code) {
+  //     nextProps.setWeChatCodeAction(obj);
+  //     console.log("wechat oauth2 login");
+  //   } else {
+  //     console.log("no code");
+  //   }
+  //   return null;
+  // }
 
   componentDidMount() {
-    let query = this.props.router.location.search.substr(1);
+    const query = this.props.router.location.search.substr(1);
     console.log(query);
-    let obj = qs.parse(query);
+    const obj = qs.parse(query);
     console.log(obj);
     if (obj.code) {
       this.props.setWeChatCodeAction(obj);

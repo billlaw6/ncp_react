@@ -2,10 +2,16 @@
   width: 50%;
   border: solid 1px;
   display: flex;
-  &-qrcode {
-    width: 50%;
-  }
-  &-demo {
-    width: 50%;
+  flex-direction: column;
+  &-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    &-qrcode {
+      width: 50%;
+    }
+    &-demo {
+      width: 50%;
+    }
   }
 }
