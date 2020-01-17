@@ -13,7 +13,9 @@ const Footer = (): ReactElement => (
         <a href="#">隐私政策</a>
       </span>
     </div>
-    <div>网站备案号</div>
+    <div>
+      <a href="http://beian.miit.gov.cn">京ICP备19054124号-1</a>
+    </div>
   </AntdFooter>
 );
 

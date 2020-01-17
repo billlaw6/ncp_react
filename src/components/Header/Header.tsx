@@ -2,9 +2,10 @@ import React, { ReactElement } from "react";
 import { Menu, Layout, Avatar, Dropdown } from "antd";
 import { ClickParam } from "antd/lib/menu";
 
+import logo from "_images/logo_temp.png";
+
 import { HeaderPropsI } from "./type";
 
-import logo from "../../assets/images/logo_temp.png";
 import "./Header.less";
 
 const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
