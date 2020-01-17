@@ -32,6 +32,7 @@ import mockData from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
 import { Link } from "react-router-dom";
+import LinkButton from "_components/LinkButton/LinkButton";
 
 const DEFAULT_PAGE_SIZE = 12;
 
@@ -279,10 +280,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
       <div id="controller" className="controller">
         <div className="controller-left">
           <span className="controller-title">影像列表</span>
-          <Link to="/upload" className="controller-upload">
-            <Icon className="iconfont" type="cloud-upload"></Icon>
+          <LinkButton className="controller-upload" to="/upload" icon="cloud-upload">
             上传
-          </Link>
+          </LinkButton>
           <div className={`controller-del ${isSelectable ? "controller-del-open" : ""}`}>
             <Icon
               className="iconfont"

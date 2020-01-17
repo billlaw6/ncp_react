@@ -8,6 +8,7 @@ import RouteWithSubRoutes from "_components/RouteWithSubRoutes";
 /* pages */
 import Upload from "_pages/upload/Upload";
 import Home from "_pages/home";
+import Error from "_pages/error/Error";
 
 import "./App.less";
 
@@ -29,9 +30,10 @@ class App extends Component {
                 return(<div>Error page</div>);
             }} />
             */}
+            <Route path="/404" component={Error}></Route>
             <Redirect
               to={{
-                pathname: "/",
+                pathname: "/404",
                 search: "?lx=404",
               }}
             />
