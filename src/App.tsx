@@ -1,12 +1,10 @@
 import React, { Component, ReactElement } from "react";
 import { Router, Link, withRouter, Switch, Redirect } from "react-router-dom";
 import routes from "./routes";
-import { Layout } from "antd";
 import RouteWithSubRoutes from "./components/RouteWithSubRoutes";
 import { history } from "./store/configureStore";
 
 import DefaultLayout from "_layout/Default";
-import RouteWithSubRoutes from "_components/RouteWithSubRoutes";
 
 import "./App.less";
 
