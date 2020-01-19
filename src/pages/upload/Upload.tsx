@@ -66,8 +66,8 @@ const Upload: FunctionComponent = () => {
         });
 
         axios
-          // .post(`http://173.242.127.101:30178/upload`, formData, {
-          .post(`http://192.168.1.220:3002/upload`, formData, {
+          .post(`http://173.242.127.101:30178/upload`, formData, {
+            // .post(`http://192.168.1.220:3002/upload`, formData, {
             // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",

@@ -2,7 +2,7 @@ import React, { Component, ReactElement } from "react";
 import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-dom";
 import routes from "./routes";
 
-import DefaultLayout from "_layout/Default";
+import DefaultLayout from "_layout/Default/Default";
 import RouteWithSubRoutes from "_components/RouteWithSubRoutes";
 
 /* pages */
