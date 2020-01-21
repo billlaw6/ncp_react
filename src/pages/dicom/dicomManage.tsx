@@ -6,13 +6,13 @@ import { ExamIndexListI, SearchFormI, StoreStateI } from "../../constants/interf
 import { Table, Input, Button, Icon } from "antd";
 import RouteWithSubRoutes from "../../components/RouteWithSubRoutes";
 
-declare interface IProps {
+declare interface PropsI {
   // 父项传进来的本模块的子路由
   routes?: Array<any>;
 }
 
-class Dicom extends React.Component<IProps, object> {
-  // constructor(props: IProps) {
+class Dicom extends React.Component<PropsI, object> {
+  // constructor(props: PropsI) {
   //     super(props);
   //     console.log(props);
   // }

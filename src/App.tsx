@@ -14,8 +14,8 @@ class App extends Component {
       <DefaultLayout>
         <Router history={history}>
           <Switch>
-            {routes.map((item, index) => {
-              return <RouteWithSubRoutes key={index} {...item} />;
+            {routes.map(item => {
+              return <RouteWithSubRoutes key={item.name} {...item} />;
             })}
 
             {/* 错误URL处理 */}

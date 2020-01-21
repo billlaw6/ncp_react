@@ -6,7 +6,6 @@ import { getExamIndex } from "../services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 import { store } from "../index";
-import { currentUserReducer } from "../store/reducers/user";
 // import { createBrowserHistory } from "history";
 // import { history } from "../store/configureStore";
 
@@ -26,8 +25,8 @@ function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
       console.log(succeededPayload);
       yield put({ type: types.SET_CURRENT_USER, payload: succeededPayload });
       // 下面两种效果一样
-      // history.push('/dicom/upload/')
-      yield put(push("/dicom/upload/"));
+      // history.push('/')
+      yield put(push("/"));
     }
   } catch (error) {
     console.log(error.response);
@@ -45,8 +44,8 @@ function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
     console.log(res.data.key);
     yield put({ type: types.SET_CURRENT_USER, payload: { token: res.data.key } });
     // 只变了URL没渲染页面
-    // history.push('/dicom/upload/')
-    yield put(push("/dicom/upload/"));
+    // history.push('/')
+    yield put(push("/"));
   } catch (error) {
     console.log(error.response);
     // 登录失败先清空本地token，防止无效token判定。
