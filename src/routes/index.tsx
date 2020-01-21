@@ -16,6 +16,7 @@ const routes = [
     exact: true,
     component: Home,
     routes: [],
+    permission: ["login"],
   },
   {
     name: "login",
@@ -37,6 +38,7 @@ const routes = [
     exact: true,
     component: Profile,
     routes: [],
+    permission: ["login"],
   },
   {
     name: "exam index",
@@ -44,6 +46,7 @@ const routes = [
     exact: true,
     component: ExamIndexManage,
     routes: [],
+    permission: ["login"],
   },
   {
     name: "dicom",
@@ -64,6 +67,7 @@ const routes = [
         component: DicomViewer,
       },
     ],
+    permission: ["login"],
   },
 ];
 
