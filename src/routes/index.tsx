@@ -2,6 +2,7 @@ import React from "react";
 // import { Route, Switch } from 'react-router-dom';
 import Home from "../pages/home";
 import Login from "../pages/user/login";
+import Logout from "../pages/user/logout";
 import Oauth from "../pages/user/oauth";
 import Profile from "../pages/user/profile";
 import DicomManage from "../pages/dicom/dicomManage";
@@ -23,6 +24,13 @@ const routes = [
     path: "/login",
     exact: true,
     component: Login,
+    routes: [],
+  },
+  {
+    name: "logout",
+    path: "/logiout",
+    exact: true,
+    component: Logout,
     routes: [],
   },
   {

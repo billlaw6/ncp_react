@@ -28,7 +28,7 @@ import {
 import { submitExamIndexSearchAction } from "_actions/dicom";
 import "./Home.less";
 
-import mockData from "./mock";
+import examIndexList from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
 
@@ -146,7 +146,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     ];
 
     const dataSource: TableDataI[] = [];
-    mockData.forEach(data => {
+    examIndexList.forEach(data => {
       const { desc, ...others } = data;
       const editorDesc = (
         <ListDesc
@@ -160,7 +160,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const paginationConfig: PaginationConfig = {
       current: page,
       defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: mockData.length,
+      total: examIndexList.length,
       onChange: (page): void => {
         this.setState({ page });
       },
@@ -242,7 +242,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             hideOnSinglePage={false}
             current={page}
             defaultPageSize={DEFAULT_PAGE_SIZE}
-            total={mockData.length}
+            total={examIndexList.length}
             onChange={(page): void => {
               this.setState({ page });
             }}
@@ -269,7 +269,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   getCurrentItem = (): ExamIndexListI[] => {
     const { page } = this.state;
-    return mockData.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
+    return examIndexList.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
   };
 
   controller = (): ReactElement => {

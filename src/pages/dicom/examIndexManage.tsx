@@ -39,7 +39,16 @@ class ExamIndexManage extends React.Component<IProps, any> {
     },
     examIndexData: [],
   };
-  componentDidMount() {}
+  componentWillMount() {
+    const defaultFormData = {
+      dtRange: [
+        this.state.fields.dtRange.value[0].toDate(),
+        this.state.fields.dtRange.value[0].toDate(),
+      ],
+      keyword: this.state.fields.keyword.value,
+    }
+    this.props.submitExamIndexSearchAction(defaultFormData);
+  }
   handleFormSubmit = (submitedFormData: SearchFormI) => {
     console.log("submit");
     console.log(submitedFormData);

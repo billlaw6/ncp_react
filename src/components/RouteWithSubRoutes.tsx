@@ -18,25 +18,25 @@ import { history } from "../store/configureStore";
 
 class RouteWithSubRoutes extends React.Component<any, any> {
   // 二级路由路径需要非exact匹配？从路由配置里取值更灵活
-  componentWillMount () {
+  componentWillMount(): void {
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
     if (
       persistRoot.currentUser &&
       JSON.parse(persistRoot.currentUser).token &&
       JSON.parse(persistRoot.currentUser).token.length > 2
     ) {
-      console.log(persistRoot.currentUser);
+      // console.log(persistRoot.currentUser);
     } else {
       history.replace("/login");
     }
   }
-  render() {
+  render(): JSX.Element {
     const { path, exact, routes } = this.props;
     return (
       <Route
         path={path}
         exact={exact}
-        render={props => <this.props.component {...props} routes={routes} />}
+        render={(props): JSX.Element => <this.props.component {...props} routes={routes} />}
       />
     );
   }

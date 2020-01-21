@@ -7,6 +7,7 @@ import logo from "_images/logo_temp.png";
 import { HeaderPropsI } from "./type";
 
 import "./Header.less";
+import { Link } from "react-router-dom";
 
 const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
 const { Header: AntdHeader } = Layout;
@@ -23,14 +24,14 @@ const getAvatarMenu = (props: HeaderPropsI): ReactElement => {
     <Menu className="header-avatar-menu" onClick={onClick}>
       <MenuItemGroup>
         <ul className="user">
-          <li className="user-name">{username || "张三"}</li>
-          <li className="user-cell-phone">{cellPhone || "138*****110"}</li>
+          <li className="user-name">{username || "匿名"}</li>
+          <li className="user-cell-phone">{cellPhone || "未填写"}</li>
         </ul>
       </MenuItemGroup>
       <Divider></Divider>
       <MenuItemGroup>
         <MenuItem className="edit-user-info" key="editUserInfo">
-          <a href="#">个人信息编辑</a>
+          <Link to="/profile">个人信息编辑</Link>
         </MenuItem>
         <MenuItem className="logout" key="logout">
           退出
