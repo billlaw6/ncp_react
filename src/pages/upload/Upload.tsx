@@ -1,4 +1,4 @@
-import React, { useState, FunctionComponent } from "react";
+import React, { useState, FunctionComponent, useRef } from "react";
 import { Icon, Switch } from "antd";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
@@ -7,10 +7,10 @@ import { UploadStatusI } from "./type";
 
 import FileProgress from "_components/FileProgress/FileProgress";
 
-import "./Upload.less";
 import { Link } from "react-router-dom";
 import { FileProgressStatusEnum } from "_components/FileProgress/type";
 
+import "./Upload.less";
 // let headersAuthorization = "";
 // const persistRootStr = localStorage.getItem("persist:root");
 // if (!isNull(persistRootStr)) {
@@ -26,6 +26,7 @@ import { FileProgressStatusEnum } from "_components/FileProgress/type";
 // }
 
 const Upload: FunctionComponent = () => {
+  const ref = useRef(null);
   const [currentLoad, updateCurrentLoad] = useState<UploadStatusI | undefined>(undefined);
   const [uploadList, updateLoadList] = useState<UploadStatusI[]>([]);
   const [delPrivacy, changeDelPrivacy] = useState(true);
@@ -118,8 +119,21 @@ const Upload: FunctionComponent = () => {
         </Link>
       </div>
       <div className="upload-content">
-        <div {...getRootProps({ className: "upload-uploader" })}>
-          <input {...getInputProps({ name: "file", multiple: true })} />
+        <div
+          {...getRootProps({ className: "upload-uploader" })}
+          onMouseOver={(): void => {
+            /* HACK: Typescript not support webkitdirectory attribute */
+            const $input = document.querySelector(".upload-input");
+            if ($input && !$input.getAttribute("webkitdirectory")) {
+              $input.setAttribute("webkitdirectory", "true");
+            }
+          }}
+        >
+          <input
+            className="upload-input"
+            ref={ref}
+            {...getInputProps({ name: "file", multiple: true })}
+          />
           <Icon className="iconfont" type="inbox" />
           <p>点击或将文件拖拽到这里上传</p>
           <small>系统自动整理影像种类</small>
@@ -143,9 +157,7 @@ const Upload: FunctionComponent = () => {
       </div>
       <div className="upload-list">
         {uploadList.map(item => {
-          console.log("1111", item);
           const { id, ...others } = item;
-
           return <FileProgress key={id} {...others}></FileProgress>;
         })}
       </div>

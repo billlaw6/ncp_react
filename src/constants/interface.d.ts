@@ -1,3 +1,5 @@
+import { InputHTMLAttributes, DOMAttributes } from "react";
+
 // Store相关接口
 // 本地变量遵循js规范使用驼峰式全名，需要与后台数据库字段对应的变量使用下划线风格。
 
@@ -108,13 +110,22 @@ export declare interface DicomSeriesI {
 export declare interface ExamIndexListI {
   id: string;
   modality: string;
+  patient_id: string;
   patient_name: string;
+  sex: GenderEnum;
+  birthday: string;
+  institution_name: string;
   created_at: Date;
   desc: string;
-  patient_id: string;
-  institution_name: string;
   study_date: string;
   thumbnail: string;
+  display_frame_rate: number;
+}
+
+export declare enum GenderEnum {
+  UNKNOW = 0,
+  MALE = 1,
+  FEMALE = 2,
 }
 
 export declare interface ExamIndexI {
@@ -148,4 +159,11 @@ export declare interface StoreStateI {
   examIndexList: ExamIndexListI[];
   dicomSeriesList: DicomSeriesListI[];
   dicomPictureList: DicomPictureListI[];
+}
+
+export declare interface CustomHTMLDivElement extends HTMLDivElement {
+  exitFullscreen: () => void;
+  mozCancelFullScreen: () => void;
+  webkitExitFullscreen: () => void;
+  webkitRequestFullscreen: () => void;
 }

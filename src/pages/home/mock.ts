@@ -7,6 +7,9 @@ const generateData = (count: number): ExamIndexListI[] => {
 
   for (let i = 0; i < count; i++) {
     const data: ExamIndexListI = {
+      sex: 1,
+      birthday: "",
+      display_frame_rate: 40,
       id: Random.string(),
       patient_id: Random.string(),
       patient_name: Random.cname(),

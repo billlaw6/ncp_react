@@ -1,4 +1,4 @@
-import React, { ReactElement } from "react";
+import React, { FunctionComponent, ReactElement } from "react";
 import { Menu, Layout, Avatar, Dropdown } from "antd";
 import { ClickParam } from "antd/lib/menu";
 
@@ -11,7 +11,7 @@ import "./Header.less";
 const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
 const { Header: AntdHeader } = Layout;
 
-const getAvatarMenu = (props: HeaderPropsI): ReactElement => {
+const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   const { username, cellPhone, logout } = props;
 
   const onClick = (e: ClickParam): void => {
@@ -40,9 +40,9 @@ const getAvatarMenu = (props: HeaderPropsI): ReactElement => {
   );
 };
 
-const Header = (props: HeaderPropsI): ReactElement => {
+const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   const { avatar } = props;
-
+  console.log(props);
   return (
     <AntdHeader id="header">
       <div className="header-content">

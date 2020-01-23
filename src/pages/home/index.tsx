@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { ReactElement, Component, FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
-import {
-  Row,
-  Col,
-  Button,
-  Dropdown,
-  Menu,
-  Icon,
-  Pagination,
-  Table,
-  Input,
-  Checkbox,
-  Modal,
-} from "antd";
+import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Input, Checkbox, Modal } from "antd";
 import DicomCard from "_components/DicomCard/DicomCard";
 import { StoreStateI, ExamIndexListI } from "_constants/interface";
 
@@ -24,39 +12,19 @@ import {
   ViewTypeEnum,
   SortTypeEnum,
   MapDispatchToPropsI,
+  ListDescPropsI,
+  TableDataI,
 } from "./type";
 import { submitExamIndexSearchAction } from "_actions/dicom";
-import "./Home.less";
 
-import mockData from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
-import { Link } from "react-router-dom";
 import LinkButton from "_components/LinkButton/LinkButton";
+
+import "./Home.less";
 
 const DEFAULT_PAGE_SIZE = 12;
 
-interface TableDataI {
-  id: string;
-  modality: string;
-  patient_name: string;
-  created_at: Date;
-  desc: string | ReactElement;
-  patient_id: string;
-  institution_name: string;
-  study_date: string;
-  thumbnail: string;
-}
-
-/**
- * 表格形式desc编辑模块
- *
- * @interface ListDescPropsI
- */
-interface ListDescPropsI {
-  desc: string;
-  updateDesc: Function;
-}
 const ListDesc: FunctionComponent<ListDescPropsI> = (props): ReactElement => {
   const { desc, updateDesc } = props;
 
@@ -120,8 +88,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   componentDidMount(): void {
-    // const { getList } = this.props;
-    // getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
+    const { getList } = this.props;
+    getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
   }
 
   list = (): ReactElement | undefined => {
@@ -148,7 +116,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
     ];
 
     const dataSource: TableDataI[] = [];
-    mockData.forEach(data => {
+    const renderList = this.getCurrentItem();
+
+    renderList.forEach(data => {
       const { desc, ...others } = data;
       const editorDesc = (
         <ListDesc
@@ -162,7 +132,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const paginationConfig: PaginationConfig = {
       current: page,
       defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: mockData.length,
+      total: renderList.length,
+      hideOnSinglePage: true,
       onChange: (page): void => {
         this.setState({ page });
       },
@@ -187,11 +158,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   dicoms = (): ReactElement | undefined => {
-    const { examIndexList } = this.props;
     const { page, isSelectable, selections } = this.state;
     const renderList = this.getCurrentItem();
 
-    if (!examIndexList || !examIndexList.length) {
+    if (renderList && renderList.length) {
       const rows: ReactElement[] = [];
       let cols: ReactElement[] = [];
       const gutter: [Gutter, Gutter] = [
@@ -241,10 +211,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
         <div className="dicom-list dicom-list-square">
           {rows}
           <Pagination
-            hideOnSinglePage={false}
+            hideOnSinglePage={true}
             current={page}
             defaultPageSize={DEFAULT_PAGE_SIZE}
-            total={mockData.length}
+            total={renderList.length}
             onChange={(page): void => {
               this.setState({ page });
             }}
@@ -255,7 +225,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   onClickItem = (id: string): void => {
-    const { history } = this.props;
+    const { history, examIndexList } = this.props;
     const { isSelectable, selections } = this.state;
 
     if (isSelectable) {
@@ -265,13 +235,36 @@ class Home extends Component<HomePropsI, HomeStateI> {
       }
       this.setState({ selections: nextSelections });
     } else {
-      history.push("/player");
+      const currentExam = examIndexList.find(item => item.id === id);
+      if (currentExam) {
+        const {
+          id,
+          patient_id,
+          patient_name,
+          birthday,
+          sex,
+          study_date,
+          institution_name,
+          modality,
+        } = currentExam;
+        history.push("/player", {
+          id,
+          patient_id,
+          patient_name,
+          birthday,
+          sex,
+          study_date,
+          institution_name,
+          modality,
+        });
+      }
     }
   };
 
   getCurrentItem = (): ExamIndexListI[] => {
+    const { examIndexList } = this.props;
     const { page } = this.state;
-    return mockData.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
+    return examIndexList.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
   };
 
   controller = (): ReactElement => {
