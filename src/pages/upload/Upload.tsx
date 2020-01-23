@@ -74,7 +74,7 @@ const Upload: FunctionComponent = () => {
               "Content-Type": "multipart/form-data",
               Authorization: headersAuthorization,
             },
-            onUploadProgress: function (progressEvent: any) {
+            onUploadProgress: function(progressEvent: any) {
               console.log("progressEvent: ", progressEvent);
               const { loaded, total } = progressEvent;
               updateCurrentLoad(
