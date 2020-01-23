@@ -1,0 +1,23 @@
+@primaryColor: #7398ff;
+
+.link-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid @primaryColor;
+  color: @primaryColor;
+  box-sizing: border-box;
+  height: 38px;
+  width: 110px;
+  font-size: 14px;
+  border-radius: 19px;
+  cursor: pointer;
+  &-icon {
+    font-size: 18px;
+  }
+  &:hover {
+    background-color: @primaryColor;
+    color: #fff;
+    transition: all 300ms;
+  }
+}

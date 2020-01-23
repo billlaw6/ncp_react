@@ -31,6 +31,8 @@ import "./Home.less";
 import examIndexList from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
+import { Link } from "react-router-dom";
+import LinkButton from "_components/LinkButton/LinkButton";
 
 const DEFAULT_PAGE_SIZE = 12;
 
@@ -278,9 +280,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
       <div id="controller" className="controller">
         <div className="controller-left">
           <span className="controller-title">影像列表</span>
-          <Button icon="cloud-upload" shape="round" className="controller-upload">
+          <LinkButton className="controller-upload" to="/upload" icon="cloud-upload">
             上传
-          </Button>
+          </LinkButton>
           <div className={`controller-del ${isSelectable ? "controller-del-open" : ""}`}>
             <Icon
               className="iconfont"
@@ -323,6 +325,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   showConfirm = (): void => {
     Modal.confirm({
+      centered: true,
       className: "del-confirm",
       title: "确认删除",
       content: "确认删除所选文件/文件夹吗？",
@@ -353,6 +356,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const { sortType } = this.state;
     return (
       <Menu
+        className="home-dicom-sort"
         onClick={(data): void => {
           this.setState({ sortType: data.key as SortTypeEnum });
         }}
