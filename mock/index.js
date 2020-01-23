@@ -34,7 +34,7 @@ router.post("/upload", (req, res) => {
       console.error("OTHER ERR: ", err);
     }
 
-    res.send(404);
+    res.send(200);
   });
 });
 

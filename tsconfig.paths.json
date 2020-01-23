@@ -7,7 +7,8 @@
       "_constants/*": ["constants/*"],
       "_layout/*": ["Layout/*"],
       "_images/*": ["assets/images/*"],
-      "_actions/*": ["store/actions/*"]
+      "_actions/*": ["store/actions/*"],
+      "_helper": ["helper/index.ts"]
     }
   }
 }

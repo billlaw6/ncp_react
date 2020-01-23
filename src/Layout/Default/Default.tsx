@@ -18,6 +18,8 @@ class DefalutLayout extends Component<StoreStateI> {
     const { children, currentUser } = this.props;
     const { avatar, username, cell_phone: cellPhone } = currentUser;
 
+    console.log("layout pathname", this.props);
+
     return (
       <Layout id="defaultLayout">
         <Header avatar={avatar} username={username} cellPhone={cellPhone}></Header>

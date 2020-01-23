@@ -8,7 +8,7 @@ import { LinkButtonPropsI } from "./type";
 import "./LinkButton.less";
 
 const LinkButton: FunctionComponent<LinkButtonPropsI> = props => {
-  const { children, icon, iconPos, className, ...args } = props;
+  const { children, icon, iconPos, className = "", type, ...args } = props;
   const insertIcon = (): ReactNode => {
     if (!icon) return undefined;
 
@@ -31,7 +31,7 @@ const LinkButton: FunctionComponent<LinkButtonPropsI> = props => {
   };
 
   return (
-    <Link className={`link-btn ${className}`} {...args}>
+    <Link className={`link-btn ${type === "light" ? "link-btn-light" : ""} ${className}`} {...args}>
       {insertIcon()}
       {children}
     </Link>

@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { ReactElement, Component, FunctionComponent, useState } from "react";
 import { connect } from "react-redux";
-import {
-  Row,
-  Col,
-  Button,
-  Dropdown,
-  Menu,
-  Icon,
-  Pagination,
-  Table,
-  Input,
-  Checkbox,
-  Modal,
-} from "antd";
+import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Input, Checkbox, Modal } from "antd";
 import DicomCard from "_components/DicomCard/DicomCard";
 import { StoreStateI, ExamIndexListI } from "_constants/interface";
 
@@ -24,39 +12,20 @@ import {
   ViewTypeEnum,
   SortTypeEnum,
   MapDispatchToPropsI,
+  ListDescPropsI,
+  TableDataI,
 } from "./type";
 import { submitExamIndexSearchAction } from "_actions/dicom";
-import "./Home.less";
 
-import examIndexList from "./mock";
+// import examIndexList from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
-import { Link } from "react-router-dom";
 import LinkButton from "_components/LinkButton/LinkButton";
+
+import "./Home.less";
 
 const DEFAULT_PAGE_SIZE = 12;
 
-interface TableDataI {
-  id: string;
-  modality: string;
-  patient_name: string;
-  created_at: Date;
-  desc: string | ReactElement;
-  patient_id: string;
-  institution_name: string;
-  study_date: string;
-  thumbnail: string;
-}
-
-/**
- * 表格形式desc编辑模块
- *
- * @interface ListDescPropsI
- */
-interface ListDescPropsI {
-  desc: string;
-  updateDesc: Function;
-}
 const ListDesc: FunctionComponent<ListDescPropsI> = (props): ReactElement => {
   const { desc, updateDesc } = props;
 
@@ -148,6 +117,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     ];
 
     const dataSource: TableDataI[] = [];
+    const examIndexList = this.getCurrentItem();
     examIndexList.forEach(data => {
       const { desc, ...others } = data;
       const editorDesc = (
@@ -163,6 +133,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       current: page,
       defaultPageSize: DEFAULT_PAGE_SIZE,
       total: examIndexList.length,
+      hideOnSinglePage: true,
       onChange: (page): void => {
         this.setState({ page });
       },
@@ -187,11 +158,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   dicoms = (): ReactElement | undefined => {
-    const { examIndexList } = this.props;
     const { page, isSelectable, selections } = this.state;
-    const renderList = this.getCurrentItem();
+    const examIndexList = this.getCurrentItem();
 
-    if (!examIndexList || !examIndexList.length) {
+    if (examIndexList && examIndexList.length) {
       const rows: ReactElement[] = [];
       let cols: ReactElement[] = [];
       const gutter: [Gutter, Gutter] = [
@@ -201,7 +171,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
       let count = 0;
 
-      renderList.forEach(item => {
+      examIndexList.forEach(item => {
         const { id, patient_name, study_date, desc, thumbnail, modality } = item;
         if (count >= 4) {
           count = 0;
@@ -241,7 +211,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         <div className="dicom-list dicom-list-square">
           {rows}
           <Pagination
-            hideOnSinglePage={false}
+            hideOnSinglePage={true}
             current={page}
             defaultPageSize={DEFAULT_PAGE_SIZE}
             total={examIndexList.length}
@@ -255,7 +225,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   onClickItem = (id: string): void => {
-    const { history } = this.props;
+    const { history, examIndexList } = this.props;
     const { isSelectable, selections } = this.state;
 
     if (isSelectable) {
@@ -265,11 +235,34 @@ class Home extends Component<HomePropsI, HomeStateI> {
       }
       this.setState({ selections: nextSelections });
     } else {
-      history.push("/player");
+      const currentExam = examIndexList.find(item => item.id === id);
+      if (currentExam) {
+        const {
+          id,
+          patient_id,
+          patient_name,
+          birthday,
+          sex,
+          study_date,
+          institution_name,
+          modality,
+        } = currentExam;
+        history.push("/player", {
+          id,
+          patient_id,
+          patient_name,
+          birthday,
+          sex,
+          study_date,
+          institution_name,
+          modality,
+        });
+      }
     }
   };
 
   getCurrentItem = (): ExamIndexListI[] => {
+    const { examIndexList } = this.props;
     const { page } = this.state;
     return examIndexList.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
   };

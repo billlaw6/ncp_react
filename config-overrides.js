@@ -21,5 +21,6 @@ module.exports = override(
     ["_layout"]: path.join(SRC, "Layout"),
     ["_images"]: path.join(SRC, "assets", "images"),
     ["_actions"]: path.join(SRC, "store", "actions"),
+    ["_helper"]: path.join(SRC, "helper", "index.ts"),
   }),
 );
