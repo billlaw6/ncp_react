@@ -118,8 +118,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   componentDidMount(): void {
-    // const { getList } = this.props;
-    // getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
+    const { getList } = this.props;
+    getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
   }
 
   list = (): ReactElement | undefined => {

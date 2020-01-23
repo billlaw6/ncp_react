@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactElement } from "react";
 import { StoreStateI, ExamIndexListI, SearchFormI } from "../../constants/interface";
 import { submitExamIndexSearchAction, setExamIndexListAction } from "../../store/actions/dicom";
 import ExamIndexTable from "./components/ExamIndexTable";
@@ -39,7 +39,7 @@ class ExamIndexManage extends React.Component<IProps, any> {
     },
     examIndexData: [],
   };
-  componentWillMount() {
+  componentWillMount(): void {
     const defaultFormData = {
       dtRange: [
         this.state.fields.dtRange.value[0].toDate(),
@@ -49,12 +49,12 @@ class ExamIndexManage extends React.Component<IProps, any> {
     }
     this.props.submitExamIndexSearchAction(defaultFormData);
   }
-  handleFormSubmit = (submitedFormData: SearchFormI) => {
+  handleFormSubmit = (submitedFormData: SearchFormI): void => {
     console.log("submit");
     console.log(submitedFormData);
-    this.props.submitExamIndexSearchAction(submitedFormData);
+    submitExamIndexSearchAction(submitedFormData);
   };
-  render() {
+  render(): ReactElement {
     console.log(this.props);
     const { fields } = this.state;
     return (
