@@ -34,7 +34,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
           <Link to="/profile">个人信息编辑</Link>
         </MenuItem>
         <MenuItem className="logout" key="logout">
-          退出
+          <Link to="/logout">退出</Link>
         </MenuItem>
       </MenuItemGroup>
     </Menu>

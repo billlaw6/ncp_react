@@ -105,11 +105,11 @@ class Login extends React.Component<PropsI, StateI> {
     return (
       <div className="login-wrapper">
         <ContentLogo />
-        <LoginForm
+        {/* <LoginForm
           fields={fields}
           onChange={this.handleFormChange}
           onSubmit={this.handleFormSubmit}
-        />
+        /> */}
         <WeChatLogin
           appid={this.state.appid}
           redirectUri={this.state.redirectUri}

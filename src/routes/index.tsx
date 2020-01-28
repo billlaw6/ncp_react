@@ -28,7 +28,7 @@ const routes = [
   },
   {
     name: "logout",
-    path: "/logiout",
+    path: "/logout",
     exact: true,
     component: Logout,
     routes: [],
