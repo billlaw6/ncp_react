@@ -176,3 +176,8 @@ export declare interface CustomHTMLDivElement extends HTMLDivElement {
   webkitExitFullscreen: () => void;
   webkitRequestFullscreen: () => void;
 }
+
+export declare interface ActionI<T, K> {
+  type: T;
+  payload: K;
+}

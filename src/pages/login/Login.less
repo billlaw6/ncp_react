@@ -1,0 +1,138 @@
+.login {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+  min-width: 1280px;
+  max-width: 1920px;
+  max-height: 1080px;
+  min-height: 100%;
+  margin: 0 auto;
+
+  &-spinner,
+  &-content {
+    flex-grow: 1;
+    width: 50%;
+    height: 100%;
+  }
+
+  &-spinner {
+    &-item {
+      height: 100%;
+      max-height: 1080px;
+      background-size: cover;
+      background-position: unset;
+    }
+  }
+
+  &-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &-title {
+      position: relative;
+      font-size: 22px;
+      margin-bottom: 34px;
+
+      &::after,
+      &::before {
+        display: block;
+        position: absolute;
+        content: "";
+        width: 130px;
+        height: 1px;
+        background-color: #bfbfbf;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      &::after {
+        right: -154px;
+      }
+
+      &::before {
+        left: -154px;
+      }
+    }
+
+    &-imgs {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      // display: flex;
+      // align-items: center;
+      // justify-content: center;
+      margin-bottom: 34px;
+      [alt="wechat-scan"] {
+        width: 235px;
+        position: absolute;
+        top: 50%;
+        transform: translate(120px, -50%);
+        right: 0;
+        z-index: 1;
+        transition: transform 400ms, opacity 400ms;
+        opacity: 1;
+      }
+
+      & + span {
+        color: #bfbfbf;
+      }
+
+      &.hidden {
+        #wechatQrcode {
+          transform: translate(0, -50%);
+          transition: transform 400ms;
+        }
+
+        [alt="wechat-scan"] {
+          transform: translate(0, -50%);
+          opacity: 0;
+          transition: all 400ms;
+        }
+      }
+    }
+  }
+
+  &-logo {
+    width: 118px;
+    margin-bottom: 34px;
+  }
+
+  .ant-carousel,
+  .slick-slider,
+  .slick-list,
+  .slick-track,
+  .slick-slide div {
+    height: 100%;
+    max-height: 1080px;
+  }
+
+  .slick-dots-bottom {
+    bottom: 66px;
+  }
+  .ant-carousel .slick-dots li {
+    margin: 0 4px;
+    &.slick-active button {
+      width: 66px;
+    }
+    button {
+      width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      opacity: 1;
+      // box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  #wechatQrcode {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translate(-120px, -50%);
+    border: none;
+    z-index: 2;
+    transition: transform 400ms;
+  }
+}
