@@ -10,21 +10,20 @@ import FileProgress from "_components/FileProgress/FileProgress";
 import { Link } from "react-router-dom";
 import { FileProgressStatusEnum } from "_components/FileProgress/type";
 
-let headersAuthorization = "";
-const persistRootStr = localStorage.getItem("persist:root")
-  ? localStorage.getItem("persist:root")
-  : "";
-if (!persistRootStr) {
-  const persistRoot = JSON.parse(persistRootStr!);
-  if (
-    persistRoot.currentUser &&
-    JSON.parse(persistRoot.currentUser).token &&
-    JSON.parse(persistRoot.currentUser).token.length > 2
-  ) {
-    console.log("valid token");
-    headersAuthorization = "Token " + JSON.parse(persistRoot.currentUser).token;
-  }
-}
+import "./Upload.less";
+// let headersAuthorization = "";
+// const persistRootStr = localStorage.getItem("persist:root");
+// if (!isNull(persistRootStr)) {
+//   const persistRoot = JSON.parse(persistRootStr);
+//   if (
+//     persistRoot.currentUser &&
+//     JSON.parse(persistRoot.currentUser).token &&
+//     JSON.parse(persistRoot.currentUser).token.length > 2
+//   ) {
+//     console.log("valid token");
+//     headersAuthorization = "Token " + JSON.parse(persistRoot.currentUser).token;
+//   }
+// }
 
 const Upload: FunctionComponent = () => {
   const ref = useRef(null);
@@ -68,10 +67,12 @@ const Upload: FunctionComponent = () => {
         });
 
         axios
-          .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
+          .post(`http://173.242.127.101:30178/upload`, formData, {
+            // .post(`http://192.168.1.220:3002/upload`, formData, {
+            // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
-              Authorization: headersAuthorization,
+              // Authorization: headersAuthorization,
             },
             onUploadProgress: function(progressEvent: any) {
               console.log("progressEvent: ", progressEvent);

@@ -17,11 +17,11 @@ import {
 } from "./type";
 import { submitExamIndexSearchAction } from "_actions/dicom";
 
-// import examIndexList from "./mock";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
 import LinkButton from "_components/LinkButton/LinkButton";
 
+import emptyImg from "_images/empty.png";
 import "./Home.less";
 
 const DEFAULT_PAGE_SIZE = 12;
@@ -117,8 +117,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
     ];
 
     const dataSource: TableDataI[] = [];
-    const examIndexList = this.getCurrentItem();
-    examIndexList.forEach(data => {
+    const renderList = this.getCurrentItem();
+
+    renderList.forEach(data => {
       const { desc, ...others } = data;
       const editorDesc = (
         <ListDesc
@@ -132,7 +133,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const paginationConfig: PaginationConfig = {
       current: page,
       defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: examIndexList.length,
+      total: renderList.length,
       hideOnSinglePage: true,
       onChange: (page): void => {
         this.setState({ page });
@@ -159,9 +160,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   dicoms = (): ReactElement | undefined => {
     const { page, isSelectable, selections } = this.state;
-    const examIndexList = this.getCurrentItem();
+    const renderList = this.getCurrentItem();
 
-    if (examIndexList && examIndexList.length) {
+    if (renderList && renderList.length) {
       const rows: ReactElement[] = [];
       let cols: ReactElement[] = [];
       const gutter: [Gutter, Gutter] = [
@@ -171,7 +172,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
       let count = 0;
 
-      examIndexList.forEach(item => {
+      renderList.forEach(item => {
         const { id, patient_name, study_date, desc, thumbnail, modality } = item;
         if (count >= 4) {
           count = 0;
@@ -214,7 +215,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             hideOnSinglePage={true}
             current={page}
             defaultPageSize={DEFAULT_PAGE_SIZE}
-            total={examIndexList.length}
+            total={renderList.length}
             onChange={(page): void => {
               this.setState({ page });
             }}
@@ -268,9 +269,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   controller = (): ReactElement => {
+    const { examIndexList } = this.props;
     const { isSelectable, viewType } = this.state;
     return (
-      <div id="controller" className="controller">
+      <div id="controller" className={`controller`}>
         <div className="controller-left">
           <span className="controller-title">影像列表</span>
           <LinkButton className="controller-upload" to="/upload" icon="cloud-upload">
@@ -286,7 +288,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             <span onClick={this.showConfirm}>删除</span>
           </div>
         </div>
-        <div className="controller-right">
+        <div className={`controller-right ${examIndexList.length ? "" : "hidden"}`}>
           <Dropdown overlay={this.dropdownContent()} placement="bottomRight">
             <Icon className="controller-select-sort iconfont" type="sort-ascending" />
           </Dropdown>
@@ -390,12 +392,23 @@ class Home extends Component<HomePropsI, HomeStateI> {
   /* === APIS 与服务器交互数据的方法 END === */
 
   render(): ReactElement {
+    const { examIndexList } = this.props;
     const { viewType } = this.state;
 
     return (
       <section className="home">
         {this.controller()}
-        {viewType === ViewTypeEnum.GRID ? this.dicoms() : this.list()}
+        {examIndexList.length ? (
+          viewType === ViewTypeEnum.GRID ? (
+            this.dicoms()
+          ) : (
+            this.list()
+          )
+        ) : (
+          <div className="home-empty">
+            <img src={emptyImg} alt="no-dicom" />
+          </div>
+        )}
       </section>
     );
   }

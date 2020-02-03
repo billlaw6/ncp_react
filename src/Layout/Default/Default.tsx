@@ -14,11 +14,8 @@ const { Content } = Layout;
 
 class DefalutLayout extends Component<StoreStateI> {
   render(): ReactElement {
-    // console.log(this.props);
     const { children, currentUser } = this.props;
     const { avatar, username, cell_phone: cellPhone } = currentUser;
-
-    console.log("layout pathname", this.props);
 
     return (
       <Layout id="defaultLayout">
