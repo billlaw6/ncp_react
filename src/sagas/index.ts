@@ -5,14 +5,10 @@ import {
   getDicomSeriesAction,
   getDicomPicturesAction,
   setDicomSeriesAction,
-  setDicomPicturessAction
+  setDicomPicturesAction,
 } from "../store/actions/dicom";
 import { userWeChatLogin, userLogin, getUserInfo } from "../services/user";
-import {
-  getExamIndex,
-  getDicomSeries,
-  getDicomSeriesDetail
-} from "../services/dicom";
+import { getExamIndex, getDicomSeries, getDicomSeriesDetail } from "../services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 import { store } from "../index";
