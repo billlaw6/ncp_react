@@ -34,6 +34,7 @@ export declare interface CurrentUserI {
   address: string;
   unit: string;
   avatar: string;
+  privacy_notice: number;
   // user_permissions?: Array<number>;
 }
 

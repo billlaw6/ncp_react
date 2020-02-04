@@ -34,7 +34,6 @@ const Login: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props =
     };
   }, []);
 
-  console.log("hiddenScan: ", hiddenScan);
   const qrcodeURL =
     `https://open.weixin.qq.com/connect/qrconnect?` +
     `appid=${APPID}&` +
