@@ -1,8 +1,5 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import {
-  setWeChatCodeAction,
-  submitLoginFormAction,
-} from "../store/actions/user";
+import { setWeChatCodeAction, submitLoginFormAction } from "../store/actions/user";
 import {
   submitExamIndexSearchAction,
   getDicomSeriesAction,

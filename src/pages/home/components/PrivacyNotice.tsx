@@ -3,6 +3,7 @@ import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 import { Modal, Button, Checkbox } from "antd";
 import { CurrentUserI } from "_constants/interface";
 import axios from "axios";
+import { getPrivacyNotice } from "../../../services/user";
 
 import "./PrivacyNotice.less";
 
@@ -22,8 +23,9 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
   const [show, setShow] = useState(true); // 是否现实modal窗
 
   useEffect(() => {
-    axios
-      .get("http://115.29.148.227:8083/rest-api/user/privacy-notice/")
+    // axios
+    //   .get("http://115.29.148.227:8083/rest-api/user/privacy-notice/")
+    getPrivacyNotice()
       .then(result => {
         const { id, content } = result.data;
         if (id) setPrivacyNotice(id);

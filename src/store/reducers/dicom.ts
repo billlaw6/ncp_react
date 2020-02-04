@@ -2,7 +2,7 @@ import {
   SearchFormI,
   ExamIndexListI,
   DicomSeriesI,
-  DicomPictureI
+  DicomPictureI,
 } from "../../constants/interface";
 import * as types from "../action-types";
 import moment from "moment";
@@ -10,7 +10,7 @@ import {
   submitExamIndexSearchAction,
   setExamIndexListAction,
   setDicomSeriesAction,
-  setDicomPicturesAction
+  setDicomPicturesAction,
 } from "../actions/dicom";
 
 const defaultExamIndexSearch: SearchFormI = {

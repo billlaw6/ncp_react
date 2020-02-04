@@ -47,12 +47,10 @@ class Profile extends React.Component<PropsI, any> {
   //   };
   // }
   // handleFormChange = (changedValues: ProfileFormI) => {};
-
   // handleFormSubmit = (submitedFormData: ProfileFormI) => {
   //   // this.props.updateUserInfoAction(submitedFormData);
   //   console.log(submitedFormData);
   // };
-
   // render() {
   //   const currentUser = this.props.currentUser;
   //   const { fields } = this.state;
