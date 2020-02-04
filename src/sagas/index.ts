@@ -1,8 +1,18 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 import { setWeChatCodeAction, submitLoginFormAction } from "../store/actions/user";
-import { submitExamIndexSearchAction } from "../store/actions/dicom";
+import {
+  submitExamIndexSearchAction,
+  getDicomSeriesAction,
+  getDicomPicturesAction,
+  setDicomSeriesAction,
+  setDicomPicturessAction
+} from "../store/actions/dicom";
 import { userWeChatLogin, userLogin, getUserInfo } from "../services/user";
-import { getExamIndex } from "../services/dicom";
+import {
+  getExamIndex,
+  getDicomSeries,
+  getDicomSeriesDetail
+} from "../services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 import { store } from "../index";
@@ -11,7 +21,7 @@ import { store } from "../index";
 
 // const history = createBrowserHistory();
 // worker Saga : 将在 action 被 dispatch 时调用
-function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
+function* weChatLoginE(action: ReturnType<typeof setWeChatCodeAction>) {
   try {
     console.log(action.payload);
     const res = yield call(userWeChatLogin, action.payload);
@@ -38,7 +48,7 @@ function* weChatLogin(action: ReturnType<typeof setWeChatCodeAction>) {
   }
 }
 
-function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
+function* formLoginE(action: ReturnType<typeof submitLoginFormAction>) {
   try {
     const res = yield call(userLogin, action.payload);
     console.log(res.data.key);
@@ -77,7 +87,7 @@ function* formLogin(action: ReturnType<typeof submitLoginFormAction>) {
   }
 }
 
-function* searchExamIndex(action: ReturnType<typeof submitExamIndexSearchAction>) {
+function* searchExamIndexE(action: ReturnType<typeof submitExamIndexSearchAction>) {
   try {
     console.log(action.payload);
     const res = yield call(getExamIndex, action.payload);
@@ -98,10 +108,35 @@ function* searchExamIndex(action: ReturnType<typeof submitExamIndexSearchAction>
   }
 }
 
+function* getDicomSeriesE(action: ReturnType<typeof getDicomSeriesAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(getDicomSeries, action.payload);
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_DICOM_SERIES, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
+function* getDicomPicturesE(action: ReturnType<typeof getDicomPicturesAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(getDicomSeriesDetail, action.payload);
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_DICOM_PICTURES, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
 function* rootSaga() {
-  yield takeEvery(types.SET_WECHAT_CODE, weChatLogin);
-  yield takeEvery(types.SUBMIT_LOGIN_FORM, formLogin);
-  yield takeEvery(types.SUBMIT_EXAM_INDEX_SEARCH_FORM, searchExamIndex);
+  yield takeEvery(types.SET_WECHAT_CODE, weChatLoginE);
+  yield takeEvery(types.SUBMIT_LOGIN_FORM, formLoginE);
+  yield takeEvery(types.SUBMIT_EXAM_INDEX_SEARCH_FORM, searchExamIndexE);
+  yield takeEvery(types.GET_DICOM_SERIES, getDicomSeriesE);
 }
 
 export default rootSaga;

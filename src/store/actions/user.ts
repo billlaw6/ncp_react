@@ -54,3 +54,12 @@ export const setUserListAction: SetUserListActionFuncT = payload => ({
   type: types.SET_USER_LIST,
   payload,
 });
+
+export type UpdateUserInfoActionT = ActionI<string, UserInfoI>;
+export interface UpdateUserInfoActionFuncT {
+  (payload: UserInfoI): UpdateUserInfoActionT;
+}
+export const updateUserInfoAction: UpdateUserInfoActionFuncT = payload => ({
+  type: types.UPDATE_USER_INFO,
+  payload,
+});

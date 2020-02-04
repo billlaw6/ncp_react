@@ -1,6 +1,7 @@
 import React, { Component, ReactElement } from "react";
-import { BrowserRouter as Router, Switch, Redirect, Route } from "react-router-dom";
+import { Router, Switch, Redirect, Route } from "react-router-dom";
 import routes from "./routes";
+import { history } from "./store/configureStore";
 
 import DefaultLayout from "_layout/Default/Default";
 import RouteWithSubRoutes from "_components/RouteWithSubRoutes";
@@ -13,7 +14,9 @@ import "./App.less";
 class App extends Component {
   render(): ReactElement {
     return (
-      <Router>
+      // {/* 原本用官方推荐的BrowserRouter，结果只变url不刷新页面
+      //               https://github.com/brickspert/blog/issues/3 */}
+      <Router history={history}>
         <Switch>
           {routes.map((item, index) => {
             return <RouteWithSubRoutes key={index} {...item} />;
@@ -26,7 +29,7 @@ class App extends Component {
             )}
           ></Route>
         </Switch>
-      </Router>
+      </Router >
     );
   }
 }

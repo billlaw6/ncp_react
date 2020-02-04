@@ -5,13 +5,13 @@ import { ProfileFormI } from "../../../constants/interface";
 import { FormattedMessage } from "react-intl";
 import "./ProfileForm.less";
 
-interface IProfileFormProps extends FormComponentProps {
+interface ProfileFormPropsI extends FormComponentProps {
   fields: any;
   onChange(fields: ProfileFormI): void;
   onSubmit(fields: ProfileFormI): void;
 }
 
-class ProfileForm extends React.Component<IProfileFormProps, any> {
+class ProfileForm extends React.Component<ProfileFormPropsI, any> {
   componentDidMount() {
     // To disabled submit button at the beginning.
     // this.props.form.validateFields();
@@ -85,9 +85,9 @@ class ProfileForm extends React.Component<IProfileFormProps, any> {
 
 // 此处的<IProps>可加可不加
 // const WrappedProfileForm = Form.create<IProps>()( ProfileForm,);
-const WrappedProfileForm = Form.create<IProfileFormProps>({
+const WrappedProfileForm = Form.create<ProfileFormPropsI>({
   name: "profile_form",
-  mapPropsToFields(props: IProfileFormProps) {
+  mapPropsToFields(props: ProfileFormPropsI) {
     // console.log(props.fields);
     return {
       username: Form.createFormField({
@@ -104,7 +104,7 @@ const WrappedProfileForm = Form.create<IProfileFormProps>({
       }),
     };
   },
-  // onFieldsChange(props: IProfileFormProps, changedFields: any, allFields: ProfileFormI) {
+  // onFieldsChange(props: ProfileFormPropsI, changedFields: any, allFields: ProfileFormI) {
   //     console.log(changedFields);
   // },
   onValuesChange(props, changedValues, allValues) {
