@@ -171,10 +171,22 @@ export declare interface StoreStateI {
 }
 
 export declare interface CustomHTMLDivElement extends HTMLDivElement {
-  exitFullscreen: () => void;
-  mozCancelFullScreen: () => void;
-  webkitExitFullscreen: () => void;
   webkitRequestFullscreen: () => void;
+  msRequestFullscreen: () => void;
+  mozRequestFullScreen: () => void;
+}
+
+interface Document {
+  exitFullscreen: any;
+  webkitExitFullscreen: any;
+  mozCancelFullScreen: any;
+  msExitFullscreen: any;
+}
+export declare interface Document {
+  exitFullscreen: () => void;
+  webkitExitFullscreen: () => void;
+  mozCancelFullScreen: () => void;
+  msExitFullscreen: () => void;
 }
 
 export declare interface ActionI<T, K> {

@@ -54,7 +54,7 @@ let ctx: CanvasRenderingContext2D | null = null;
 const Player: FunctionComponent<RouteComponentProps> = props => {
   const { state } = props.location;
   /* =============== use ref =============== */
-  const $player = useRef<HTMLDivElement>(null);
+  const $player = useRef<CustomHTMLDivElement>(null);
   const $viewport = useRef<HTMLCanvasElement>(null);
   /* =============== use state =============== */
   const [patient, setPatient] = useState<PatientI>({
@@ -101,8 +101,21 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
    */
   const changeFullscreen = (isFullscreen: boolean): void => {
     if ($player && $player.current) {
-      if (isFullscreen) document.exitFullscreen();
-      else $player.current.requestFullscreen();
+      if (isFullscreen) {
+        const document: any = window.document; // magic
+        if (document.exitFullscreen) return document.exitFullscreen();
+        if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+      } else {
+        if ($player.current.requestFullscreen) {
+          $player.current.requestFullscreen();
+        } else if ($player.current.webkitRequestFullscreen) {
+          $player.current.webkitRequestFullscreen();
+        } else if ($player.current.mozRequestFullScreen) {
+          $player.current.mozRequestFullScreen();
+        } else if ($player.current.msRequestFullscreen) {
+          $player.current.msRequestFullscreen();
+        }
+      }
     }
   };
 
@@ -203,11 +216,13 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       };
 
       current.addEventListener("fullscreenchange", fullscreenChange);
+      current.addEventListener("webkitfullscreenchange", fullscreenChange);
       current.addEventListener("fullscreenerror", fullscreenError);
 
       return (): void => {
         if (current) {
           current.removeEventListener("fullscreenchange", fullscreenChange);
+          current.removeEventListener("webkitfullscreenchange", fullscreenChange);
           current.removeEventListener("fullscreenerror", fullscreenError);
         }
       };
@@ -350,6 +365,8 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   let className = "player";
   if (isFullscreen) className += " player-fullscreen";
   if (isShowPanels) className += " player-show-panels";
+
+  console.log("isFullscreen: ", isFullscreen);
 
   return (
     <section className={className}>

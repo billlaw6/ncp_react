@@ -195,7 +195,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
               modality={modality}
               checkbox={isSelectable}
               checked={selections.indexOf(id) > -1}
-              onClick={this.onClickItem}
+              onClick={(): void => this.onClickItem(id)}
               updateDesc={(value: string): void => this.updateDesc(id, value)}
             ></DicomCard>
           </Col>,

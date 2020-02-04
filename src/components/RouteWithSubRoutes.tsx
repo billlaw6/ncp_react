@@ -22,6 +22,7 @@ class RouteWithSubRoutes extends Component<RoutesI> {
   componentDidMount(): void {
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
     if (
+      persistRoot &&
       persistRoot.currentUser &&
       JSON.parse(persistRoot.currentUser).token &&
       JSON.parse(persistRoot.currentUser).token.length > 2
