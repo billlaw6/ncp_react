@@ -9,9 +9,9 @@ import Upload from "_pages/upload/Upload";
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
 
-// import Logout from "../pages/user/logout";
+import Logout from "../pages/user/logout";
 // import Oauth from "../pages/user/oauth";
-// import Profile from "../pages/user/profile";
+import Profile from "../pages/user/profile";
 // import DicomManage from "../pages/dicom/dicomManage";
 // import DicomUploader from "../pages/dicom/components/DicomUploader";
 // import DicomViewer from "../pages/dicom/components/DicomViewer";
@@ -45,31 +45,33 @@ const routes: RoutesI[] = [
     name: "player",
     path: "/player",
     component: Player,
+    permission: ["login"],
   },
   {
     name: "upload",
     path: "/upload",
     component: Upload,
+    permission: ["login"],
   },
-  // {
-  //   name: "logout",
-  //   path: "/logout",
-  //   component: Logout,
-  //   routes: [],
-  // },
+  {
+    name: "logout",
+    path: "/logout",
+    component: Logout,
+    routes: [],
+  },
   // {
   //   name: "oauth",
   //   path: "/oauth",
   //   component: Oauth,
   //   routes: [],
   // },
-  // {
-  //   name: "profile",
-  //   path: "/profile",
-  //   component: Profile,
-  //   routes: [],
-  //   permission: ["login"],
-  // },
+  {
+    name: "profile",
+    path: "/profile",
+    component: Profile,
+    routes: [],
+    permission: ["login"],
+  },
   // {
   //   name: "exam index",
   //   path: "/exam",
