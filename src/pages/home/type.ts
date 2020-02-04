@@ -1,10 +1,11 @@
-import { ExamIndexListI } from "_constants/interface";
+import { ExamIndexListI, CurrentUserI } from "_constants/interface";
 import { submitExamIndexSearchAction } from "_actions/dicom";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
 export interface MapStateToPropsI {
   examIndexList: ExamIndexListI[];
+  user: CurrentUserI;
 }
 export interface MapDispatchToPropsI {
   getList: typeof submitExamIndexSearchAction;
@@ -17,6 +18,7 @@ export interface HomeStateI {
   isSelectable: boolean; // 是否是可选择的
   page: number; // 当前在第几页 从1开始
   selections: string[]; //当前已选择的dicom id 集
+  redirectUpload: boolean; // 是否重定向到upload页
 }
 
 // 排序类型

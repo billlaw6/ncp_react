@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import { CurrentUserI, UserInfoI, LoginFormI } from "../../constants/interface";
 import {
   setCurrentUserAction,
@@ -43,6 +44,7 @@ const defaultCurrentUser: CurrentUserI = {
   address: "",
   unit: "",
   avatar: "",
+  privacy_notice: 0,
 };
 const currentUserReducer = (
   state = defaultCurrentUser,

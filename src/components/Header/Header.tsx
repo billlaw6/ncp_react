@@ -43,7 +43,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
 
 const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   const { avatar } = props;
-  console.log(props);
+
   return (
     <AntdHeader id="header">
       <div className="header-content">

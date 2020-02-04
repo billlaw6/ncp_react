@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { ReactElement, Component, FunctionComponent, useState } from "react";
+import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
-import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Input, Checkbox, Modal } from "antd";
+import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
 import DicomCard from "_components/DicomCard/DicomCard";
 import { StoreStateI, ExamIndexListI } from "_constants/interface";
 
@@ -12,7 +12,6 @@ import {
   ViewTypeEnum,
   SortTypeEnum,
   MapDispatchToPropsI,
-  ListDescPropsI,
   TableDataI,
 } from "./type";
 import { submitExamIndexSearchAction } from "_actions/dicom";
@@ -20,60 +19,14 @@ import { submitExamIndexSearchAction } from "_actions/dicom";
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
 import LinkButton from "_components/LinkButton/LinkButton";
+import ListDesc from "./components/ListDesc";
+import PrivacyNotice from "./components/PrivacyNotice";
 
 import emptyImg from "_images/empty.png";
 import "./Home.less";
+import { Redirect } from "react-router";
 
 const DEFAULT_PAGE_SIZE = 12;
-
-const ListDesc: FunctionComponent<ListDescPropsI> = (props): ReactElement => {
-  const { desc, updateDesc } = props;
-
-  const [inputValue, changeInputValue] = useState(desc || "");
-  const [showEditor, editDesc] = useState(false);
-
-  return (
-    <>
-      <span className={`dicom-list-desc-text`}>{desc}</span>
-      <Icon
-        className={`dicom-list-desc-edit iconfont`}
-        type="edit"
-        onClick={(e): void => {
-          e.stopPropagation();
-          editDesc(true);
-        }}
-      />
-      <Input
-        className={`dicom-list-desc-editor ${showEditor ? "dicom-list-desc-show" : ""}`}
-        value={inputValue || ""}
-        placeholder="备注"
-        onClick={(e): void => e.stopPropagation()}
-        onInput={(e): void => changeInputValue(e.currentTarget.value)}
-        addonAfter={
-          <div className="dicom-list-desc-ctl">
-            <Icon
-              className="iconfont icon_ic-complete"
-              type="check-circle"
-              onClick={(e): void => {
-                e.stopPropagation();
-                updateDesc && updateDesc(inputValue);
-                editDesc(false);
-              }}
-            />
-            <Icon
-              type="close-circle"
-              className="iconfont icon_ic-close"
-              onClick={(e): void => {
-                e.stopPropagation();
-                editDesc(false);
-              }}
-            />
-          </div>
-        }
-      ></Input>
-    </>
-  );
-};
 
 class Home extends Component<HomePropsI, HomeStateI> {
   constructor(props: HomePropsI) {
@@ -85,6 +38,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       isSelectable: false,
       page: 1,
       selections: [],
+      redirectUpload: false,
     };
   }
 
@@ -195,7 +149,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
               modality={modality}
               checkbox={isSelectable}
               checked={selections.indexOf(id) > -1}
-              onClick={this.onClickItem}
+              onClick={(): void => this.onClickItem(id)}
               updateDesc={(value: string): void => this.updateDesc(id, value)}
             ></DicomCard>
           </Col>,
@@ -366,6 +320,16 @@ class Home extends Component<HomePropsI, HomeStateI> {
     );
   };
 
+  /**
+   * 当确认隐私后 如果没有影响列表 跳转到upload界面
+   *
+   * @memberof Home
+   */
+  onChecked = (): void => {
+    const { examIndexList } = this.props;
+    if (!examIndexList.length) this.setState({ redirectUpload: true });
+  };
+
   /* === APIS 与服务器交互数据的方法 START === */
 
   /**
@@ -392,30 +356,34 @@ class Home extends Component<HomePropsI, HomeStateI> {
   /* === APIS 与服务器交互数据的方法 END === */
 
   render(): ReactElement {
-    const { examIndexList } = this.props;
-    const { viewType } = this.state;
+    const { examIndexList, user } = this.props;
+    const { viewType, redirectUpload } = this.state;
 
-    return (
-      <section className="home">
-        {this.controller()}
-        {examIndexList.length ? (
-          viewType === ViewTypeEnum.GRID ? (
-            this.dicoms()
+    if (redirectUpload) return <Redirect to="/upload" />;
+    else
+      return (
+        <section className="home">
+          {this.controller()}
+          {examIndexList.length ? (
+            viewType === ViewTypeEnum.GRID ? (
+              this.dicoms()
+            ) : (
+              this.list()
+            )
           ) : (
-            this.list()
-          )
-        ) : (
-          <div className="home-empty">
-            <img src={emptyImg} alt="no-dicom" />
-          </div>
-        )}
-      </section>
-    );
+            <div className="home-empty">
+              <img src={emptyImg} alt="no-dicom" />
+            </div>
+          )}
+          <PrivacyNotice user={user} onChecked={this.onChecked}></PrivacyNotice>
+        </section>
+      );
   }
 }
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   examIndexList: state.examIndexList,
+  user: state.currentUser,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   getList: submitExamIndexSearchAction,
