@@ -34,7 +34,7 @@ class Oauth extends React.Component<any, any> {
     console.log(obj);
     if (obj.code) {
       this.props.setWeChatCodeAction(obj);
-      console.log("wechat oauth2 login");
+      console.log("wechat oauth2 logining");
     } else {
       console.log("no code");
     }

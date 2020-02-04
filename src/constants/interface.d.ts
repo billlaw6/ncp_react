@@ -162,6 +162,7 @@ export declare interface RouteI {
 export declare interface StoreStateI {
   router: { location: Location };
   loginForm: LoginFormI;
+  profileForm: ProfileFormI;
   currentUser: CurrentUserI;
   userInfo: UserInfoI;
   userInfoList: UserInfoI[];

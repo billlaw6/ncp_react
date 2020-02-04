@@ -17,6 +17,16 @@ export const setExamIndexListAction = (payload: ExamIndexListI[]) => ({
   payload,
 });
 
+export const getDicomSeriesMprAction = (payload: string) => ({
+  type: types.GET_DICOM_SERIES_MPR,
+  payload,
+});
+
+export const setDicomSeriesMprAction = (payload: DicomSeriesI[]) => ({
+  type: types.SET_DICOM_SERIES_MPR,
+  payload,
+});
+
 export const getDicomSeriesAction = (payload: string) => ({
   type: types.GET_DICOM_SERIES,
   payload,

@@ -14,6 +14,7 @@ const defaultLoginForm: LoginFormI = {
   remember: false,
   messages: [],
 };
+
 const loginFormReducer = (
   state = defaultLoginForm,
   action: ReturnType<typeof setLoginFormAction>,
@@ -46,6 +47,7 @@ const defaultCurrentUser: CurrentUserI = {
   avatar: "",
   privacy_notice: 0,
 };
+
 const currentUserReducer = (
   state = defaultCurrentUser,
   action: ReturnType<typeof setCurrentUserAction>,
@@ -80,6 +82,7 @@ const defaultUserInfo: UserInfoI = {
   // 数组定义方法二
   user_permissions: [],
 };
+
 const userInfoReducer = (state = defaultUserInfo, action: ReturnType<typeof setUserInfoAction>) => {
   switch (action.type) {
     case types.SET_USER_INFO: {

@@ -25,3 +25,13 @@ export const sendIdentifyingCode = async (params: any) => {
   const res = await axios.post(`/user/send-sms/`, params);
   return res;
 };
+
+export const getPrivacyNotice = async () => {
+  const res = await axios.get(`/user/privacy-notice/`);
+  return res;
+};
+
+export const agreePrivacyNotice = async (params: any) => {
+  const res = await axios.post(`/user/privacy-notice/agree/`, params);
+  return res;
+};

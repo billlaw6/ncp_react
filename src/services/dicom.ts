@@ -20,6 +20,11 @@ export const getDicomSeriesDetail = async (params: any) => {
   return res;
 };
 
+export const getDicomSeriesMprDetail = async (params: any) => {
+  const res = await axios.get(`/dicom/dicom-series/mpr/${params.id}`, { params: params });
+  return res;
+};
+
 export const getDicomPicture = async (params: any) => {
   const res = await axios.get(`/dicom/dicom-picture/`, { params: params });
   return res;

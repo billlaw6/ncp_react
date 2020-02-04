@@ -1,14 +1,30 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { setWeChatCodeAction, submitLoginFormAction } from "../store/actions/user";
+import {
+  setWeChatCodeAction,
+  submitLoginFormAction,
+} from "../store/actions/user";
 import {
   submitExamIndexSearchAction,
   getDicomSeriesAction,
   getDicomPicturesAction,
   setDicomSeriesAction,
   setDicomPicturesAction,
+  getDicomSeriesMprAction,
+  setDicomSeriesMprAction,
 } from "../store/actions/dicom";
-import { userWeChatLogin, userLogin, getUserInfo } from "../services/user";
-import { getExamIndex, getDicomSeries, getDicomSeriesDetail } from "../services/dicom";
+import {
+  userWeChatLogin,
+  userLogin,
+  getUserInfo,
+  getPrivacyNotice,
+  agreePrivacyNotice,
+} from "../services/user";
+import {
+  getExamIndex,
+  getDicomSeries,
+  getDicomSeriesDetail,
+  getDicomSeriesMprDetail,
+} from "../services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 import { store } from "../index";
@@ -102,6 +118,18 @@ function* searchExamIndexE(action: ReturnType<typeof submitExamIndexSearchAction
       yield put({ type: types.SET_LOGIN_FORM, payload: failedPayload });
     }
   }
+
+  function* getDicomSeriesMprE(action: ReturnType<typeof getDicomSeriesMprAction>) {
+    try {
+      console.log(action.payload);
+      const res = yield call(getDicomSeries, action.payload);
+      console.log(res.data);
+      // put对应redux中的dispatch。
+      yield put({ type: types.SET_DICOM_SERIES, payload: res.data });
+    } catch (error) {
+      console.log(error.response);
+    }
+  }
 }
 
 function* getDicomSeriesE(action: ReturnType<typeof getDicomSeriesAction>) {
@@ -111,6 +139,18 @@ function* getDicomSeriesE(action: ReturnType<typeof getDicomSeriesAction>) {
     console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_DICOM_SERIES, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
+function* getDicomSeriesMprE(action: ReturnType<typeof getDicomSeriesMprAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(getDicomSeriesMprDetail, action.payload);
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_DICOM_SERIES_MPR, payload: res.data });
   } catch (error) {
     console.log(error.response);
   }
@@ -128,11 +168,38 @@ function* getDicomPicturesE(action: ReturnType<typeof getDicomPicturesAction>) {
   }
 }
 
+function* getPrivacyNoticeE(action: ReturnType<typeof getDicomPicturesAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(getPrivacyNotice);
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_PRIVACY_NOTICE, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
+function* agreePrivacyNoticeE(action: ReturnType<typeof getDicomPicturesAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(agreePrivacyNotice, action.payload);
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_PRIVACY_NOTICE, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
 function* rootSaga() {
   yield takeEvery(types.SET_WECHAT_CODE, weChatLoginE);
   yield takeEvery(types.SUBMIT_LOGIN_FORM, formLoginE);
   yield takeEvery(types.SUBMIT_EXAM_INDEX_SEARCH_FORM, searchExamIndexE);
   yield takeEvery(types.GET_DICOM_SERIES, getDicomSeriesE);
+  yield takeEvery(types.GET_DICOM_SERIES_MPR, getDicomSeriesMprE);
+  yield takeEvery(types.GET_PRIVACY_NOTICE, getPrivacyNoticeE);
+  yield takeEvery(types.AGREE_PRIVACY_NOTICE, agreePrivacyNoticeE);
 }
 
 export default rootSaga;
