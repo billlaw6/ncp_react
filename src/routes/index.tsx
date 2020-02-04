@@ -24,7 +24,7 @@ export interface RoutesI {
   exact?: boolean;
   routes?: RoutesI[];
   permission?: string[];
-  layout?: typeof DefaultLayout | typeof FullscreenLayout;
+  layout?: typeof DefaultLayout | typeof FullscreenLayout; // 布局
 }
 
 const routes: RoutesI[] = [

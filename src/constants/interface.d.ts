@@ -123,30 +123,117 @@ export declare interface ExamIndexListI {
   display_frame_rate: number;
 }
 
-export declare enum GenderEnum {
+export declare interface ExamIndexFormI {
+  id: string;
+  desc: string;
+}
+
+/* ===============  根据Tower文档整理的接口相关的interface =============== */
+// 性别枚举
+export declare enum GenderE {
   UNKNOW = 0,
   MALE = 1,
   FEMALE = 2,
 }
 
+// 是否是mpr类型 枚举
+export declare enum MprFlagE {
+  TRUE = 1,
+  FALSE = 0,
+}
+
+export declare enum CollectionTypeE {
+  MARK = "mark",
+  SKETCH = "sketch",
+}
+
+// mpr顺序
+export declare type MprOrderT = 0 | 1 | 2;
+
+// 影像集
 export declare interface ExamIndexI {
   id: string;
   modality: string;
   patient_name: string;
-  created_at: Date;
-  desc: string;
-  patient_id: string;
-  institution_name: string;
-  study_date: string;
   thumbnail: string;
-  display_frame_rate: number;
-  series: DicomSeriesListI[];
+  desc: string;
+  study_date: string;
+  // created_at: Date;
+  // patient_id: string;
+  // institution_name: string;
+  // display_frame_rate: number;
+  // series: DicomSeriesListI[];
 }
 
-export declare interface ExamIndexFormI {
-  id: string;
-  desc: string;
+// 用户信息
+export declare interface UserI {
+  id: number;
+  username: string;
+  cell_phone: string;
+  gender: GenderE;
+  age: number;
+  sign: string;
+  address: string;
+  unit: string;
+  avatar: string;
+  unionid?: string;
+  privacy_notice: number;
 }
+
+// 单张图片
+export declare interface ImageI {
+  id: string;
+  mpr_order: MprOrderT;
+  frame_order: number;
+  url: string;
+}
+
+// 单个影像序列
+export declare interface SeriesI {
+  id: string;
+  series_number: number;
+  mpr_flag: mprFlagE;
+  window_width: number;
+  window_center: number;
+  thumbnail: string;
+  display_frame_rate: number;
+  pictures?: ImageI[] | ImageI[][];
+}
+
+// 影像序列列表
+export declare interface SeriesListI {
+  patient_name: string;
+  patient_id: string;
+  sex: string;
+  birthday: string;
+  institution_name: string;
+  study_date: string;
+  modality: string;
+  children: SeriesI[];
+}
+
+// 作品集
+export declare interface CollectionI {
+  id?: string;
+  dicom_pic_id: string;
+  type: CollectionTypeE;
+  modality: string;
+  patient_name: string;
+  study_date: string;
+  thumbnail?: string;
+  title: string;
+  data: string; // 作品集数据
+  share_data: string; // 合成的图片地址 作为分享用
+}
+
+// 标签
+export declare interface TagI {
+  id?: number;
+  content: string;
+  auth_flag: number;
+}
+
+/* ===============  根据Tower文档整理的接口相关的interface =============== */
 
 export declare interface RouteI {
   path: string;

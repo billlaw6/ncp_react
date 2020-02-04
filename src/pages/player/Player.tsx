@@ -16,7 +16,7 @@ import { Scrollbars } from "react-custom-scrollbars";
 
 import { SeriesI, ImageI, PatientI } from "./type";
 import "./Player.less";
-import { Icon, Slider } from "antd";
+import { Icon, Slider, Result } from "antd";
 import { isIE as isIEFunc } from "_helper";
 import { CustomHTMLDivElement } from "_constants/interface";
 import { RouteComponentProps } from "react-router-dom";
@@ -29,7 +29,7 @@ const VIEWPORT_HEIGHT_DEFAULT = 508; // 视图默认高
 const req = axios.create({
   // baseURL: "http://115.29.148.227:8083/rest-api",
   baseURL: "https://mi.mediclouds.cn/rest-api",
-  timeout: 1000,
+  timeout: 60 * 1000,
 });
 req.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
@@ -66,6 +66,8 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     institution_name: "未知",
     modality: "未知",
   });
+  const [imgs, setImgs] = useState<any[][]>([]);
+  const [cacheDone, setCacheDone] = useState(false); // 是否缓存图片完毕
   const [seriesIndex, setSeriesIndex] = useState(1); // 初始序列索引
   const [imgIndexs, setImgIndexs] = useState([1]); // 初始序列图像索引列表
   const [isPlay, setPlay] = useState(false); // 是否播放
@@ -182,17 +184,6 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
   /* =============== use effect =============== */
   useEffect(() => {
-    // 临时effect 获取series列表 执行一次
-    if (state && state.id) {
-      getSeriesList(state.id).then((result: any) => {
-        const { children, ...args } = result;
-        setPatient({ ...args });
-        setSeriesList(children as SeriesI[]);
-        setImgIndexs(new Array<number>(result.length).fill(1));
-      });
-    }
-  }, [state]);
-  useEffect(() => {
     // 修改root的背景色
     const $wrapper = document.getElementById("defaultLayout");
     if ($wrapper) {
@@ -204,6 +195,36 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       };
     }
   }, []);
+  useEffect(() => {
+    // 临时effect 获取series列表 执行一次
+    if (state && state.id) {
+      getSeriesList(state.id).then((result: any) => {
+        const { children, ...args } = result;
+        setPatient({ ...args });
+        setSeriesList(children as SeriesI[]);
+        setImgIndexs(new Array<number>(result.length).fill(1));
+      });
+    }
+  }, [state]);
+  useEffect(() => {
+    // 临时effect 获取所有series列表的图像 执行一次
+    const _imgs: any[][] = [];
+    let count = 0;
+
+    seriesList.forEach(series => {
+      const { id } = series;
+      getImgList(id)
+        .then(result => {
+          // console.log("img: ", result);
+          _imgs.push(result);
+          count += 1;
+          if (count === seriesList.length) {
+            setImgs(_imgs);
+          }
+        })
+        .catch(error => console.error(error));
+    });
+  }, [seriesList]);
   useEffect(() => {
     // 监听fullscreen event
     if ($player && $player.current) {
