@@ -192,12 +192,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
     } else {
       const currentExam = examIndexList.find(item => item.id === id);
       if (currentExam) {
-        const { id, patient_name, study_date, modality } = currentExam;
+        const { id } = currentExam;
         history.push("/player", {
           id,
-          patient_name,
-          study_date,
-          modality,
         });
       }
     }

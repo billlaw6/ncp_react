@@ -10,9 +10,8 @@ export interface PatientI {
   modality: string;
 }
 
-export interface SeriesCacheListI {
-  [key: number]: HTMLImageElement[];
-}
+/* 缓存的普通series的images列表 */
+export type SeriesImgCacheListT = HTMLImageElement[][];
 
 export interface PlayerStateI {
   seriesIndex: number; // 当前序列索引
@@ -23,7 +22,7 @@ export interface PlayerStateI {
   wrapperClassName: string; // wrapper element classname
   showInfo: boolean; // 是否显示病人信息
   showPanels: boolean; // 全屏时是否显示info、list、ctl等
-  seriesCacheList: SeriesCacheListI; // 正常模式下 序列图像的缓存
+  seriesCacheList: SeriesImgCacheListT; // 正常模式下 序列图像的缓存
 
   seriesList: SeriesListI;
   imageList: ImageI[];

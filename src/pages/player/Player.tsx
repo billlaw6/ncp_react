@@ -2,6 +2,14 @@
 /* 
 !=========== 所有列表的index从1开始算，与series保持一致 ============!
 !=========== 从Array里写入、读取时记得当前的index - 1 才是array内的index =========!
+
+1. 进入后首先获取seriesList 渲染左边的序列缩略图
+2. 然后获取当前序列的信息
+3. 对当前序列的image进行缓存，并显示进度条。同时下方控制器不可用的状态
+4. 加载完毕后，启用下方控制器，canvas中渲染当前序列的当前图像
+5. 切换序列时，重复步骤3-4
+
+
 */
 import React, {
   ReactElement,
@@ -15,9 +23,9 @@ import React, {
 import LinkButton from "_components/LinkButton/LinkButton";
 import { Scrollbars } from "react-custom-scrollbars";
 
-import { PatientI } from "./type";
+import { PatientI, SeriesImgCacheListT } from "./type";
 import "./Player.less";
-import { Icon, Slider } from "antd";
+import { Icon, Slider, Progress } from "antd";
 import { isIE as isIEFunc } from "_helper";
 import { CustomHTMLDivElement, ImageI, SeriesListI, SeriesI } from "_constants/interface";
 import { RouteComponentProps } from "react-router-dom";
@@ -37,14 +45,13 @@ req.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 /* 获取series列表 */
 const getSeriesList = async (id: string): Promise<SeriesListI> => {
   const result = await req.get(`/dicom/dicom-series/`, { data: { id } });
-  console.log("get SeriesList: ", result);
   return result.data;
 };
 
-/* 获取序列的图像列表 */
-const getImgList = async (id: string): Promise<ImageI[]> => {
+/* 获取序列 */
+const getSeries = async (id: string): Promise<SeriesI> => {
   const result = await req.get(`/dicom/dicom-series/${id}/`);
-  return result.data as ImageI[];
+  return result.data;
 };
 
 const isIE = isIEFunc();
@@ -59,6 +66,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const $player = useRef<CustomHTMLDivElement>(null);
   const $viewport = useRef<HTMLCanvasElement>(null);
   /* =============== use state =============== */
+  const [progress, setProgress] = useState(0); // 加载进度
   const [patient, setPatient] = useState<PatientI>({
     patient_name: "匿名",
     patient_id: "未知",
@@ -68,10 +76,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     institution_name: "未知",
     modality: "未知",
   });
-  const [imgs, setImgs] = useState<any[][]>([]);
   const [cacheDone, setCacheDone] = useState(false); // 是否缓存图片完毕
-  const [seriesIndex, setSeriesIndex] = useState(1); // 初始序列索引
-  const [imgIndexs, setImgIndexs] = useState([1]); // 初始序列图像索引列表
+  const [seriesIndex, setSeriesIndex] = useState(1); // 序列索引
+  const [imgIndexs, setImgIndexs] = useState([1]); // 序列当前图像索引列表
   const [isPlay, setPlay] = useState(false); // 是否播放
   const [isShowInfo, setShowInfo] = useState(true); // 是否显示病人信息
   const [isFullscreen, setFullscreen] = useState(false); // 是否全屏
@@ -79,29 +86,51 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const [viewportSize, setViewportSize] = useState([
     VIEWPORT_WIDTH_DEFAULT,
     VIEWPORT_HEIGHT_DEFAULT,
-  ]);
-  const [seriesList, setSeriesList] = useState<SeriesListI>(); // 序列列表
-
+  ]); // 视图区域width&height
+  const [seriesList, setSeriesList] = useState<SeriesListI>(); // seriesList信息
+  const [seriesMap, setSeriesMap] = useState<Map<string, SeriesI>>(new Map()); // series信息集合
+  const [cache, setCache] = useState<SeriesImgCacheListT>([]); // 缓存列表
   /* =============== methods =============== */
+
+  // 获取当前series信息
+  const getCurrentSerie = useCallback((): SeriesI | undefined => {
+    if (!seriesList) return undefined;
+    const { id } = seriesList.children[seriesIndex - 1];
+    return seriesMap.get(id);
+  }, [seriesIndex, seriesList, seriesMap]);
+
   /**
    * 更改选中的序列
    * @param {string} id 序列id
    */
-  // const changeSeries = (id: string): void => {
-  //   // ===>  后面要改为props内获取store上的seriesList <=== //
-  //   const originList = [...seriesList];
-  //   const selectSeries = originList.find(item => item.id === id);
+  const changeSeries = (id: string): void => {
+    if (!seriesList) return;
 
-  //   if (selectSeries) {
-  //     setSeriesIndex(selectSeries.series_number);
-  //   }
-  // };
+    const originList = [...seriesList.children];
+    let num = 1; // temp
+    const selectSeries = originList.find((item, index) => {
+      if (item.id === id) {
+        num = index + 1;
+        return true;
+      }
+    });
+
+    if (selectSeries) {
+      // setSeriesIndex(selectSeries.series_number);
+      setSeriesIndex(num);
+      if (!cache[num - 1]) {
+        setCacheDone(false);
+        setProgress(0);
+      }
+    }
+  };
 
   /**
    * 切换全屏状态
    * @param {boolean} isFullscreen 当前全屏状态
    */
   const changeFullscreen = (isFullscreen: boolean): void => {
+    if (!cacheDone) return;
     if ($player && $player.current) {
       if (isFullscreen) {
         const document: any = window.document; // magic
@@ -121,40 +150,73 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
   };
 
+  // 下一个序列
+  const nextSeries = useCallback((): void => {
+    if (!seriesList) return;
+    const nextSeriesIndex = seriesIndex + 1;
+    setSeriesIndex(Math.min(nextSeriesIndex, seriesList.children.length));
+    if (!cache[nextSeriesIndex - 1]) {
+      setCacheDone(false);
+      setProgress(0);
+    }
+  }, [cache, seriesIndex, seriesList]);
+
+  // 上一个序列
+  const prevSeries = useCallback((): void => {
+    if (!seriesList) return;
+    const nextSeriesIndex = seriesIndex - 1;
+    setSeriesIndex(Math.max(nextSeriesIndex, 1));
+    if (!cache[nextSeriesIndex - 1]) {
+      setCacheDone(false);
+      setProgress(0);
+    }
+  }, [cache, seriesIndex, seriesList]);
+
   const next = useCallback((): void => {
+    if (!cacheDone) return;
+    const currentSeries = getCurrentSerie();
+    if (!currentSeries || !currentSeries.pictures) return;
+
     const next = [...imgIndexs];
     const seriesIndexInArray = seriesIndex - 1;
-    const nextNum = Math.min(100, next[seriesIndexInArray] + 1); // 这里应为当前序列的图像数量 - 1
+    const nextNum = Math.min(currentSeries.pictures.length, next[seriesIndexInArray] + 1); // 这里应为当前序列的图像数量 - 1
     next[seriesIndexInArray] = nextNum;
 
     setImgIndexs(next);
-  }, [seriesIndex, imgIndexs]);
+    if (nextNum === currentSeries.pictures.length && isPlay) setPlay(false);
+  }, [cacheDone, getCurrentSerie, imgIndexs, isPlay, seriesIndex]);
 
-  const prev = (): void => {
+  const prev = useCallback((): void => {
+    if (!cacheDone) return;
     const next = [...imgIndexs];
     const seriesIndexInArray = seriesIndex - 1;
     const nextNum = Math.max(1, next[seriesIndexInArray] - 1);
     next[seriesIndexInArray] = nextNum;
 
     setImgIndexs(next);
-  };
+  }, [cacheDone, imgIndexs, seriesIndex]);
   const first = (): void => {
+    if (!cacheDone) return;
     const next = [...imgIndexs];
     next[seriesIndex - 1] = 1;
 
     setImgIndexs(next);
   };
   const last = (): void => {
+    if (!cacheDone) return;
+    const currentSeries = getCurrentSerie();
+    if (!currentSeries || !currentSeries.pictures) return;
+
     const next = [...imgIndexs];
-    next[seriesIndex - 1] = 100; // 这里应为当前序列的图像数量 - 1
+    next[seriesIndex - 1] = currentSeries.pictures.length; // 这里应为当前序列的图像数量 - 1
 
     setImgIndexs(next);
   };
   const play = (): void => {
-    setPlay(true);
+    cacheDone && setPlay(true);
   };
   const pause = (): void => {
-    setPlay(false);
+    cacheDone && setPlay(false);
   };
   const wheelChange = (event: React.WheelEvent<HTMLCanvasElement>): void => {
     const { deltaY } = event;
@@ -176,11 +238,67 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
   };
 
+  // 获取渲染坐标
+  const getDrawInfo = useCallback(
+    (
+      width: number,
+      height: number,
+    ): {
+      width: number;
+      height: number;
+      x: number;
+      y: number;
+    } => {
+      const [canvasWidth, canvasHeight] = viewportSize;
+      let drawW = 512,
+        drawH = 512,
+        drawX = 0,
+        drawY = 0;
+
+      if (canvasWidth / width < canvasHeight / height) {
+        drawW = canvasWidth;
+        drawH = (drawW * height) / width;
+        drawY = (canvasHeight - drawH) / 2;
+      } else {
+        drawH = canvasHeight;
+        drawW = (drawH * width) / height;
+        drawX = (canvasWidth - drawW) / 2;
+      }
+
+      return {
+        x: drawX,
+        y: drawY,
+        width: drawW,
+        height: drawH,
+      };
+    },
+    [viewportSize],
+  );
+
   const updateViewport = useCallback(() => {
-    if (ctx) {
-      console.log(imgIndexs);
-    }
-  }, [imgIndexs]);
+    if (!ctx) return;
+    if (!cache) return;
+
+    const currentCache = cache[seriesIndex - 1];
+    if (!currentCache) return;
+    const currentImg = currentCache[imgIndexs[seriesIndex - 1] - 1];
+    if (!currentImg) return;
+
+    const { width, height } = currentImg;
+    const drawInfo = getDrawInfo(width, height);
+
+    ctx.drawImage(
+      currentImg,
+      0,
+      0,
+      width,
+      height,
+      drawInfo.x,
+      drawInfo.y,
+      drawInfo.width,
+      drawInfo.height,
+    );
+  }, [cache, getDrawInfo, imgIndexs, seriesIndex]);
 
   /* =============== use effect =============== */
   useEffect(() => {
@@ -196,35 +314,66 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
   }, []);
   useEffect(() => {
-    // 临时effect 获取series列表 执行一次
+    // 获取seriesList 执行一次
     if (state && state.id) {
-      getSeriesList(state.id).then((result: any) => {
+      getSeriesList(state.id).then(result => {
         const { children, ...args } = result;
+
         setPatient({ ...args });
-        // setSeriesList(children as SeriesI[]);
-        setImgIndexs(new Array<number>(result.length).fill(1));
+        setSeriesList(result);
+        setImgIndexs(new Array<number>(children.length).fill(1));
       });
     }
   }, [state]);
-  // useEffect(() => {
-  //   // 临时effect 获取所有series列表的图像 执行一次
-  //   const _imgs: any[][] = [];
-  //   let count = 0;
+  useEffect(() => {
+    // 获取所有series  执行一次
+    if (!seriesList) return;
+    const { children } = seriesList;
+    const _seriesMap = new Map<string, SeriesI>();
+    let count = 0;
 
-  //   seriesList.forEach(series => {
-  //     const { id } = series;
-  //     getImgList(id)
-  //       .then(result => {
-  //         // console.log("img: ", result);
-  //         _imgs.push(result);
-  //         count += 1;
-  //         if (count === seriesList.length) {
-  //           setImgs(_imgs);
-  //         }
-  //       })
-  //       .catch(error => console.error(error));
-  //   });
-  // }, [seriesList]);
+    children.forEach(series => {
+      const { id } = series;
+      getSeries(id)
+        .then(series => {
+          _seriesMap.set(id, series);
+          count += 1;
+          if (count === children.length) {
+            setSeriesMap(_seriesMap);
+          }
+        })
+        .catch(error => console.error(error));
+    });
+  }, [seriesList]);
+  useEffect(() => {
+    // 更新当前序列的图片缓存
+    const currentSeries = getCurrentSerie();
+    if (!currentSeries || !currentSeries.pictures) return;
+    const currentCache = cache[seriesIndex - 1];
+    if (currentCache && currentCache.length === currentSeries.pictures.length) {
+      setCacheDone(true);
+      return;
+    }
+
+    const pics = currentSeries.pictures as ImageI[];
+    const _imgs: HTMLImageElement[] = [];
+    let count = 0;
+    pics.forEach(pic => {
+      const $img = new Image();
+      $img.src = pic.url;
+      $img.onload = (): void => {
+        _imgs[pic.frame_order] = $img;
+        count += 1;
+        setProgress((count / pics.length) * 100);
+        if (count === pics.length) {
+          const nextCache = [...cache];
+          nextCache[seriesIndex - 1] = _imgs;
+          setCache(nextCache);
+          setCacheDone(true);
+        }
+      };
+    });
+  }, [seriesIndex, seriesList, seriesMap]);
   useEffect(() => {
     // 监听fullscreen event
     if ($player && $player.current) {
@@ -249,14 +398,54 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       };
     }
   }, [isFullscreen]);
+  useEffect(() => {
+    // 监听键盘事件
+    const LEFT = 37,
+      RIGHT = 39,
+      UP = 38,
+      DOWN = 40,
+      PLAY_PAUSE = 32;
 
+    const onKeydown = (e: KeyboardEvent): void => {
+      // console.log(e.keyCode);
+      switch (e.keyCode) {
+        case LEFT:
+          prev();
+          break;
+        case RIGHT:
+          next();
+          break;
+        case UP:
+          prevSeries();
+          break;
+        case DOWN:
+          nextSeries();
+          break;
+        case PLAY_PAUSE:
+          setPlay(!isPlay);
+          break;
+        default:
+          return;
+      }
+    };
+    document.addEventListener("keydown", onKeydown);
+
+    return (): void => {
+      document.removeEventListener("keydown", onKeydown);
+    };
+  }, [isPlay, next, nextSeries, prev, prevSeries]);
   useEffect(() => {
     // 更新 canvas 视图
+    const currentSeries = getCurrentSerie();
+
     playTimer !== undefined && window.clearTimeout(playTimer);
     if (isPlay) {
-      playTimer = window.setTimeout(() => {
-        next();
-      }, 500);
+      playTimer = window.setTimeout(
+        () => {
+          next();
+        },
+        currentSeries ? currentSeries.display_frame_rate : 300,
+      );
     }
 
     updateViewport();
@@ -294,9 +483,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     const renderList: SeriesI[] = [];
     const { children } = list;
-    children.forEach(item => {
-      renderList[item.series_number - 1] = item;
-    });
+    // children.forEach(item => {
+    //   renderList[item.series_number - 1] = item;
+    // });
 
     return (
       <div className="player-list">
@@ -309,14 +498,14 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
           )}
           renderView={(props): ReactElement => <ul {...props} className="player-list-inner"></ul>}
         >
-          {renderList.map(item => {
+          {children.map((item, index) => {
             const { id, thumbnail, series_number } = item;
 
             return (
               <li
                 key={id}
-                className={`player-list-item ${series_number === seriesIndex ? "active" : ""}`}
-                // onClick={(): void => changeSeries(id)}
+                className={`player-list-item ${index + 1 === seriesIndex ? "active" : ""}`}
+                onClick={(): void => changeSeries(id)}
               >
                 <img src={thumbnail} alt={id} />
               </li>
@@ -327,6 +516,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     );
   };
   const info = (imgIndexs: number[], seriesIndex: number, isShowInfo: boolean): ReactElement => {
+    const currentSeries = getCurrentSerie();
     const {
       patient_name = "匿名",
       patient_id = "未知",
@@ -336,6 +526,17 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       institution_name = "未知",
       modality = "未知",
     } = patient;
+
+    let max = 1,
+      windowWidth = "未知",
+      windowCenter = "未知";
+
+    if (currentSeries) {
+      const { pictures, window_center, window_width } = currentSeries;
+      if (pictures) max = pictures.length;
+      if (window_width) windowWidth = `${window_width}`;
+      if (window_center) windowCenter = `${window_center}`;
+    }
 
     return (
       <div className={`player-info ${isShowInfo ? "" : isIE ? "player-nosee" : "filter-blur"}`}>
@@ -347,11 +548,13 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         </span>
         <span title="医院">{institution_name}</span>
         <span title="日期">{study_date}</span>
-        <span title="图片索引">Frame: {imgIndexs[seriesIndex]} / 100</span>
+        <span title="图片索引">
+          Frame: {imgIndexs[seriesIndex - 1]} / {max}
+        </span>
         <span title="序列">Series: {seriesIndex}</span>
         <span>
-          <span title="窗宽">WL: 400</span>
-          <span title="窗位">WL: 800</span>
+          <span title="窗宽">WL: {windowWidth}</span>
+          <span title="窗位">WL: {windowCenter}</span>
         </span>
         <span title="类型">{modality}</span>
       </div>
@@ -359,15 +562,22 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   };
 
   const slider = (imgIndexs: number[], seriesIndex: number): ReactElement => {
+    const currentSeries = getCurrentSerie();
+    let max = 1;
+    if (currentSeries && currentSeries.pictures) max = currentSeries.pictures.length;
+
     return (
       <Slider
-        value={imgIndexs[seriesIndex]}
+        value={imgIndexs[seriesIndex - 1]}
+        min={1}
         step={1}
+        max={max}
+        disabled={!cacheDone}
         className="player-ctl-slider"
         getTooltipPopupContainer={(): HTMLElement => $player.current || document.body}
         onChange={(value): void => {
           const next = [...imgIndexs];
-          next[seriesIndex] = value as number;
+          next[seriesIndex - 1] = value as number;
           setImgIndexs(next);
         }}
       ></Slider>
@@ -379,7 +589,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         <Icon
           className={`iconfont ${isShowInfo ? "" : "active"}`}
           type={`${isShowInfo ? "eye" : "eye-invisible"}`}
-          onClick={(): void => setShowInfo(!isShowInfo)}
+          onClick={(): void => {
+            cacheDone && setShowInfo(!isShowInfo);
+          }}
         />
         <Icon className="iconfont" type="snippets" />
         <Icon
@@ -394,8 +606,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   let className = "player";
   if (isFullscreen) className += " player-fullscreen";
   if (isShowPanels) className += " player-show-panels";
-
-  console.log("isFullscreen: ", isFullscreen);
+  // console.log("cache: ", cache);
 
   return (
     <section className={className}>
@@ -408,19 +619,24 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       <div className="player-content" ref={$player}>
         <div className="player-view">
           {seriesListCmp(seriesList)}
-          <canvas
-            className="player-viewport"
-            ref={$viewport}
-            onWheel={wheelChange}
-            onMouseOut={(): void => window.clearTimeout(showPanelsTimer)}
-            onMouseOver={(): void => showPanels(isFullscreen, isShowPanels)}
-            onMouseMove={(): void => showPanels(isFullscreen, isShowPanels)}
-            width={viewportSize[0]}
-            height={viewportSize[1]}
-          ></canvas>
+          <div className="player-view-inner">
+            <canvas
+              className="player-viewport"
+              ref={$viewport}
+              onWheel={wheelChange}
+              onMouseOut={(): void => window.clearTimeout(showPanelsTimer)}
+              onMouseOver={(): void => showPanels(isFullscreen, isShowPanels)}
+              onMouseMove={(): void => showPanels(isFullscreen, isShowPanels)}
+              width={viewportSize[0]}
+              height={viewportSize[1]}
+            ></canvas>
+            <div className="player-progress" style={{ display: cacheDone ? "none" : "flex" }}>
+              <Progress percent={progress}></Progress>
+            </div>
+          </div>
           {info(imgIndexs, seriesIndex, isShowInfo)}
         </div>
-        <div className="player-ctl">
+        <div className={`player-ctl ${cacheDone ? "" : "player-disabled"}`}>
           <div className="player-ctl-playbtns">
             <Icon className="iconfont" type="step-backward" onClick={first} />
             <Icon className="iconfont" type="left" onClick={prev} />
