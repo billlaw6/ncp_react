@@ -56,6 +56,7 @@
     margin-right: 8px;
 
     &-count {
+      text-align: center;
       margin-bottom: 10px;
     }
 
@@ -142,6 +143,17 @@
 
     &-slider {
       flex-grow: 1;
+      &.ant-slider {
+        & .ant-slider-track,
+        &:hover .ant-slider-track {
+          background-color: @primaryColor;
+        }
+
+        & .ant-slider-handle,
+        &:hover .ant-slider-handle {
+          border-color: @primaryColor;
+        }
+      }
     }
 
     &-playbtns {
@@ -168,8 +180,32 @@
     left: 0;
     top: 0;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+
+    .ant-progress {
+      width: 320px;
+      position: relative;
+      &-outer {
+        padding: 0;
+        &::before {
+          position: absolute;
+          display: block;
+          content: "";
+          width: calc(100% + 6px);
+          height: 14px;
+          border: 2px solid rgba(58, 78, 150, 0.8);
+          border-radius: 7px;
+          left: -3px;
+          bottom: 2px;
+          z-index: 1;
+        }
+      }
+      &-text {
+        display: none !important;
+      }
+    }
   }
 
   &-progress,
@@ -213,8 +249,27 @@
     visibility: hidden;
   }
 
-  // &-disabled {
-  //   opacity: 0.3;
-  //   cursor: not-allowed;
-  // }
+  &-fullscreen {
+    cursor: none;
+
+    .player-list {
+      margin-right: 0;
+      padding: 14px 18px 25px;
+      &-item {
+        width: 64px;
+        height: 64px;
+        margin-bottom: 8px;
+      }
+    }
+
+    .player-progress {
+      background-color: #ccc;
+      position: fixed;
+      height: 100%;
+      z-index: 10;
+    }
+  }
+  &-show-panels {
+    cursor: default !important;
+  }
 }

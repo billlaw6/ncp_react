@@ -153,8 +153,8 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   // 下一个序列
   const nextSeries = useCallback((): void => {
     if (!seriesList) return;
-    const nextSeriesIndex = seriesIndex + 1;
-    setSeriesIndex(Math.min(nextSeriesIndex, seriesList.children.length));
+    const nextSeriesIndex = Math.min(seriesIndex + 1, seriesList.children.length);
+    setSeriesIndex(nextSeriesIndex);
     if (!cache[nextSeriesIndex - 1]) {
       setCacheDone(false);
       setProgress(0);
@@ -164,8 +164,8 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   // 上一个序列
   const prevSeries = useCallback((): void => {
     if (!seriesList) return;
-    const nextSeriesIndex = seriesIndex - 1;
-    setSeriesIndex(Math.max(nextSeriesIndex, 1));
+    const nextSeriesIndex = Math.max(seriesIndex - 1, 1);
+    setSeriesIndex(nextSeriesIndex);
     if (!cache[nextSeriesIndex - 1]) {
       setCacheDone(false);
       setProgress(0);
@@ -449,7 +449,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
 
     updateViewport();
-  }, [imgIndexs, seriesIndex, isPlay, next, viewportSize, updateViewport]);
+  }, [imgIndexs, seriesIndex, isPlay, next, viewportSize, updateViewport, getCurrentSerie]);
   useEffect(() => {
     // 重新计算canvas的width height
     const { outerWidth, outerHeight, devicePixelRatio = 1 } = window;
@@ -631,7 +631,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
               height={viewportSize[1]}
             ></canvas>
             <div className="player-progress" style={{ display: cacheDone ? "none" : "flex" }}>
-              <Progress percent={progress}></Progress>
+              <span>{Math.ceil(progress)}%</span>
+              <Progress percent={progress} strokeColor="#7594FF"></Progress>
+              <span>Loading...</span>
             </div>
           </div>
           {info(imgIndexs, seriesIndex, isShowInfo)}

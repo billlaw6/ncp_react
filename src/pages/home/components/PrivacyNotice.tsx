@@ -57,6 +57,8 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
       agreePrivacyNoticeAction({ privacy_notice_id: privacyNotice });
+      setShow(false);
+      onChecked && onChecked();
     }
   }
 
