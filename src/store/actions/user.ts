@@ -1,4 +1,4 @@
-import { LoginFormI, UserInfoI, CurrentUserI, ActionI } from "../../constants/interface";
+import { LoginFormI, UserI, CurrentUserI, ActionI } from "../../constants/interface";
 import * as types from "../action-types";
 
 export type SetWeChatCodeActionT = ActionI<string, string>;
@@ -37,29 +37,38 @@ export const submitLoginFormAction: SubmitLoginFormActionFuncT = payload => ({
   payload,
 });
 
-export type SetUserInfoActionT = ActionI<string, UserInfoI>;
+export type SetUserInfoActionT = ActionI<string, UserI>;
 export interface SetUserInfoActionFuncT {
-  (payload: UserInfoI): SetUserInfoActionT;
+  (payload: UserI): SetUserInfoActionT;
 }
 export const setUserInfoAction: SetUserInfoActionFuncT = payload => ({
   type: types.SET_USER_INFO,
   payload,
 });
 
-export type SetUserListActionT = ActionI<string, UserInfoI[]>;
+export type SetUserListActionT = ActionI<string, UserI[]>;
 export interface SetUserListActionFuncT {
-  (payload: UserInfoI[]): SetUserListActionT;
+  (payload: UserI[]): SetUserListActionT;
 }
 export const setUserListAction: SetUserListActionFuncT = payload => ({
   type: types.SET_USER_LIST,
   payload,
 });
 
-export type UpdateUserInfoActionT = ActionI<string, UserInfoI>;
+export type UpdateUserInfoActionT = ActionI<string, UserI>;
 export interface UpdateUserInfoActionFuncT {
-  (payload: UserInfoI): UpdateUserInfoActionT;
+  (payload: UserI): UpdateUserInfoActionT;
 }
 export const updateUserInfoAction: UpdateUserInfoActionFuncT = payload => ({
   type: types.UPDATE_USER_INFO,
+  payload,
+});
+
+export type AgreePrivacyNoticeT = ActionI<string, { privacy_notice_id: number }>;
+export interface AgreePrivacyNoticeActionFuncT {
+  (payload: { privacy_notice_id: number }): AgreePrivacyNoticeT;
+}
+export const agreePrivacyNoticeAction: AgreePrivacyNoticeActionFuncT = payload => ({
+  type: types.AGREE_PRIVACY_NOTICE,
   payload,
 });

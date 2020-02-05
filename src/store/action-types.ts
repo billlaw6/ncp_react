@@ -15,11 +15,8 @@ export const SET_USER_INFO = "set_user_info";
 export const SET_USER_LIST = "set_user_list";
 
 ///////////////////////////////////////
-export const SUBMIT_EXAM_INDEX_SEARCH_FORM = "submit_exam_index_search_form";
 export const GET_EXAM_INDEX_LIST = "get_exam_index_list";
 export const SET_EXAM_INDEX_LIST = "set_exam_index_list";
-export const SUBMIT_DICOM_SERIES_SEARCH_FORM = "submit_dicom_series_search_form";
-export const SUBMIT_COLLECTION_SEARCH_FORM = "submit_collection_search_form";
 export const GET_DICOM_SERIES = "get_dicom_series";
 export const SET_DICOM_SERIES = "set_dicom_series";
 export const GET_DICOM_SERIES_MPR = "get_dicom_series_mpr";

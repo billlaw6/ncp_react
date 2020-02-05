@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { UserI, UserInfoI, LoginFormI } from "../../constants/interface";
+import { UserI, LoginFormI } from "../../constants/interface";
 import {
   setCurrentUserAction,
   setLoginFormAction,
   setUserInfoAction,
-  setUserListAction,
+  // setUserListAction,
 } from "../actions/user";
 import * as types from "../action-types";
 
@@ -66,51 +66,51 @@ const currentUserReducer = (
   }
 };
 
-const defaultUserInfo: UserInfoI = {
-  id: -1,
-  username: "",
-  email: "",
-  cell_phone: "",
-  openid: "",
-  unionid: "",
-  // 数组定义方法一
-  groups: [],
-  first_name: "",
-  last_name: "",
-  pinyin: "",
-  py: "",
-  gender: 0,
-  // 数组定义方法二
-  user_permissions: [],
-};
+// const defaultUserInfo: UserInfoI = {
+//   id: -1,
+//   username: "",
+//   email: "",
+//   cell_phone: "",
+//   openid: "",
+//   unionid: "",
+//   // 数组定义方法一
+//   groups: [],
+//   first_name: "",
+//   last_name: "",
+//   pinyin: "",
+//   py: "",
+//   gender: 0,
+//   // 数组定义方法二
+//   user_permissions: [],
+// };
 
-const userInfoReducer = (state = defaultUserInfo, action: ReturnType<typeof setUserInfoAction>) => {
-  switch (action.type) {
-    case types.SET_USER_INFO: {
-      return {
-        ...defaultUserInfo,
-        ...action.payload,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+// const userInfoReducer = (state = defaultUserInfo, action: ReturnType<typeof setUserInfoAction>) => {
+//   switch (action.type) {
+//     case types.SET_USER_INFO: {
+//       return {
+//         ...defaultUserInfo,
+//         ...action.payload,
+//       };
+//     }
+//     default: {
+//       return state;
+//     }
+//   }
+// };
 
-const defaultUserList: UserInfoI[] = [];
-const userListReducer = (state = defaultUserList, action: ReturnType<typeof setUserListAction>) => {
-  switch (action.type) {
-    case types.SET_USER_LIST: {
-      return {
-        ...defaultUserList,
-        ...action.payload,
-      };
-    }
-    default: {
-      return state;
-    }
-  }
-};
+// const defaultUserList: UserInfoI[] = [];
+// const userListReducer = (state = defaultUserList, action: ReturnType<typeof setUserListAction>) => {
+//   switch (action.type) {
+//     case types.SET_USER_LIST: {
+//       return {
+//         ...defaultUserList,
+//         ...action.payload,
+//       };
+//     }
+//     default: {
+//       return state;
+//     }
+//   }
+// };
 
-export { loginFormReducer, userInfoReducer, currentUserReducer, userListReducer };
+export { loginFormReducer, currentUserReducer };

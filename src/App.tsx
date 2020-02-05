@@ -1,5 +1,5 @@
 import React, { Component, ReactElement } from "react";
-import { Router, Switch, Redirect, Route } from "react-router-dom";
+import { Router, Switch, Route } from "react-router-dom";
 import routes from "./routes";
 import { history } from "./store/configureStore";
 
