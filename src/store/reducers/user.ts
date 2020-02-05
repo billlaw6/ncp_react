@@ -3,7 +3,7 @@ import { UserI, LoginFormI } from "../../constants/interface";
 import {
   setCurrentUserAction,
   setLoginFormAction,
-  setUserInfoAction,
+  // setUserInfoAction,
   // setUserListAction,
 } from "../actions/user";
 import * as types from "../action-types";

@@ -2,7 +2,7 @@ import { SearchFormI, DicomSeriesI, DicomPictureI, ExamIndexI } from "../../cons
 import * as types from "../action-types";
 
 // 用于在SAGA中触发请求
-export const getExamIndexAction = (payload: SearchFormI) => ({
+export const getExamIndexListAction = (payload: SearchFormI) => ({
   type: types.GET_EXAM_INDEX_LIST,
   payload,
 });

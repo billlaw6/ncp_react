@@ -46,12 +46,12 @@ const routes: RoutesI[] = [
     component: Upload,
     permission: ["login"],
   },
-  {
-    name: "logout",
-    path: "/logout",
-    component: Logout,
-    routes: [],
-  },
+  // {
+  //   name: "logout",
+  //   path: "/logout",
+  //   component: Logout,
+  //   routes: [],
+  // },
   {
     name: "oauth",
     path: "/oauth",

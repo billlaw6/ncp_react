@@ -1,7 +1,7 @@
 import { combineReducers } from "redux";
 import { History } from "history";
 import { connectRouter } from "connected-react-router";
-import { loginFormReducer, currentUserReducer, userInfoReducer } from "./user";
+import { loginFormReducer, currentUserReducer } from "./user";
 import { examSearchReducer, examIndexListReducer } from "./dicom";
 
 // 每个reducer必须都返回state类型的数据！
@@ -10,7 +10,7 @@ const createRootReducer = (history: History) =>
     router: connectRouter(history),
     loginForm: loginFormReducer,
     currentUser: currentUserReducer,
-    userInfo: userInfoReducer,
+    // userInfo: userInfoReducer,
     // userList: userListReducer,
     examSearchForm: examSearchReducer,
     examIndexList: examIndexListReducer,

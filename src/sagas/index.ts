@@ -1,7 +1,11 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { setWeChatCodeAction, submitLoginFormAction, agreePrivacyNoticeAction } from "../store/actions/user";
 import {
-  submitExamIndexSearchAction,
+  setWeChatCodeAction,
+  submitLoginFormAction,
+  agreePrivacyNoticeAction,
+} from "../store/actions/user";
+import {
+  getExamIndexListAction,
   getDicomSeriesAction,
   getDicomPicturesAction,
   setDicomSeriesAction,
@@ -87,7 +91,7 @@ function* formLoginE(action: ReturnType<typeof submitLoginFormAction>) {
   }
 }
 
-function* searchExamIndexE(action: ReturnType<typeof submitExamIndexSearchAction>) {
+function* getExamIndexE(action: ReturnType<typeof getExamIndexListAction>) {
   try {
     console.log(action.payload);
     const res = yield call(getExamIndex, action.payload);
@@ -188,6 +192,7 @@ function* agreePrivacyNoticeE(action: ReturnType<typeof agreePrivacyNoticeAction
 function* rootSaga() {
   yield takeEvery(types.SET_WECHAT_CODE, weChatLoginE);
   yield takeEvery(types.SUBMIT_LOGIN_FORM, formLoginE);
+  yield takeEvery(types.GET_EXAM_INDEX_LIST, getExamIndexE);
   yield takeEvery(types.GET_DICOM_SERIES, getDicomSeriesE);
   yield takeEvery(types.GET_DICOM_SERIES_MPR, getDicomSeriesMprE);
   yield takeEvery(types.GET_PRIVACY_NOTICE, getPrivacyNoticeE);

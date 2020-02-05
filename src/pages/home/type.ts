@@ -1,5 +1,5 @@
 import { ExamIndexI, UserI } from "_constants/interface";
-import { submitExamIndexSearchAction } from "_actions/dicom";
+import { getExamIndexListAction } from "_actions/dicom";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
@@ -8,7 +8,7 @@ export interface MapStateToPropsI {
   user: UserI;
 }
 export interface MapDispatchToPropsI {
-  getList: typeof submitExamIndexSearchAction;
+  getList: typeof getExamIndexListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;

@@ -14,7 +14,7 @@ import {
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
-import { submitExamIndexSearchAction } from "_actions/dicom";
+import { getExamIndexListAction } from "_actions/dicom";
 
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
@@ -370,6 +370,6 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.currentUser,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getList: submitExamIndexSearchAction,
+  getList: getExamIndexListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
