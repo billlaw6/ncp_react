@@ -25,10 +25,7 @@ import {
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 import { store } from "../index";
-// import { createBrowserHistory } from "history";
-// import { history } from "../store/configureStore";
 
-// const history = createBrowserHistory();
 // worker Saga : 将在 action 被 dispatch 时调用
 function* weChatLoginE(action: ReturnType<typeof setWeChatCodeAction>) {
   try {
@@ -43,8 +40,6 @@ function* weChatLoginE(action: ReturnType<typeof setWeChatCodeAction>) {
       };
       console.log(succeededPayload);
       yield put({ type: types.SET_CURRENT_USER, payload: succeededPayload });
-      // 下面两种效果一样
-      // history.push('/')
       yield put(push("/"));
     }
   } catch (error) {
@@ -52,8 +47,6 @@ function* weChatLoginE(action: ReturnType<typeof setWeChatCodeAction>) {
     if (error.response) {
       yield put({ type: types.SET_CURRENT_USER, payload: { token: "" } });
     }
-    // history.push('/login/')
-    // yield put(push("/login/"));
   }
 }
 
@@ -62,8 +55,6 @@ function* formLoginE(action: ReturnType<typeof submitLoginFormAction>) {
     const res = yield call(userLogin, action.payload);
     console.log(res.data.key);
     yield put({ type: types.SET_CURRENT_USER, payload: { token: res.data.key } });
-    // 只变了URL没渲染页面
-    // history.push('/')
     yield put(push("/"));
   } catch (error) {
     console.log(error.response);

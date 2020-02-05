@@ -129,7 +129,7 @@ axios.interceptors.response.use(
         return Promise.reject(error);
       }
       // 服务器无响应又没断网，返回报错
-      history.push("/error");
+      // history.push("/error");
       return Promise.reject(error);
     }
   },

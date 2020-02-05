@@ -3,7 +3,7 @@ import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 import { Modal, Button, Checkbox } from "antd";
 import { CurrentUserI } from "_constants/interface";
 import axios from "axios";
-import { getPrivacyNotice } from "../../../services/user";
+import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
 
 import "./PrivacyNotice.less";
 
@@ -41,9 +41,10 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
     } else {
       // something
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
-      axios
-        .post("#")
-        // .post("http://115.29.148.227:8083/rest-api/user/update", { privacy_notice: privacyNotice })
+      // axios
+      //   .post("#")
+      // .post("http://115.29.148.227:8083/rest-api/user/update", { privacy_notice: privacyNotice })
+      agreePrivacyNotice({ privacy_notice_id: 1 })
         .then((result): void => {
           // setShow(false);
           // onChecked && onChecked();
