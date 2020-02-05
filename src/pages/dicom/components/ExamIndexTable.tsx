@@ -1,13 +1,13 @@
 import React from "react";
 import { Table, Icon, Button, Input } from "antd";
-import { ExamIndexListI, ExamIndexFormI } from "../../../constants/interface";
+import { ExamIndexFormI, ExamIndexI } from "../../../constants/interface";
 import { FormattedMessage } from "react-intl";
 import { Resizable } from "react-resizable";
 import ExamIndexDescForm from "./ExamIndexDescForm";
 
 // 组件不直接从reducer取数，通过父项传进来。
 type IProps = {
-  examIndexData: ExamIndexListI[];
+  examIndexData: ExamIndexI[];
 };
 
 // 写object会取不到state的值
@@ -31,7 +31,7 @@ class ExamIndexTable extends React.Component<IProps, any> {
         title: "上传日期",
         dataIndex: "created_at",
         key: "created_at",
-        render: (value: any, record: ExamIndexListI, index: number) => {
+        render: (value: any, record: ExamIndexI, index: number) => {
           return value;
         },
       },
@@ -40,7 +40,7 @@ class ExamIndexTable extends React.Component<IProps, any> {
         dataIndex: "desc",
         key: "desc",
         // fixed属性和render貌似不能共存
-        render: (value: any, record: ExamIndexListI, index: number) => {
+        render: (value: any, record: ExamIndexI, index: number) => {
           const fields = {
             id: {
               value: record.id,

@@ -3,7 +3,7 @@ import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
 import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
 import DicomCard from "_components/DicomCard/DicomCard";
-import { StoreStateI, ExamIndexListI } from "_constants/interface";
+import { StoreStateI, ExamIndexI } from "_constants/interface";
 
 import {
   MapStateToPropsI,
@@ -192,31 +192,18 @@ class Home extends Component<HomePropsI, HomeStateI> {
     } else {
       const currentExam = examIndexList.find(item => item.id === id);
       if (currentExam) {
-        const {
-          id,
-          patient_id,
-          patient_name,
-          birthday,
-          sex,
-          study_date,
-          institution_name,
-          modality,
-        } = currentExam;
+        const { id, patient_name, study_date, modality } = currentExam;
         history.push("/player", {
           id,
-          patient_id,
           patient_name,
-          birthday,
-          sex,
           study_date,
-          institution_name,
           modality,
         });
       }
     }
   };
 
-  getCurrentItem = (): ExamIndexListI[] => {
+  getCurrentItem = (): ExamIndexI[] => {
     const { examIndexList } = this.props;
     const { page } = this.state;
     return examIndexList.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);

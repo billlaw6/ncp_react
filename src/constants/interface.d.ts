@@ -233,7 +233,7 @@ export declare interface TagI {
   auth_flag: number;
 }
 
-/* ===============  根据Tower文档整理的接口相关的interface =============== */
+/* ===============  根据Tower文档整理的接口相关的interface END =============== */
 
 export declare interface RouteI {
   path: string;
@@ -250,11 +250,11 @@ export declare interface StoreStateI {
   router: { location: Location };
   loginForm: LoginFormI;
   profileForm: ProfileFormI;
-  currentUser: CurrentUserI;
+  currentUser: UserI;
   userInfo: UserInfoI;
   userInfoList: UserInfoI[];
   examSearchForm: SearchFormI;
-  examIndexList: ExamIndexListI[];
+  examIndexList: ExamIndexI[];
   dicomSeriesList: DicomSeriesListI[];
   dicomPictureList: DicomPictureListI[];
 }

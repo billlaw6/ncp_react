@@ -1,5 +1,5 @@
 import React, { ReactElement } from "react";
-import { StoreStateI, ExamIndexListI, SearchFormI } from "../../constants/interface";
+import { StoreStateI, SearchFormI } from "../../constants/interface";
 import { submitExamIndexSearchAction, setExamIndexListAction } from "../../store/actions/dicom";
 import ExamIndexTable from "./components/ExamIndexTable";
 import ExamIndexList from "./components/ExamIndexList";
@@ -24,7 +24,7 @@ type IProps = ReturnType<typeof mapStateToProps> & IDispatchProps;
 
 // type IState = {
 //     fields: SearchFormI;
-//     examIndexData: ExamIndexListI[];
+//     examIndexData: ExamIndexI[];
 // }
 
 class ExamIndexManage extends React.Component<IProps, any> {

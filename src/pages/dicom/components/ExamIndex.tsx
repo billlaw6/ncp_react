@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/camelcase */
 import React from "react";
-import { ExamIndexListI } from "../../../constants/interface";
+import { ExamIndexI } from "../../../constants/interface";
 import { Icon } from "antd";
 import "./ExamIndex.less";
 
-class ExamIndex extends React.Component<ExamIndexListI, object> {
+class ExamIndex extends React.Component<ExamIndexI, object> {
   render() {
     const { thumbnail, patient_name, study_date, modality } = this.props;
     return (

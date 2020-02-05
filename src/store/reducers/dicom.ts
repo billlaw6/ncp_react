@@ -1,9 +1,4 @@
-import {
-  SearchFormI,
-  ExamIndexListI,
-  DicomSeriesI,
-  DicomPictureI,
-} from "../../constants/interface";
+import { SearchFormI, ExamIndexI, DicomSeriesI, DicomPictureI } from "../../constants/interface";
 import * as types from "../action-types";
 import moment from "moment";
 import {
@@ -35,7 +30,7 @@ const examSearchReducer = (
   }
 };
 
-const defaultExamIndexList: ExamIndexListI[] = [];
+const defaultExamIndexList: ExamIndexI[] = [];
 const examIndexListReducer = (
   state = defaultExamIndexList,
   action: ReturnType<typeof setExamIndexListAction>,

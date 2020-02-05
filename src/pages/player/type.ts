@@ -1,11 +1,4 @@
-export interface SeriesI {
-  id: string;
-  series_number: number;
-  mpr_flag: mprFlagType;
-  window_width: number;
-  window_center: number;
-  thumbnail: string;
-}
+import { ImageI, SeriesListI } from "_constants/interface";
 
 export interface PatientI {
   patient_name: string;
@@ -16,16 +9,6 @@ export interface PatientI {
   institution_name: string;
   modality: string;
 }
-
-export interface ImageI {
-  id: string;
-  mpr_order: mprOrderType;
-  frame_order: number;
-  url: string;
-}
-
-type mprFlagType = 0 | 1;
-type mprOrderType = 0 | 1 | 2;
 
 export interface SeriesCacheListI {
   [key: number]: HTMLImageElement[];
@@ -42,7 +25,6 @@ export interface PlayerStateI {
   showPanels: boolean; // 全屏时是否显示info、list、ctl等
   seriesCacheList: SeriesCacheListI; // 正常模式下 序列图像的缓存
 
-  /* 下面👇的是临时的state */
-  seriesList: SeriesI[];
+  seriesList: SeriesListI;
   imageList: ImageI[];
 }

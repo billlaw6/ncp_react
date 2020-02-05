@@ -1,11 +1,11 @@
-import { ExamIndexListI, CurrentUserI } from "_constants/interface";
+import { ExamIndexI, UserI } from "_constants/interface";
 import { submitExamIndexSearchAction } from "_actions/dicom";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
 export interface MapStateToPropsI {
-  examIndexList: ExamIndexListI[];
-  user: CurrentUserI;
+  examIndexList: ExamIndexI[];
+  user: UserI;
 }
 export interface MapDispatchToPropsI {
   getList: typeof submitExamIndexSearchAction;
@@ -37,10 +37,10 @@ export interface TableDataI {
   id: string;
   modality: string;
   patient_name: string;
-  created_at: Date;
+  // created_at: Date;
   desc: string | ReactElement;
-  patient_id: string;
-  institution_name: string;
+  // patient_id: string;
+  // institution_name: string;
   study_date: string;
   thumbnail: string;
 }

@@ -1,13 +1,13 @@
 import React from "react";
 import { Table, Icon, Button, Input } from "antd";
-import { ExamIndexListI } from "../../../constants/interface";
+import { ExamIndexI } from "../../../constants/interface";
 import ExamIndex from "./ExamIndex";
 import { FormattedMessage } from "react-intl";
 import { Resizable } from "react-resizable";
 
 // 组件不直接从reducer取数，通过父项传进来。
 type IProps = {
-  examIndexData: ExamIndexListI[];
+  examIndexData: ExamIndexI[];
 };
 
 // 写object会取不到state的值

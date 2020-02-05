@@ -10,15 +10,16 @@ import React, {
   useEffect,
   useRef,
   useCallback,
+  ReactNode,
 } from "react";
 import LinkButton from "_components/LinkButton/LinkButton";
 import { Scrollbars } from "react-custom-scrollbars";
 
-import { SeriesI, ImageI, PatientI } from "./type";
+import { PatientI } from "./type";
 import "./Player.less";
-import { Icon, Slider, Result } from "antd";
+import { Icon, Slider } from "antd";
 import { isIE as isIEFunc } from "_helper";
-import { CustomHTMLDivElement } from "_constants/interface";
+import { CustomHTMLDivElement, ImageI, SeriesListI, SeriesI } from "_constants/interface";
 import { RouteComponentProps } from "react-router-dom";
 
 import axios from "axios";
@@ -27,15 +28,16 @@ const VIEWPORT_WIDTH_DEFAULT = 890; // 视图默认宽
 const VIEWPORT_HEIGHT_DEFAULT = 508; // 视图默认高
 
 const req = axios.create({
-  // baseURL: "http://115.29.148.227:8083/rest-api",
-  baseURL: "https://mi.mediclouds.cn/rest-api",
+  baseURL: "http://115.29.148.227:8083/rest-api",
+  // baseURL: "https://mi.mediclouds.cn/rest-api",
   timeout: 60 * 1000,
 });
 req.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
 /* 获取series列表 */
-const getSeriesList = async (id: string): Promise<SeriesI[]> => {
+const getSeriesList = async (id: string): Promise<SeriesListI> => {
   const result = await req.get(`/dicom/dicom-series/`, { data: { id } });
+  console.log("get SeriesList: ", result);
   return result.data;
 };
 
@@ -78,24 +80,22 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     VIEWPORT_WIDTH_DEFAULT,
     VIEWPORT_HEIGHT_DEFAULT,
   ]);
-
-  // 临时state 后面改用props
-  const [seriesList, setSeriesList] = useState<SeriesI[]>([]); // 序列列表
+  const [seriesList, setSeriesList] = useState<SeriesListI>(); // 序列列表
 
   /* =============== methods =============== */
   /**
    * 更改选中的序列
    * @param {string} id 序列id
    */
-  const changeSeries = (id: string): void => {
-    // ===>  后面要改为props内获取store上的seriesList <=== //
-    const originList = [...seriesList];
-    const selectSeries = originList.find(item => item.id === id);
+  // const changeSeries = (id: string): void => {
+  //   // ===>  后面要改为props内获取store上的seriesList <=== //
+  //   const originList = [...seriesList];
+  //   const selectSeries = originList.find(item => item.id === id);
 
-    if (selectSeries) {
-      setSeriesIndex(selectSeries.series_number);
-    }
-  };
+  //   if (selectSeries) {
+  //     setSeriesIndex(selectSeries.series_number);
+  //   }
+  // };
 
   /**
    * 切换全屏状态
@@ -201,30 +201,30 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       getSeriesList(state.id).then((result: any) => {
         const { children, ...args } = result;
         setPatient({ ...args });
-        setSeriesList(children as SeriesI[]);
+        // setSeriesList(children as SeriesI[]);
         setImgIndexs(new Array<number>(result.length).fill(1));
       });
     }
   }, [state]);
-  useEffect(() => {
-    // 临时effect 获取所有series列表的图像 执行一次
-    const _imgs: any[][] = [];
-    let count = 0;
+  // useEffect(() => {
+  //   // 临时effect 获取所有series列表的图像 执行一次
+  //   const _imgs: any[][] = [];
+  //   let count = 0;
 
-    seriesList.forEach(series => {
-      const { id } = series;
-      getImgList(id)
-        .then(result => {
-          // console.log("img: ", result);
-          _imgs.push(result);
-          count += 1;
-          if (count === seriesList.length) {
-            setImgs(_imgs);
-          }
-        })
-        .catch(error => console.error(error));
-    });
-  }, [seriesList]);
+  //   seriesList.forEach(series => {
+  //     const { id } = series;
+  //     getImgList(id)
+  //       .then(result => {
+  //         // console.log("img: ", result);
+  //         _imgs.push(result);
+  //         count += 1;
+  //         if (count === seriesList.length) {
+  //           setImgs(_imgs);
+  //         }
+  //       })
+  //       .catch(error => console.error(error));
+  //   });
+  // }, [seriesList]);
   useEffect(() => {
     // 监听fullscreen event
     if ($player && $player.current) {
@@ -284,15 +284,23 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   }, []);
 
   /* =============== components =============== */
-  const seriesListCmp = (list: SeriesI[]): ReactElement => {
+  const seriesListCmp = (list?: SeriesListI): ReactNode => {
+    if (!list)
+      return (
+        <div className="player-list">
+          <span className="player-list-count">no series</span>
+        </div>
+      );
+
     const renderList: SeriesI[] = [];
-    list.forEach(item => {
+    const { children } = list;
+    children.forEach(item => {
       renderList[item.series_number - 1] = item;
     });
 
     return (
       <div className="player-list">
-        <span className="player-list-count">{`${seriesIndex} / ${list.length}`}</span>
+        <span className="player-list-count">{`${seriesIndex} / ${children.length}`}</span>
         <Scrollbars
           autoHide
           className="player-list-scrollbar"
@@ -308,7 +316,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
               <li
                 key={id}
                 className={`player-list-item ${series_number === seriesIndex ? "active" : ""}`}
-                onClick={(): void => changeSeries(id)}
+                // onClick={(): void => changeSeries(id)}
               >
                 <img src={thumbnail} alt={id} />
               </li>

@@ -1,20 +1,20 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { ExamIndexListI } from "_constants/interface";
+import { ExamIndexI } from "_constants/interface";
 import { Random, mock } from "mockjs";
 
-const generateData = (count: number): ExamIndexListI[] => {
+const generateData = (count: number): ExamIndexI[] => {
   const result = [];
 
   for (let i = 0; i < count; i++) {
-    const data: ExamIndexListI = {
-      sex: 1,
-      birthday: "",
-      display_frame_rate: 40,
+    const data: ExamIndexI = {
+      // sex: 1,
+      // birthday: "",
+      // display_frame_rate: 40,
       id: Random.string(),
-      patient_id: Random.string(),
+      // patient_id: Random.string(),
       patient_name: Random.cname(),
-      created_at: new Date(),
-      institution_name: Random.csentence(),
+      // created_at: new Date(),
+      // institution_name: Random.csentence(),
       desc: Random.csentence(),
       thumbnail: "https://source.unsplash.com/random/300x300",
       study_date: Random.date("yyyy-MM-dd"),

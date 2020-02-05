@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { CurrentUserI, UserInfoI, LoginFormI } from "../../constants/interface";
+import { UserI, UserInfoI, LoginFormI } from "../../constants/interface";
 import {
   setCurrentUserAction,
   setLoginFormAction,
@@ -32,15 +32,16 @@ const loginFormReducer = (
   }
 };
 
-const defaultCurrentUser: CurrentUserI = {
+const defaultCurrentUser: UserI = {
   id: -1,
-  token: "",
+  // token: "",
   username: "",
   cell_phone: "",
-  first_name: "",
-  last_name: "",
+  // first_name: "",
+  // last_name: "",
   gender: 0,
-  birthday: undefined,
+  // birthday: undefined,
+  age: 0,
   sign: "",
   address: "",
   unit: "",

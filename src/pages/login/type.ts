@@ -1,4 +1,4 @@
-import { LoginFormI, CurrentUserI } from "_constants/interface";
+import { LoginFormI, UserI } from "_constants/interface";
 import {
   SetWeChatCodeActionFuncI,
   SetLoginFormActionFuncT,
@@ -9,7 +9,7 @@ import {
 export interface MapStateToPropsI {
   router: { location: Location };
   loginForm: LoginFormI;
-  currentUser: CurrentUserI;
+  currentUser: UserI;
 }
 
 export interface MapDispatchToPropsI {

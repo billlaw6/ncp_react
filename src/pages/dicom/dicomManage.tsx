@@ -2,7 +2,7 @@ import React, { FC } from "react";
 import { connect } from "react-redux";
 import { Switch, Route, Link, RouteComponentProps } from "react-router-dom";
 import ExamIndexTable from "./components/ExamIndexTable";
-import { ExamIndexListI, SearchFormI, StoreStateI } from "../../constants/interface";
+import { SearchFormI, StoreStateI } from "../../constants/interface";
 import { Table, Input, Button, Icon } from "antd";
 import RouteWithSubRoutes from "../../components/RouteWithSubRoutes";
 

@@ -1,9 +1,4 @@
-import {
-  SearchFormI,
-  ExamIndexListI,
-  DicomSeriesI,
-  DicomPictureI,
-} from "../../constants/interface";
+import { SearchFormI, DicomSeriesI, DicomPictureI, ExamIndexI } from "../../constants/interface";
 import * as types from "../action-types";
 
 // 用于在SAGA中触发请求
@@ -12,7 +7,7 @@ export const submitExamIndexSearchAction = (payload: SearchFormI) => ({
   payload,
 });
 
-export const setExamIndexListAction = (payload: ExamIndexListI[]) => ({
+export const setExamIndexListAction = (payload: ExamIndexI[]) => ({
   type: types.SET_EXAM_INDEX_LIST,
   payload,
 });

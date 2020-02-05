@@ -1,14 +1,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 import { Modal, Button, Checkbox } from "antd";
-import { CurrentUserI } from "_constants/interface";
+import { UserI } from "_constants/interface";
 import axios from "axios";
 import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
 
 import "./PrivacyNotice.less";
 
 interface PrivacyNoticePropsI {
-  user: CurrentUserI;
+  user: UserI;
   onChecked: Function;
 }
 
@@ -48,12 +48,10 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
         .then((result): void => {
           // setShow(false);
           // onChecked && onChecked();
-        })
-        .catch(error => console.error(error))
-        .finally(() => {
           setShow(false);
           onChecked && onChecked();
-        });
+        })
+        .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
     }
   }
