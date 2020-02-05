@@ -2,7 +2,7 @@ import { SearchFormI, ExamIndexI, DicomSeriesI, DicomPictureI } from "../../cons
 import * as types from "../action-types";
 import moment from "moment";
 import {
-  submitExamIndexSearchAction,
+  getExamIndexListAction,
   setExamIndexListAction,
   setDicomSeriesAction,
   setDicomPicturesAction,

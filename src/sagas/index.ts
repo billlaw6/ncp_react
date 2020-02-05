@@ -1,5 +1,5 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { setWeChatCodeAction, submitLoginFormAction } from "../store/actions/user";
+import { setWeChatCodeAction, submitLoginFormAction, agreePrivacyNoticeAction } from "../store/actions/user";
 import {
   submitExamIndexSearchAction,
   getDicomSeriesAction,
@@ -168,13 +168,18 @@ function* getPrivacyNoticeE(action: ReturnType<typeof getDicomPicturesAction>) {
   }
 }
 
-function* agreePrivacyNoticeE(action: ReturnType<typeof getDicomPicturesAction>) {
+function* agreePrivacyNoticeE(action: ReturnType<typeof agreePrivacyNoticeAction>) {
   try {
     console.log(action.payload);
     const res = yield call(agreePrivacyNotice, action.payload);
     console.log(res.data);
     // put对应redux中的dispatch。
-    yield put({ type: types.SET_PRIVACY_NOTICE, payload: res.data });
+    yield put({ type: types.SET_PRIVACY_NOTICE, payload: action.payload });
+    const currentUserInfo = {
+      ...store.getState().currentUser,
+      ...{ privacyNotice: action.payload.privacy_notice_id },
+    };
+    yield put({ type: types.SET_CURRENT_USER, payload: currentUserInfo });
   } catch (error) {
     console.log(error.response);
   }
@@ -183,7 +188,6 @@ function* agreePrivacyNoticeE(action: ReturnType<typeof getDicomPicturesAction>)
 function* rootSaga() {
   yield takeEvery(types.SET_WECHAT_CODE, weChatLoginE);
   yield takeEvery(types.SUBMIT_LOGIN_FORM, formLoginE);
-  yield takeEvery(types.SUBMIT_EXAM_INDEX_SEARCH_FORM, searchExamIndexE);
   yield takeEvery(types.GET_DICOM_SERIES, getDicomSeriesE);
   yield takeEvery(types.GET_DICOM_SERIES_MPR, getDicomSeriesMprE);
   yield takeEvery(types.GET_PRIVACY_NOTICE, getPrivacyNoticeE);

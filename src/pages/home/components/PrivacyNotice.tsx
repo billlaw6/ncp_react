@@ -2,10 +2,13 @@
 import React, { FunctionComponent, useState, useEffect, useRef } from "react";
 import { Modal, Button, Checkbox } from "antd";
 import { UserI } from "_constants/interface";
-import axios from "axios";
-import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
+import { getPrivacyNotice } from "../../../services/user";
+import { connect } from "react-redux";
+import { StoreStateI } from "_constants/interface";
+import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
 
 import "./PrivacyNotice.less";
+import { agreePrivacyNoticeAction } from "_actions/user";
 
 interface PrivacyNoticePropsI {
   user: UserI;
@@ -44,15 +47,16 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       // axios
       //   .post("#")
       // .post("http://115.29.148.227:8083/rest-api/user/update", { privacy_notice: privacyNotice })
-      agreePrivacyNotice({ privacy_notice_id: 1 })
-        .then((result): void => {
-          // setShow(false);
-          // onChecked && onChecked();
-          setShow(false);
-          onChecked && onChecked();
-        })
-        .catch(error => console.error(error));
+      // agreePrivacyNotice({ privacy_notice_id: 1 })
+      //   .then((result): void => {
+      //     // setShow(false);
+      //     // onChecked && onChecked();
+      //     setShow(false);
+      //     onChecked && onChecked();
+      //   })
+      //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
+      agreePrivacyNoticeAction({ privacy_notice_id: privacyNotice });
     }
   }
 
@@ -90,4 +94,17 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
   return null;
 };
 
-export default PrivacyNotice;
+// export default PrivacyNotice;
+const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
+  // console.log(state);
+  return {
+    router: state.router,
+    currentUser: state.currentUser,
+  };
+};
+
+const mapDispatchToProps: MapDispatchToPropsI = {
+  agreePrivacyNoticeAction,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(PrivacyNotice);

@@ -38,23 +38,23 @@ export declare interface CurrentUserI {
   // user_permissions?: Array<number>;
 }
 
-export declare interface UserInfoI {
-  id: number;
-  username: string;
-  email: string;
-  cell_phone: string;
-  openid: string;
-  unionid: string;
-  // 数组定义方法一
-  groups: number[];
-  first_name?: string;
-  last_name?: string;
-  pinyin?: string;
-  py?: string;
-  gender: number;
-  // 数组定义方法二
-  user_permissions: Array<number>;
-}
+// export declare interface UserInfoI {
+//   id: number;
+//   username: string;
+//   email: string;
+//   cell_phone: string;
+//   openid: string;
+//   unionid: string;
+//   // 数组定义方法一
+//   groups: number[];
+//   first_name?: string;
+//   last_name?: string;
+//   pinyin?: string;
+//   py?: string;
+//   gender: number;
+//   // 数组定义方法二
+//   user_permissions: Array<number>;
+// }
 
 export declare interface SearchFormI {
   dtRange: Date[];
