@@ -23,7 +23,7 @@ import React, {
 import LinkButton from "_components/LinkButton/LinkButton";
 import { Scrollbars } from "react-custom-scrollbars";
 
-import { PatientI, SeriesImgCacheListT } from "./type";
+import { PatientI, SeriesImgCacheListT, PlayerModeT } from "./type";
 import "./Player.less";
 import { Icon, Slider, Progress } from "antd";
 import { isIE as isIEFunc } from "_helper";
@@ -66,6 +66,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const $player = useRef<CustomHTMLDivElement>(null);
   const $viewport = useRef<HTMLCanvasElement>(null);
   /* =============== use state =============== */
+  const [mode, setMode] = useState<PlayerModeT>("normal"); // 播放器模式
   const [progress, setProgress] = useState(0); // 加载进度
   const [patient, setPatient] = useState<PatientI>({
     patient_name: "匿名",
@@ -90,14 +91,15 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const [seriesList, setSeriesList] = useState<SeriesListI>(); // seriesList信息
   const [seriesMap, setSeriesMap] = useState<Map<string, SeriesI>>(new Map()); // series信息集合
   const [cache, setCache] = useState<SeriesImgCacheListT>([]); // 缓存列表
+  const [currentSeries, setCurrentSeries] = useState<SeriesI>(); // 当前的序列
   /* =============== methods =============== */
 
   // 获取当前series信息
-  const getCurrentSerie = useCallback((): SeriesI | undefined => {
-    if (!seriesList) return undefined;
-    const { id } = seriesList.children[seriesIndex - 1];
-    return seriesMap.get(id);
-  }, [seriesIndex, seriesList, seriesMap]);
+  // const getCurrentSerie = useCallback((): SeriesI | undefined => {
+  //   if (!seriesList) return undefined;
+  //   const { id } = seriesList.children[seriesIndex - 1];
+  //   return seriesMap.get(id);
+  // }, [seriesIndex, seriesList, seriesMap]);
 
   /**
    * 更改选中的序列
@@ -118,6 +120,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     if (selectSeries) {
       // setSeriesIndex(selectSeries.series_number);
       setSeriesIndex(num);
+      if (seriesMap) setCurrentSeries(seriesMap.get(id));
       if (!cache[num - 1]) {
         setCacheDone(false);
         setProgress(0);
@@ -152,29 +155,30 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
   // 下一个序列
   const nextSeries = useCallback((): void => {
-    if (!seriesList) return;
+    if (!seriesList || !seriesMap) return;
     const nextSeriesIndex = Math.min(seriesIndex + 1, seriesList.children.length);
     setSeriesIndex(nextSeriesIndex);
+    setCurrentSeries(seriesMap.get(seriesList.children[nextSeriesIndex - 1].id));
     if (!cache[nextSeriesIndex - 1]) {
       setCacheDone(false);
       setProgress(0);
     }
-  }, [cache, seriesIndex, seriesList]);
+  }, [cache, seriesIndex, seriesList, seriesMap]);
 
   // 上一个序列
   const prevSeries = useCallback((): void => {
-    if (!seriesList) return;
+    if (!seriesList || !seriesMap) return;
     const nextSeriesIndex = Math.max(seriesIndex - 1, 1);
     setSeriesIndex(nextSeriesIndex);
+    setCurrentSeries(seriesMap.get(seriesList.children[nextSeriesIndex - 1].id));
     if (!cache[nextSeriesIndex - 1]) {
       setCacheDone(false);
       setProgress(0);
     }
-  }, [cache, seriesIndex, seriesList]);
+  }, [cache, seriesIndex, seriesList, seriesMap]);
 
   const next = useCallback((): void => {
     if (!cacheDone) return;
-    const currentSeries = getCurrentSerie();
     if (!currentSeries || !currentSeries.pictures) return;
 
     const next = [...imgIndexs];
@@ -184,7 +188,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     setImgIndexs(next);
     if (nextNum === currentSeries.pictures.length && isPlay) setPlay(false);
-  }, [cacheDone, getCurrentSerie, imgIndexs, isPlay, seriesIndex]);
+  }, [cacheDone, currentSeries, imgIndexs, isPlay, seriesIndex]);
 
   const prev = useCallback((): void => {
     if (!cacheDone) return;
@@ -204,7 +208,6 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   };
   const last = (): void => {
     if (!cacheDone) return;
-    const currentSeries = getCurrentSerie();
     if (!currentSeries || !currentSeries.pictures) return;
 
     const next = [...imgIndexs];
@@ -332,11 +335,12 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     const _seriesMap = new Map<string, SeriesI>();
     let count = 0;
 
-    children.forEach(series => {
+    children.forEach((series, index) => {
       const { id } = series;
       getSeries(id)
         .then(series => {
           _seriesMap.set(id, series);
+          index === 0 && setCurrentSeries(series);
           count += 1;
           if (count === children.length) {
             setSeriesMap(_seriesMap);
@@ -347,8 +351,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   }, [seriesList]);
   useEffect(() => {
     // 更新当前序列的图片缓存
-    const currentSeries = getCurrentSerie();
+    if (!seriesList || !seriesMap) return;
     if (!currentSeries || !currentSeries.pictures) return;
+    if (seriesMap.size !== seriesList.children.length) return;
     const currentCache = cache[seriesIndex - 1];
     if (currentCache && currentCache.length === currentSeries.pictures.length) {
       setCacheDone(true);
@@ -358,6 +363,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     const pics = currentSeries.pictures as ImageI[];
     const _imgs: HTMLImageElement[] = [];
     let count = 0;
+
     pics.forEach(pic => {
       const $img = new Image();
       $img.src = pic.url;
@@ -373,7 +379,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         }
       };
     });
-  }, [seriesIndex, seriesList, seriesMap]);
+  }, [currentSeries, seriesIndex, seriesList, seriesMap]);
   useEffect(() => {
     // 监听fullscreen event
     if ($player && $player.current) {
@@ -416,10 +422,10 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
           next();
           break;
         case UP:
-          prevSeries();
+          mode !== "mpr" && prevSeries();
           break;
         case DOWN:
-          nextSeries();
+          mode !== "mpr" && nextSeries();
           break;
         case PLAY_PAUSE:
           setPlay(!isPlay);
@@ -433,11 +439,9 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     return (): void => {
       document.removeEventListener("keydown", onKeydown);
     };
-  }, [isPlay, next, nextSeries, prev, prevSeries]);
+  }, [isPlay, mode, next, nextSeries, prev, prevSeries]);
   useEffect(() => {
     // 更新 canvas 视图
-    const currentSeries = getCurrentSerie();
-
     playTimer !== undefined && window.clearTimeout(playTimer);
     if (isPlay) {
       playTimer = window.setTimeout(
@@ -449,7 +453,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
 
     updateViewport();
-  }, [imgIndexs, seriesIndex, isPlay, next, viewportSize, updateViewport, getCurrentSerie]);
+  }, [imgIndexs, seriesIndex, isPlay, next, viewportSize, updateViewport, currentSeries]);
   useEffect(() => {
     // 重新计算canvas的width height
     const { outerWidth, outerHeight, devicePixelRatio = 1 } = window;
@@ -516,7 +520,6 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     );
   };
   const info = (imgIndexs: number[], seriesIndex: number, isShowInfo: boolean): ReactElement => {
-    const currentSeries = getCurrentSerie();
     const {
       patient_name = "匿名",
       patient_id = "未知",
@@ -562,7 +565,6 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   };
 
   const slider = (imgIndexs: number[], seriesIndex: number): ReactElement => {
-    const currentSeries = getCurrentSerie();
     let max = 1;
     if (currentSeries && currentSeries.pictures) max = currentSeries.pictures.length;
 
@@ -583,7 +585,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       ></Slider>
     );
   };
-  const ctlbtns = (isShowInfo: boolean): ReactElement => {
+  const ctlbtns = (isShowInfo: boolean, mpr: boolean): ReactElement => {
     return (
       <div className="player-ctl-btns">
         <Icon
@@ -593,7 +595,14 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
             cacheDone && setShowInfo(!isShowInfo);
           }}
         />
-        <Icon className="iconfont" type="snippets" />
+        <i
+          className={`iconfont icon-ic icon-ic_mpr player-mpr-btn ${mpr ? "" : "disabled"}`}
+          onClick={(): void => {
+            if (!mpr) return;
+
+            console.log("mpr mode");
+          }}
+        ></i>
         <Icon
           className="iconfont"
           type="fullscreen"
@@ -651,7 +660,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
             <Icon className="iconfont" type="right" onClick={next} />
             <Icon className="iconfont" type="step-forward" onClick={last} />
           </div>
-          {ctlbtns(isShowInfo)}
+          {ctlbtns(isShowInfo, currentSeries ? currentSeries.mpr_flag : false)}
         </div>
       </div>
     </section>

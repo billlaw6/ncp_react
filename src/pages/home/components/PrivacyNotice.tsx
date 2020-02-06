@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import React, { FunctionComponent, useState, useEffect, useRef } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import { Modal, Button, Checkbox } from "antd";
 import { UserI } from "_constants/interface";
-import { getPrivacyNotice } from "../../../services/user";
+import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
 import { connect } from "react-redux";
 import { StoreStateI } from "_constants/interface";
 import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
@@ -47,18 +47,20 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       // axios
       //   .post("#")
       // .post("http://115.29.148.227:8083/rest-api/user/update", { privacy_notice: privacyNotice })
-      // agreePrivacyNotice({ privacy_notice_id: 1 })
-      //   .then((result): void => {
-      //     // setShow(false);
-      //     // onChecked && onChecked();
-      //     setShow(false);
-      //     onChecked && onChecked();
-      //   })
+      agreePrivacyNotice({ privacy_notice_id: privacyNotice }).then(
+        (): void => {
+          // setShow(false);
+          // onChecked && onChecked();
+          setShow(false);
+          onChecked && onChecked();
+        },
+        err => console.error(err),
+      );
       //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
-      agreePrivacyNoticeAction({ privacy_notice_id: privacyNotice });
-      setShow(false);
-      onChecked && onChecked();
+      // agreePrivacyNoticeAction({ privacy_notice_id: privacyNotice });
+      // setShow(false);
+      // onChecked && onChecked();
     }
   }
 

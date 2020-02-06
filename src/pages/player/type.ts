@@ -13,6 +13,8 @@ export interface PatientI {
 /* 缓存的普通series的images列表 */
 export type SeriesImgCacheListT = HTMLImageElement[][];
 
+export type PlayerModeT = "normal" | "mpr";
+
 export interface PlayerStateI {
   seriesIndex: number; // 当前序列索引
   imgIndex: number[]; // 所有序列的当前图像索引

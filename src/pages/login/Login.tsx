@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect, useState, useRef } from "react";
+import React, { FunctionComponent, useEffect, useState } from "react";
 import { Carousel } from "antd";
 import { connect } from "react-redux";
 
