@@ -180,6 +180,21 @@ export declare interface UserI {
   privacy_notice: number;
 }
 
+// 更新用户信息表单
+export declare interface UserFormI {
+  id: number;
+  username: string;
+  cell_phone: string;
+  gender: GenderE;
+  birthday: Date;
+  sign: string;
+  address: string;
+  unit: string;
+  avatar: File;
+  unionid?: string;
+  privacy_notice: number;
+}
+
 // 单张图片
 export declare interface ImageI {
   id: string;
@@ -248,15 +263,9 @@ export declare interface RouteI {
 // 作为组件创建时props类型！！！必须用store.d里定义的！三天的教训！
 export declare interface StoreStateI {
   router: { location: Location };
-  loginForm: LoginFormI;
-  profileForm: ProfileFormI;
-  currentUser: UserI;
-  userInfo: UserInfoI;
-  userInfoList: UserInfoI[];
-  examSearchForm: SearchFormI;
+  token: string;
+  user: UserI;
   examIndexList: ExamIndexI[];
-  dicomSeriesList: DicomSeriesListI[];
-  dicomPictureList: DicomPictureListI[];
 }
 
 export declare interface CustomHTMLDivElement extends HTMLDivElement {

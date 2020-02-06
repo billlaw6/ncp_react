@@ -2,12 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from "react";
 import { Carousel } from "antd";
 import { connect } from "react-redux";
 
-import {
-  setWeChatCodeAction,
-  setLoginFormAction,
-  submitLoginFormAction,
-  setCurrentUserAction,
-} from "_actions/user";
+import { setUserAction } from "_actions/user";
 import { StoreStateI } from "_constants/interface";
 
 import img1 from "_images/login-spinner-1.png";
@@ -98,10 +93,7 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
 };
 
 const mapDispatchToProps: MapDispatchToPropsI = {
-  setWeChatCodeAction,
-  setLoginFormAction,
-  submitLoginFormAction,
-  setCurrentUserAction,
+  setUserAction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -5,10 +5,9 @@ import { UserI } from "_constants/interface";
 import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
 import { connect } from "react-redux";
 import { StoreStateI } from "_constants/interface";
-import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { MapStateToPropsI } from "./type";
 
 import "./PrivacyNotice.less";
-import { agreePrivacyNoticeAction } from "_actions/user";
 
 interface PrivacyNoticePropsI {
   user: UserI;
@@ -44,9 +43,6 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
     } else {
       // something
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
-      // axios
-      //   .post("#")
-      // .post("http://115.29.148.227:8083/rest-api/user/update", { privacy_notice: privacyNotice })
       agreePrivacyNotice({ privacy_notice_id: privacyNotice }).then(
         (): void => {
           // setShow(false);
@@ -103,12 +99,8 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
   // console.log(state);
   return {
     router: state.router,
-    currentUser: state.currentUser,
+    user: state.user,
   };
 };
 
-const mapDispatchToProps: MapDispatchToPropsI = {
-  agreePrivacyNoticeAction,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(PrivacyNotice);
+export default connect(mapStateToProps)(PrivacyNotice);

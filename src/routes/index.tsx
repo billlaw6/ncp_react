@@ -46,46 +46,12 @@ const routes: RoutesI[] = [
     component: Upload,
     permission: ["login"],
   },
-  // {
-  //   name: "logout",
-  //   path: "/logout",
-  //   component: Logout,
-  //   routes: [],
-  // },
   {
     name: "oauth",
     path: "/oauth",
     component: Oauth,
     routes: [],
   },
-  // {
-  //   name: "exam index",
-  //   path: "/exam",
-  //   component: ExamIndexManage,
-  //   routes: [],
-  //   permission: ["login"],
-  // },
-  // {
-  //   name: "dicom",
-  //   path: "/dicom",
-  //   exact: false,
-  //   component: DicomManage,
-  //   routes: [
-  //     {
-  //       name: "dicom upload",
-  //       path: "/dicom/upload",
-  //       exact: true,
-  //       component: DicomUploader,
-  //     },
-  //     {
-  //       name: "dicom viewer",
-  //       path: "/dicom/viewer",
-  //       exact: true,
-  //       component: DicomViewer,
-  //     },
-  //   ],
-  //   permission: ["login"],
-  // },
 ];
 
 export default routes;

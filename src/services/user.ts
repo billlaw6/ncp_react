@@ -1,12 +1,13 @@
 import axios from "./api";
+import { UserI, UserFormI } from "_constants/interface";
 
-export const userWeChatLogin = async (params: any) => {
+export const weChatLoginUser = async (params: any) => {
   console.log(params);
   const res = await axios.post(`/user/wechat-oauth2-login/`, params);
   return res;
 };
 
-export const userLogin = async (params: any) => {
+export const loginUser = async (params: any) => {
   const res = await axios.post(`/auth/login/`, params);
   return res;
 };
@@ -16,8 +17,14 @@ export const getUserInfo = async () => {
   return res;
 };
 
-export const userLogout = async (params: any) => {
-  const res = await axios.post(`/auth/logout/`, { params: params });
+// export const updateUserInfo = async (params: UserFormI): Promise<UserI> => {
+export const updateUserInfo = async (params: any) => {
+  const res = await axios.get(`/user/update/`, params);
+  return res;
+};
+
+export const logoutUser = async () => {
+  const res = await axios.post(`/auth/logout/`);
   return res;
 };
 

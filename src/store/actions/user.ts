@@ -1,74 +1,96 @@
-import { LoginFormI, UserI, CurrentUserI, ActionI } from "../../constants/interface";
+import { UserFormI, UserI, ActionI } from "../../constants/interface";
 import * as types from "../action-types";
 
-export type SetWeChatCodeActionT = ActionI<string, string>;
-export interface SetWeChatCodeActionFuncI {
-  (payload: string): SetWeChatCodeActionT;
+// 设置后台给的token
+export type SetTokenActionT = ActionI<string, string>;
+export interface SetTokenActionFuncI {
+  (payload: string): SetTokenActionT;
 }
-export const setWeChatCodeAction: SetWeChatCodeActionFuncI = payload => ({
-  type: types.SET_WECHAT_CODE,
+export const setTokenAction: SetTokenActionFuncI = payload => ({
+  type: types.SET_TOKEN,
   payload,
 });
 
-export type SetCurrentUserActionT = ActionI<string, CurrentUserI>;
-export interface SetCurrentUserActionFuncT {
-  (payload: CurrentUserI): SetCurrentUserActionT;
+// 设置登录用户全局变量
+export type SetUserActionT = ActionI<string, UserI>;
+export interface SetUserActionFuncT {
+  (payload: UserI): SetUserActionT;
 }
-export const setCurrentUserAction: SetCurrentUserActionFuncT = payload => ({
-  type: types.SET_CURRENT_USER,
+export const setUserAction: SetUserActionFuncT = payload => ({
+  type: types.SET_USER,
   payload,
 });
 
-export type SetLoginFormActionT = ActionI<string, LoginFormI>;
-export interface SetLoginFormActionFuncT {
-  (payload: LoginFormI): SetLoginFormActionT;
+// 需要监听：用于用户信息更新
+export type UpdateUserActionT = ActionI<string, UserFormI>;
+export interface UpdateUserActionFuncT {
+  (payload: UserFormI): UpdateUserActionT;
 }
-export const setLoginFormAction: SetLoginFormActionFuncT = payload => ({
-  type: types.SET_LOGIN_FORM,
+export const updateUserAction: UpdateUserActionFuncT = payload => ({
+  type: types.UPDATE_USER,
   payload,
 });
 
-export type SubmitLoginFormActionT = ActionI<string, LoginFormI>;
-export interface SubmitLoginFormActionFuncT {
-  (payload: LoginFormI): SubmitLoginFormActionT;
+// 用户注销时操作：发起远程注销，清楚本地变量
+export type LogoutUserActionT = ActionI<string, UserFormI>;
+export interface LogoutUserActionFuncT {
+  (payload: UserFormI): LogoutUserActionT;
 }
-export const submitLoginFormAction: SubmitLoginFormActionFuncT = payload => ({
-  type: types.SUBMIT_LOGIN_FORM,
+export const logoutUserAction: LogoutUserActionFuncT = payload => ({
+  type: types.LOGOUT_USER,
   payload,
 });
 
-export type SetUserInfoActionT = ActionI<string, UserI>;
-export interface SetUserInfoActionFuncT {
-  (payload: UserI): SetUserInfoActionT;
-}
-export const setUserInfoAction: SetUserInfoActionFuncT = payload => ({
-  type: types.SET_USER_INFO,
-  payload,
-});
+// export type SubmitLoginFormActionT = ActionI<string, LoginFormI>;
+// export interface SubmitLoginFormActionFuncT {
+//   (payload: LoginFormI): SubmitLoginFormActionT;
+// }
+// export const submitLoginFormAction: SubmitLoginFormActionFuncT = payload => ({
+//   type: types.SUBMIT_LOGIN_FORM,
+//   payload,
+// });
 
-export type SetUserListActionT = ActionI<string, UserI[]>;
-export interface SetUserListActionFuncT {
-  (payload: UserI[]): SetUserListActionT;
-}
-export const setUserListAction: SetUserListActionFuncT = payload => ({
-  type: types.SET_USER_LIST,
-  payload,
-});
+// export type SetUserInfoActionT = ActionI<string, UserI>;
+// export interface SetUserInfoActionFuncT {
+//   (payload: UserI): SetUserInfoActionT;
+// }
+// export const setUserInfoAction: SetUserInfoActionFuncT = payload => ({
+//   type: types.SET_USER_INFO,
+//   payload,
+// });
 
-export type UpdateUserInfoActionT = ActionI<string, UserI>;
-export interface UpdateUserInfoActionFuncT {
-  (payload: UserI): UpdateUserInfoActionT;
-}
-export const updateUserInfoAction: UpdateUserInfoActionFuncT = payload => ({
-  type: types.UPDATE_USER_INFO,
-  payload,
-});
+// export type SetUserListActionT = ActionI<string, UserI[]>;
+// export interface SetUserListActionFuncT {
+//   (payload: UserI[]): SetUserListActionT;
+// }
+// export const setUserListAction: SetUserListActionFuncT = payload => ({
+//   type: types.SET_USER_LIST,
+//   payload,
+// });
 
-export type AgreePrivacyNoticeT = ActionI<string, { privacy_notice_id: number }>;
-export interface AgreePrivacyNoticeActionFuncT {
-  (payload: { privacy_notice_id: number }): AgreePrivacyNoticeT;
-}
-export const agreePrivacyNoticeAction: AgreePrivacyNoticeActionFuncT = payload => ({
-  type: types.AGREE_PRIVACY_NOTICE,
-  payload,
-});
+// export type UpdateUserInfoActionT = ActionI<string, UserI>;
+// export interface UpdateUserInfoActionFuncT {
+//   (payload: UserI): UpdateUserInfoActionT;
+// }
+// export const updateUserInfoAction: UpdateUserInfoActionFuncT = payload => ({
+//   type: types.UPDATE_USER_INFO,
+//   payload,
+// });
+
+// export type AgreePrivacyNoticeT = ActionI<string, { privacy_notice_id: number }>;
+// export interface AgreePrivacyNoticeActionFuncT {
+//   (payload: { privacy_notice_id: number }): AgreePrivacyNoticeT;
+// }
+// export const agreePrivacyNoticeAction: AgreePrivacyNoticeActionFuncT = payload => ({
+//   type: types.AGREE_PRIVACY_NOTICE,
+//   payload,
+// });
+
+// export type SetWeChatCodeActionT = ActionI<string, string>;
+// export interface SetWeChatCodeActionFuncI {
+//   (payload: string): SetWeChatCodeActionT;
+// }
+// export const setWeChatCodeAction: SetWeChatCodeActionFuncI = payload => ({
+//   type: types.SET_WECHAT_CODE,
+//   payload,
+// });
