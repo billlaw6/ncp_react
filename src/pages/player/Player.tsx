@@ -894,7 +894,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       </div>
     );
   };
-  const info = (imgIndexs: number[], seriesIndex: number, isShowInfo: boolean): ReactElement => {
+  const info = (): ReactElement => {
     const {
       patient_name = "匿名",
       patient_id = "未知",
@@ -932,7 +932,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         </div>
         <div>
           <span title="图片索引">
-            Frame: {imgIndexs[seriesIndex - 1]} / {max}
+            Frame: {isMpr ? mprImgIndexs[mprSeriesIndex - 1] : imgIndexs[seriesIndex - 1]} / {max}
           </span>
           <span title="序列">Series: {seriesIndex}</span>
           <span>
@@ -1044,7 +1044,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
               <span>Loading...</span>
             </div>
           </div>
-          {info(imgIndexs, seriesIndex, isShowInfo)}
+          {info()}
         </div>
         <div className={`player-ctl ${cacheDone ? "" : "player-disabled"}`}>
           <div className="player-ctl-playbtns">
