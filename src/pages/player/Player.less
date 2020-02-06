@@ -37,6 +37,44 @@
       position: relative;
       margin-right: 8px;
     }
+
+    &.player-mpr {
+      width: 1152px;
+      min-width: 1152px;
+      flex-direction: column;
+      .player-list {
+        display: none !important;
+      }
+      .player-view-inner {
+        margin-right: 0;
+        height: 420px;
+        min-height: 420px;
+      }
+      .player-viewport {
+        width: 100%;
+        height: 100%;
+        min-height: 100%;
+      }
+      .player-info {
+        width: 100%;
+        height: 80px;
+        min-height: 80px;
+        margin-bottom: 8px;
+        order: -1;
+        overflow: hidden;
+        flex-direction: row;
+        > div {
+          max-width: 170px;
+          width: 170px;
+          margin-bottom: 0;
+          margin-right: 10px;
+        }
+      }
+      .player-progress {
+        height: 420px;
+        min-height: 420px;
+      }
+    }
   }
 
   &-viewport {
@@ -61,6 +99,7 @@
     }
 
     &-item {
+      position: relative;
       width: 54px;
       min-width: 54px;
       height: 54px;
@@ -78,6 +117,32 @@
       &.active {
         border-color: @primaryColor;
       }
+      &:hover &-mask {
+        opacity: 1;
+        transition: opacity 200ms;
+      }
+      &-mask {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4);
+        top: 0;
+        left: 0;
+        opacity: 0;
+        transition: opacity 200ms;
+        text-align: center;
+        line-height: 54px;
+        color: #fff;
+        user-select: none;
+        span {
+          position: absolute;
+          bottom: 2px;
+          left: 50%;
+          transform: translateX(-50%);
+          line-height: 1;
+        }
+      }
+
       img {
         width: 100%;
       }
@@ -108,9 +173,12 @@
     padding: 15px 22px;
     box-sizing: border-box;
 
-    > span {
+    > div {
+      display: flex;
+      flex-direction: column;
       margin-bottom: 8px;
-      span {
+
+      > span span {
         margin-right: 6px;
       }
     }
@@ -227,6 +295,9 @@
 
   &-mpr {
     &-btn {
+      &.active {
+        color: @primaryColor;
+      }
       &.disabled {
         opacity: 0.3;
         cursor: not-allowed;
@@ -260,29 +331,5 @@
 
   &-nosee {
     visibility: hidden;
-  }
-
-  &-fullscreen {
-    cursor: none;
-
-    .player-list {
-      margin-right: 0;
-      padding: 14px 18px 25px;
-      &-item {
-        width: 64px;
-        height: 64px;
-        margin-bottom: 8px;
-      }
-    }
-
-    .player-progress {
-      background-color: #ccc;
-      position: fixed;
-      height: 100%;
-      z-index: 10;
-    }
-  }
-  &-show-panels {
-    cursor: default !important;
   }
 }

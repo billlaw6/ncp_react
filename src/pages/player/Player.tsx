@@ -9,6 +9,21 @@
 4. 加载完毕后，启用下方控制器，canvas中渲染当前序列的当前图像
 5. 切换序列时，重复步骤3-4
 
+！=============  有关全屏Mpr ============== ！
+由于有不同分辨率的屏幕（甚至正方形），而影像绝大多数趋于正方形
+目前设计稿选中图片战幕整个height的方式使得其他两个没有空间渲染
+所以有如下约定：
+
+  1. 将整个屏幕宽度分成三等分，被选中的图片占据左边2份宽度
+  2. 剩下的1份再将屏幕高度二等分，剩下两张占据1份宽度，1份高度
+  3. 所有图片在各自区域内垂直水平居中
+  4. 所有图片完全显示
+
+  -------------
+  |       |   |
+  |       -----
+  |       |   |
+  -------------
 
 */
 import React, {
@@ -19,11 +34,19 @@ import React, {
   useRef,
   useCallback,
   ReactNode,
+  MouseEvent,
 } from "react";
 import LinkButton from "_components/LinkButton/LinkButton";
 import { Scrollbars } from "react-custom-scrollbars";
 
-import { PatientI, SeriesImgCacheListT, PlayerModeT } from "./type";
+import {
+  PatientI,
+  SeriesImgCacheListT,
+  ImgDrawInfoI,
+  MprImgClientRects,
+  MprImgSizeI,
+  MprImgAndSizeI,
+} from "./type";
 import "./Player.less";
 import { Icon, Slider, Progress } from "antd";
 import { isIE as isIEFunc } from "_helper";
@@ -34,6 +57,8 @@ import axios from "axios";
 
 const VIEWPORT_WIDTH_DEFAULT = 890; // 视图默认宽
 const VIEWPORT_HEIGHT_DEFAULT = 508; // 视图默认高
+const MPR_VIEWPORT_WIDTH_DEFAULT = 1152; // mpr 视图默认宽
+const MPR_VIEWPORT_HEIGHT_DEFAULT = 420; // mpr 视图默认高
 
 const req = axios.create({
   baseURL: "http://115.29.148.227:8083/rest-api",
@@ -54,7 +79,44 @@ const getSeries = async (id: string): Promise<SeriesI> => {
   return result.data;
 };
 
+/* 获取mpr序列 */
+const getMprSeries = async (id: string): Promise<SeriesI> => {
+  const result = await req.get(`/dicom/dicom-series/mpr/${id}/`);
+  return result.data;
+};
+
 const isIE = isIEFunc();
+
+/* ====== Helper Methods ====== */
+
+// 获取图片完全显示在视图区域并保持比例的信息：
+// x, y：相对于视图区域的x，y轴坐标
+// width，height：图片渲染的尺寸
+const getDrawInfo = (
+  viewWidth: number,
+  viewHeight: number,
+  width: number,
+  height: number,
+): MprImgClientRects => {
+  let drawW = 0,
+    drawH = 0,
+    x = 0,
+    y = 0;
+
+  if (viewWidth / width < viewHeight / height) {
+    // 视图和图片宽度比 小于 视图和图片高度比， 宽度等于视图宽度
+    drawW = viewWidth;
+    drawH = (drawW * height) / width;
+    y = (viewHeight - drawH) / 2;
+  } else {
+    // 视图和图片宽度比 大于 视图和图片高度比， 高度等于视图高度
+    drawH = viewHeight;
+    drawW = (drawH * width) / height;
+    x = (viewWidth - drawW) / 2;
+  }
+
+  return { x, y, width: drawW, height: drawH };
+};
 
 let playTimer: number | undefined = undefined;
 let showPanelsTimer: number | undefined = undefined;
@@ -66,7 +128,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const $player = useRef<CustomHTMLDivElement>(null);
   const $viewport = useRef<HTMLCanvasElement>(null);
   /* =============== use state =============== */
-  const [mode, setMode] = useState<PlayerModeT>("normal"); // 播放器模式
+  const [isMpr, setIsMpr] = useState(false); // 是否为mpr模式
   const [progress, setProgress] = useState(0); // 加载进度
   const [patient, setPatient] = useState<PatientI>({
     patient_name: "匿名",
@@ -91,6 +153,10 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   const [seriesList, setSeriesList] = useState<SeriesListI>(); // seriesList信息
   const [seriesMap, setSeriesMap] = useState<Map<string, SeriesI>>(new Map()); // series信息集合
   const [cache, setCache] = useState<SeriesImgCacheListT>([]); // 缓存列表
+  const [mprCache, setMprCache] = useState<Map<string, HTMLImageElement[][]>>(new Map()); // mpr缓存列表
+  const [mprSeriesIndex, setMprSeriesIndex] = useState(1); // mpr序列索引 取 0｜1｜2
+  const [mprImgRange, setMprImgRange] = useState<ImgDrawInfoI[]>([]); // 保存当前mpr每个img在视图区域的范围
+  const [mprImgIndexs, setMprImgIndexs] = useState<number[]>([1, 1, 1]); // mpr每个序列当前图片的索引
   const [currentSeries, setCurrentSeries] = useState<SeriesI>(); // 当前的序列
   /* =============== methods =============== */
 
@@ -177,6 +243,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     }
   }, [cache, seriesIndex, seriesList, seriesMap]);
 
+  // 下一张图片
   const next = useCallback((): void => {
     if (!cacheDone) return;
     if (!currentSeries || !currentSeries.pictures) return;
@@ -190,6 +257,25 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     if (nextNum === currentSeries.pictures.length && isPlay) setPlay(false);
   }, [cacheDone, currentSeries, imgIndexs, isPlay, seriesIndex]);
 
+  // 下一张MPR图片
+  const nextMpr = useCallback((): void => {
+    if (!currentSeries || !cacheDone) return;
+    const currentMprCache = mprCache.get(currentSeries.id);
+    if (!currentMprCache) return;
+
+    const next = [...mprImgIndexs];
+    const mprSeriesIndexInArray = mprSeriesIndex - 1;
+    const nextNum = Math.min(
+      currentMprCache[mprSeriesIndex - 1].length,
+      next[mprSeriesIndexInArray] + 1,
+    );
+    next[mprSeriesIndexInArray] = nextNum;
+    setMprImgIndexs(next);
+
+    if (nextNum === currentMprCache[mprSeriesIndex - 1].length && isPlay) setPlay(false);
+  }, [cacheDone, currentSeries, isPlay, mprCache, mprImgIndexs, mprSeriesIndex]);
+
+  // 上一张图片
   const prev = useCallback((): void => {
     if (!cacheDone) return;
     const next = [...imgIndexs];
@@ -199,6 +285,19 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     setImgIndexs(next);
   }, [cacheDone, imgIndexs, seriesIndex]);
+
+  // 上一张MPR图片
+  const prevMpr = useCallback((): void => {
+    if (!cacheDone) return;
+    const next = [...mprImgIndexs];
+    const mprSeriesIndexInArray = mprSeriesIndex - 1;
+    const nextNum = Math.max(1, next[mprSeriesIndexInArray] - 1);
+    next[mprSeriesIndexInArray] = nextNum;
+
+    setMprImgIndexs(next);
+  }, [cacheDone, mprImgIndexs, mprSeriesIndex]);
+
+  // 第一张图片
   const first = (): void => {
     if (!cacheDone) return;
     const next = [...imgIndexs];
@@ -206,6 +305,17 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     setImgIndexs(next);
   };
+
+  // 第一张MPR图片
+  const firstMpr = (): void => {
+    if (!cacheDone) return;
+    const next = [...mprImgIndexs];
+    next[mprSeriesIndex - 1] = 1;
+
+    setMprImgIndexs(next);
+  };
+
+  // 最后一张图片
   const last = (): void => {
     if (!cacheDone) return;
     if (!currentSeries || !currentSeries.pictures) return;
@@ -215,18 +325,37 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     setImgIndexs(next);
   };
+
+  // 最后一张MPR图片
+  const lastMpr = (): void => {
+    if (!currentSeries || !cacheDone) return;
+    const currentMprCache = mprCache.get(currentSeries.id);
+    if (!currentMprCache) return;
+
+    const next = [...mprImgIndexs];
+    next[mprSeriesIndex - 1] = currentMprCache[mprSeriesIndex - 1].length; // 这里应为当前序列的图像数量 - 1
+
+    setMprImgIndexs(next);
+  };
+
+  // 播放
   const play = (): void => {
     cacheDone && setPlay(true);
   };
+
+  // 暂停
   const pause = (): void => {
     cacheDone && setPlay(false);
   };
+
+  // 鼠标滚轮切换图片
   const wheelChange = (event: React.WheelEvent<HTMLCanvasElement>): void => {
     const { deltaY } = event;
-    if (deltaY > 0) next();
-    if (deltaY < 0) prev();
+    if (deltaY > 0) isMpr ? nextMpr() : next();
+    if (deltaY < 0) isMpr ? prevMpr() : prev();
   };
 
+  // 显示所有 动作&信息面板
   const showPanels = (isFullscreen: boolean, isShowPanels: boolean): void => {
     if (isFullscreen) {
       if (!isShowPanels) {
@@ -242,67 +371,294 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   };
 
   // 获取渲染坐标
-  const getDrawInfo = useCallback(
-    (
-      width: number,
-      height: number,
-    ): {
-      width: number;
-      height: number;
-      x: number;
-      y: number;
-    } => {
+  // const getDrawInfo = useCallback(
+  //   (width: number, height: number): ImgDrawInfoI => {
+  //     const [canvasWidth, canvasHeight] = viewportSize;
+  //     return getRangeInfo(canvasWidth, canvasHeight, width, height);
+  //   },
+  //   [viewportSize],
+  // );
+
+  // 获取MPR模式下绘制图片的必要信息
+  const getMprDrawInfo = useCallback(
+    (size: MprImgAndSizeI[]): ImgDrawInfoI[] => {
       const [canvasWidth, canvasHeight] = viewportSize;
-      let drawW = 512,
-        drawH = 512,
-        drawX = 0,
-        drawY = 0;
+      let totalWidth = 0,
+        totalHeight = 0;
 
-      if (canvasWidth / width < canvasHeight / height) {
-        drawW = canvasWidth;
-        drawH = (drawW * height) / width;
-        drawY = (canvasHeight - drawH) / 2;
+      if (isFullscreen) {
+        const selectedImg = size[mprSeriesIndex - 1];
+        const otherImgs: MprImgAndSizeI[] = [];
+        const selectedWidth = (canvasWidth * 2) / 3;
+        const selectedHeight = canvasHeight;
+        const otherWidth = (canvasWidth * 1) / 3;
+        const otherHeight = canvasHeight / 2;
+
+        size.forEach((item, index) => {
+          if (index !== mprSeriesIndex - 1) otherImgs.push(item);
+        });
+
+        const selectedInfo = getDrawInfo(
+          selectedWidth,
+          selectedHeight,
+          selectedImg.width,
+          selectedImg.height,
+        );
+        const topInfo = getDrawInfo(
+          otherWidth,
+          otherHeight,
+          otherImgs[0].width,
+          otherImgs[0].height,
+        );
+        const bottomInfo = getDrawInfo(
+          otherWidth,
+          otherHeight,
+          otherImgs[1].width,
+          otherImgs[1].height,
+        );
+
+        topInfo.x += selectedWidth;
+        bottomInfo.x += selectedWidth;
+        bottomInfo.y += otherHeight;
+        return [
+          { ...selectedInfo, img: selectedImg.img },
+          { ...topInfo, img: otherImgs[0].img },
+          { ...bottomInfo, img: otherImgs[1].img },
+        ];
       } else {
-        drawH = canvasHeight;
-        drawW = (drawH * width) / height;
-        drawX = (canvasWidth - drawW) / 2;
-      }
+        const viewWidth = canvasWidth - 4 * devicePixelRatio;
+        const viewHeight = canvasHeight - 2 * devicePixelRatio;
+        size.forEach(img => {
+          /* 
+            // ====== 当非全屏时 ====
+            并排排列，先求出3张图片宽度总和 && 最高的高度 然后计算渲染位置并输出
+          
+          */
+          totalWidth += img.width;
+          totalHeight = Math.max(totalHeight, img.height);
+        });
 
-      return {
-        x: drawX,
-        y: drawY,
-        width: drawW,
-        height: drawH,
-      };
+        if (viewWidth / totalWidth < viewHeight / totalHeight) {
+          const drawW = viewWidth;
+          const drawH = (drawW * totalHeight) / totalWidth;
+          const initDrawY = (viewHeight - drawH) / 2;
+          const scaleNum = drawW / totalWidth;
+          let drawX = 1 * devicePixelRatio;
+
+          return size.map(item => {
+            const result = {
+              x: drawX,
+              y: initDrawY,
+              width: item.width * scaleNum,
+              height: item.height * scaleNum,
+              img: item.img,
+            };
+
+            drawX += result.width + 1 * devicePixelRatio;
+            return result;
+          });
+        } else {
+          const drawH = viewHeight;
+          const drawW = (drawH * totalWidth) / totalHeight;
+          const initDrawX = (viewWidth - drawW) / 2;
+          const scaleNum = drawW / totalHeight;
+          let drawX = initDrawX;
+
+          return size.map(item => {
+            const result = {
+              img: item.img,
+              x: drawX,
+              y: 1 * devicePixelRatio,
+              width: item.width * scaleNum,
+              height: item.height * scaleNum,
+            };
+
+            drawX += result.width + 1 * devicePixelRatio;
+            return result;
+          });
+        }
+      }
     },
-    [viewportSize],
+    [viewportSize, isFullscreen, mprSeriesIndex],
   );
 
+  // 绘制图片
+  const drawNormal = useCallback(
+    (ctx: CanvasRenderingContext2D): void => {
+      if (!cache) return;
+
+      const currentCache = cache[seriesIndex - 1];
+      if (!currentCache) return;
+      const currentImg = currentCache[imgIndexs[seriesIndex - 1] - 1];
+      if (!currentImg) return;
+
+      const { width, height } = currentImg;
+      const drawInfo = getDrawInfo(viewportSize[0], viewportSize[1], width, height);
+
+      ctx.clearRect(0, 0, viewportSize[0], viewportSize[1]);
+      ctx.drawImage(
+        currentImg,
+        0,
+        0,
+        width,
+        height,
+        drawInfo.x,
+        drawInfo.y,
+        drawInfo.width,
+        drawInfo.height,
+      );
+    },
+    [cache, imgIndexs, seriesIndex, viewportSize],
+  );
+
+  // 绘制MPR模式下的图片
+  const drawMpr = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      if (!currentSeries) return;
+      if (isMpr && !mprCache.size) return;
+      const currentCache = mprCache.get(currentSeries.id);
+      if (!currentCache) return;
+      const imgs = [
+        currentCache[0][mprImgIndexs[0] - 1],
+        currentCache[1][mprImgIndexs[1] - 1],
+        currentCache[2][mprImgIndexs[2] - 1],
+      ];
+
+      const drawInfo = getMprDrawInfo(
+        imgs.map(img => ({
+          img,
+          width: img.width * devicePixelRatio,
+          height: img.height * devicePixelRatio,
+        })),
+      );
+      setMprImgRange(drawInfo);
+      ctx.clearRect(0, 0, viewportSize[0], viewportSize[1]);
+
+      drawInfo.forEach((info, index) => {
+        const { x, y, width, height, img } = info;
+        ctx.drawImage(
+          img,
+          0,
+          0,
+          img.width / devicePixelRatio,
+          img.height / devicePixelRatio,
+          x,
+          y,
+          width,
+          height,
+        );
+        if (!isFullscreen && index === mprSeriesIndex - 1) {
+          ctx.strokeStyle = "#7398FF";
+          ctx.lineWidth = 1 * devicePixelRatio;
+
+          ctx.beginPath();
+          ctx.moveTo(x - 1, y - 1);
+          ctx.lineTo(x - 1 + width + 2, y - 1);
+          ctx.lineTo(x - 1 + width + 2, y - 1 + height + 2);
+          ctx.lineTo(x - 1, y - 1 + height + 2);
+          ctx.lineTo(x - 1, y - 1);
+          ctx.stroke();
+        }
+      });
+      // ctx.clearRect(0, 0, width, height);
+    },
+    [
+      currentSeries,
+      getMprDrawInfo,
+      isFullscreen,
+      isMpr,
+      mprCache,
+      mprImgIndexs,
+      mprSeriesIndex,
+      viewportSize,
+    ],
+  );
+
+  // 更新视图
   const updateViewport = useCallback(() => {
     if (!ctx) return;
-    if (!cache) return;
 
-    const currentCache = cache[seriesIndex - 1];
-    if (!currentCache) return;
-    const currentImg = currentCache[imgIndexs[seriesIndex - 1] - 1];
-    if (!currentImg) return;
+    if (isMpr) drawMpr(ctx);
+    else drawNormal(ctx);
+  }, [drawMpr, drawNormal, isMpr]);
 
-    const { width, height } = currentImg;
-    const drawInfo = getDrawInfo(width, height);
+  // 显示Mpr
+  const showMpr = (mpr: boolean): void => {
+    if (!mpr || !currentSeries || !cacheDone) return;
+    if (isMpr) return setIsMpr(false);
 
-    ctx.drawImage(
-      currentImg,
-      0,
-      0,
-      width,
-      height,
-      drawInfo.x,
-      drawInfo.y,
-      drawInfo.width,
-      drawInfo.height,
-    );
-  }, [cache, getDrawInfo, imgIndexs, seriesIndex]);
+    setProgress(0);
+    setIsMpr(true);
+    getMprSeries(currentSeries.id)
+      .then(result => {
+        const { id } = result;
+        const pictures = result.pictures as ImageI[][];
+        const picTotalCount = pictures[0].length + pictures[1].length + pictures[2].length;
 
+        const cacheMprSeries = mprCache.get(id);
+
+        // 如果存在缓存 && 缓存的所有图片数量与原始图片数量相同 则不往下进行
+        if (
+          cacheMprSeries &&
+          cacheMprSeries[0].length + cacheMprSeries[1].length + cacheMprSeries[2].length ===
+            picTotalCount
+        )
+          return;
+
+        setCacheDone(false);
+        const _cache: HTMLImageElement[][] = [];
+        let mprCount = 0;
+        let progressCount = 0;
+
+        pictures.forEach((pics, index) => {
+          const currentPicsCache: HTMLImageElement[] = [];
+          let imgCount = 0;
+          pics.forEach(pic => {
+            const { url, frame_order, mpr_order } = pic;
+            const $img = new Image();
+            $img.src = url;
+            $img.onload = (): void => {
+              currentPicsCache[frame_order] = $img;
+              imgCount += 1;
+              progressCount += 1;
+              setProgress((progressCount * 100) / picTotalCount);
+              if (imgCount === pics.length) {
+                // _cache[mpr_order] = currentPicsCache;
+                _cache[index] = currentPicsCache; // 这里需要用mpr_order 目前没有提供
+                mprCount += 1;
+                if (mprCount === pictures.length) {
+                  setMprCache(mprCache.set(id, _cache));
+                  setCacheDone(true);
+                }
+              }
+            };
+          });
+        });
+      })
+      .catch(err => console.error(err));
+  };
+
+  // 选择MPR模式下的图片
+  const selectMprImg = (e: MouseEvent): void => {
+    if (!isMpr || !$viewport.current) return;
+    const { left, top } = $viewport.current.getClientRects()[0];
+    const mouseX = (e.clientX - left) * devicePixelRatio;
+    const mouseY = (e.clientY - top) * devicePixelRatio;
+
+    for (let i = 0; i < mprImgRange.length; i++) {
+      const { x, y, width, height } = mprImgRange[i];
+      if (mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height) {
+        if (isFullscreen) {
+          const TEMP = [0, 1, 2].filter(item => item !== mprSeriesIndex - 1); // 获取全屏模式下另外两个图像的index
+          if (i !== 0) {
+            return setMprSeriesIndex(TEMP[i - 1] + 1);
+            // return updateViewport();
+          }
+        }
+        return setMprSeriesIndex(i + 1);
+      }
+    }
+  };
   /* =============== use effect =============== */
   useEffect(() => {
     // 修改root的背景色
@@ -379,6 +735,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         }
       };
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentSeries, seriesIndex, seriesList, seriesMap]);
   useEffect(() => {
     // 监听fullscreen event
@@ -413,19 +770,18 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
       PLAY_PAUSE = 32;
 
     const onKeydown = (e: KeyboardEvent): void => {
-      // console.log(e.keyCode);
       switch (e.keyCode) {
         case LEFT:
-          prev();
+          isMpr ? prevMpr() : prev();
           break;
         case RIGHT:
-          next();
+          isMpr ? nextMpr() : next();
           break;
         case UP:
-          mode !== "mpr" && prevSeries();
+          !isMpr && prevSeries();
           break;
         case DOWN:
-          mode !== "mpr" && nextSeries();
+          !isMpr && nextSeries();
           break;
         case PLAY_PAUSE:
           setPlay(!isPlay);
@@ -439,26 +795,42 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     return (): void => {
       document.removeEventListener("keydown", onKeydown);
     };
-  }, [isPlay, mode, next, nextSeries, prev, prevSeries]);
+  }, [isPlay, isMpr, next, nextSeries, prev, prevSeries, prevMpr, nextMpr]);
   useEffect(() => {
     // 更新 canvas 视图
     playTimer !== undefined && window.clearTimeout(playTimer);
     if (isPlay) {
       playTimer = window.setTimeout(
         () => {
-          next();
+          isMpr ? nextMpr() : next();
         },
         currentSeries ? currentSeries.display_frame_rate : 300,
       );
     }
 
     updateViewport();
-  }, [imgIndexs, seriesIndex, isPlay, next, viewportSize, updateViewport, currentSeries]);
+  }, [
+    imgIndexs,
+    seriesIndex,
+    isPlay,
+    next,
+    viewportSize,
+    updateViewport,
+    mprSeriesIndex,
+    currentSeries,
+    isMpr,
+    nextMpr,
+  ]);
   useEffect(() => {
     // 重新计算canvas的width height
     const { outerWidth, outerHeight, devicePixelRatio = 1 } = window;
     let width = VIEWPORT_WIDTH_DEFAULT,
       height = VIEWPORT_HEIGHT_DEFAULT;
+
+    if (isMpr) {
+      width = MPR_VIEWPORT_WIDTH_DEFAULT;
+      height = MPR_VIEWPORT_HEIGHT_DEFAULT;
+    }
 
     if (isFullscreen) {
       width = outerWidth;
@@ -469,13 +841,12 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
     height *= devicePixelRatio;
 
     setViewportSize([width, height]);
-  }, [isFullscreen]);
+  }, [isFullscreen, isMpr]);
   useEffect(() => {
     if ($viewport && $viewport.current && !ctx) {
       ctx = $viewport.current.getContext("2d");
     }
   }, []);
-
   /* =============== components =============== */
   const seriesListCmp = (list?: SeriesListI): ReactNode => {
     if (!list)
@@ -503,7 +874,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
           renderView={(props): ReactElement => <ul {...props} className="player-list-inner"></ul>}
         >
           {children.map((item, index) => {
-            const { id, thumbnail, series_number } = item;
+            const { id, thumbnail, series_number, mpr_flag } = item;
 
             return (
               <li
@@ -511,6 +882,10 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
                 className={`player-list-item ${index + 1 === seriesIndex ? "active" : ""}`}
                 onClick={(): void => changeSeries(id)}
               >
+                <span className="player-list-item-mask">
+                  {index + 1}
+                  <span>{mpr_flag ? "mpr" : ""}</span>
+                </span>
                 <img src={thumbnail} alt={id} />
               </li>
             );
@@ -543,34 +918,52 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
 
     return (
       <div className={`player-info ${isShowInfo ? "" : isIE ? "player-nosee" : "filter-blur"}`}>
-        <span title="姓名">{patient_name}</span>
-        <span title="编号">{patient_id}</span>
-        <span>
-          <span title="生日">{birthday}</span>
-          <span title="性别">{sex}</span>
-        </span>
-        <span title="医院">{institution_name}</span>
-        <span title="日期">{study_date}</span>
-        <span title="图片索引">
-          Frame: {imgIndexs[seriesIndex - 1]} / {max}
-        </span>
-        <span title="序列">Series: {seriesIndex}</span>
-        <span>
-          <span title="窗宽">WL: {windowWidth}</span>
-          <span title="窗位">WL: {windowCenter}</span>
-        </span>
-        <span title="类型">{modality}</span>
+        <div>
+          <span title="姓名">{patient_name}</span>
+          <span title="编号">{patient_id}</span>
+          <span>
+            <span title="生日">{birthday}</span>
+            <span title="性别">{sex}</span>
+          </span>
+        </div>
+        <div>
+          <span title="医院">{institution_name}</span>
+          <span title="日期">{study_date}</span>
+        </div>
+        <div>
+          <span title="图片索引">
+            Frame: {imgIndexs[seriesIndex - 1]} / {max}
+          </span>
+          <span title="序列">Series: {seriesIndex}</span>
+          <span>
+            <span title="窗宽">WL: {windowWidth}</span>
+            <span title="窗位">WL: {windowCenter}</span>
+          </span>
+        </div>
+        <div>
+          <span title="类型">{modality}</span>
+        </div>
       </div>
     );
   };
 
-  const slider = (imgIndexs: number[], seriesIndex: number): ReactElement => {
+  const slider = (): ReactElement => {
     let max = 1;
-    if (currentSeries && currentSeries.pictures) max = currentSeries.pictures.length;
+    if (currentSeries) {
+      const { id, pictures } = currentSeries;
+      if (isMpr) {
+        const currentMprCache = mprCache.get(id);
+        if (currentMprCache && currentMprCache[mprSeriesIndex - 1].length) {
+          max = currentMprCache[mprSeriesIndex - 1].length;
+        }
+      } else if (pictures) {
+        max = pictures.length || 1;
+      }
+    }
 
     return (
       <Slider
-        value={imgIndexs[seriesIndex - 1]}
+        value={isMpr ? mprImgIndexs[mprSeriesIndex - 1] : imgIndexs[seriesIndex - 1]}
         min={1}
         step={1}
         max={max}
@@ -578,9 +971,17 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         className="player-ctl-slider"
         getTooltipPopupContainer={(): HTMLElement => $player.current || document.body}
         onChange={(value): void => {
-          const next = [...imgIndexs];
-          next[seriesIndex - 1] = value as number;
-          setImgIndexs(next);
+          let _indexs = imgIndexs,
+            _seriesIndex = seriesIndex,
+            _updateImgIndexs = setImgIndexs;
+          if (isMpr) {
+            _indexs = mprImgIndexs;
+            _seriesIndex = mprSeriesIndex;
+            _updateImgIndexs = setMprImgIndexs;
+          }
+          const next = [..._indexs];
+          next[_seriesIndex - 1] = value as number;
+          _updateImgIndexs(next);
         }}
       ></Slider>
     );
@@ -596,16 +997,14 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
           }}
         />
         <i
-          className={`iconfont icon-ic icon-ic_mpr player-mpr-btn ${mpr ? "" : "disabled"}`}
-          onClick={(): void => {
-            if (!mpr) return;
-
-            console.log("mpr mode");
-          }}
+          className={`iconfont icon-ic icon-ic_mpr player-mpr-btn ${mpr ? "" : "disabled"} ${
+            isMpr ? "active" : ""
+          }`}
+          onClick={(): void => showMpr(mpr)}
         ></i>
         <Icon
-          className="iconfont"
-          type="fullscreen"
+          className={`iconfont ${isFullscreen ? "active" : ""}`}
+          type={isFullscreen ? "fullscreen-exit" : "fullscreen"}
           onClick={(): void => changeFullscreen(isFullscreen)}
         />
       </div>
@@ -615,7 +1014,6 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
   let className = "player";
   if (isFullscreen) className += " player-fullscreen";
   if (isShowPanels) className += " player-show-panels";
-  // console.log("cache: ", cache);
 
   return (
     <section className={className}>
@@ -626,7 +1024,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         </LinkButton>
       </div>
       <div className="player-content" ref={$player}>
-        <div className="player-view">
+        <div className={`player-view ${isMpr ? "player-mpr" : ""}`}>
           {seriesListCmp(seriesList)}
           <div className="player-view-inner">
             <canvas
@@ -636,6 +1034,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
               onMouseOut={(): void => window.clearTimeout(showPanelsTimer)}
               onMouseOver={(): void => showPanels(isFullscreen, isShowPanels)}
               onMouseMove={(): void => showPanels(isFullscreen, isShowPanels)}
+              onClick={selectMprImg}
               width={viewportSize[0]}
               height={viewportSize[1]}
             ></canvas>
@@ -649,16 +1048,16 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         </div>
         <div className={`player-ctl ${cacheDone ? "" : "player-disabled"}`}>
           <div className="player-ctl-playbtns">
-            <Icon className="iconfont" type="step-backward" onClick={first} />
-            <Icon className="iconfont" type="left" onClick={prev} />
+            <Icon className="iconfont" type="step-backward" onClick={isMpr ? firstMpr : first} />
+            <Icon className="iconfont" type="left" onClick={isMpr ? prevMpr : prev} />
             <Icon
               className="iconfont iconfont-isPlay"
               type={`${isPlay ? "pause" : "caret-right"}`}
               onClick={isPlay ? pause : play}
             />
-            {slider(imgIndexs, seriesIndex)}
-            <Icon className="iconfont" type="right" onClick={next} />
-            <Icon className="iconfont" type="step-forward" onClick={last} />
+            {slider()}
+            <Icon className="iconfont" type="right" onClick={isMpr ? nextMpr : next} />
+            <Icon className="iconfont" type="step-forward" onClick={isMpr ? lastMpr : last} />
           </div>
           {ctlbtns(isShowInfo, currentSeries ? currentSeries.mpr_flag : false)}
         </div>

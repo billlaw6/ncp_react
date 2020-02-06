@@ -15,6 +15,21 @@ export type SeriesImgCacheListT = HTMLImageElement[][];
 
 export type PlayerModeT = "normal" | "mpr";
 
+export interface MprImgSizeI {
+  width: number;
+  height: number;
+}
+export interface MprImgClientRects extends MprImgSizeI {
+  x: number;
+  y: number;
+}
+export interface MprImgAndSizeI extends MprImgSizeI {
+  img: HTMLImageElement;
+}
+export interface ImgDrawInfoI extends MprImgClientRects {
+  img: HTMLImageElement;
+}
+
 export interface PlayerStateI {
   seriesIndex: number; // 当前序列索引
   imgIndex: number[]; // 所有序列的当前图像索引
