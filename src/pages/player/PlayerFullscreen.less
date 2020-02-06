@@ -1,5 +1,7 @@
 .player-fullscreen.player {
+  cursor: none;
   &.player-show-panels {
+    cursor: default !important;
     .player {
       &-ctl,
       &-list,
@@ -13,6 +15,10 @@
       &-list,
       &-info {
         transform: translate(0, -50%);
+      }
+
+      &-mpr .player-info {
+        transform: translate(0, 0);
       }
     }
   }
@@ -55,6 +61,17 @@
       top: 50%;
       left: 0;
       transform: translate(-110px, -50%);
+      margin-right: 0;
+      padding: 14px 18px 25px;
+      &-item {
+        position: relative;
+        width: 64px;
+        height: 64px;
+        margin-bottom: 8px;
+        &-mask {
+          line-height: 64px;
+        }
+      }
     }
     &-info {
       top: 50%;
@@ -75,6 +92,21 @@
         position: absolute;
         top: -22px;
         left: 0px;
+      }
+    }
+
+    &-progress {
+      background-color: #ccc;
+      position: fixed;
+      height: 100%;
+      z-index: 10;
+    }
+
+    &-mpr {
+      .player-info {
+        top: 0;
+        left: 0;
+        transform: translate(0, -100%);
       }
     }
   }
