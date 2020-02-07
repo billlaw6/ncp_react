@@ -2,9 +2,9 @@ import React from "react";
 import { Link } from "react-router-dom";
 import qs from "qs";
 import { connect } from "react-redux";
-import { StoreStateI } from "../../constants/interface";
-import { setUserAction } from "../../store/actions/user";
-import { weChatLoginUser } from "../../services/user";
+import { StoreStateI } from "_constants/interface";
+import { setUserAction } from "_actions/user";
+import { weChatLoginUser } from "_services/user";
 import { replace } from "react-router-redux";
 
 class Oauth extends React.Component<any, any> {

@@ -367,7 +367,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   examIndexList: state.examIndexList,
-  user: state.currentUser,
+  user: state.user,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   getList: getExamIndexListAction,

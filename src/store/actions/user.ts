@@ -1,4 +1,4 @@
-import { UserFormI, UserI, ActionI } from "../../constants/interface";
+import { UserFormI, UserI, ActionI } from "_constants/interface";
 import * as types from "../action-types";
 
 // 设置后台给的token

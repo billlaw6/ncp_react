@@ -22,5 +22,6 @@ module.exports = override(
     ["_images"]: path.join(SRC, "assets", "images"),
     ["_actions"]: path.join(SRC, "store", "actions"),
     ["_helper"]: path.join(SRC, "helper", "index.ts"),
+    ["_services"]: path.join(SRC, "services"),
   }),
 );

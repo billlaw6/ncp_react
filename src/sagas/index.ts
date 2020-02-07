@@ -1,8 +1,8 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { updateUserAction, logoutUserAction } from "../store/actions/user";
-import { getExamIndexListAction, deleteExamIndexListAction } from "../store/actions/dicom";
-import { logoutUser, updateUserInfo } from "../services/user";
-import { getExamIndex } from "../services/dicom";
+import { updateUserAction, logoutUserAction } from "_actions/user";
+import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
+import { logoutUser, updateUserInfo } from "_services/user";
+import { getExamIndex } from "_services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 // import { store } from "../index";

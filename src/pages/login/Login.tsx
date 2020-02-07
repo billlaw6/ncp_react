@@ -86,9 +86,7 @@ const Login: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props =
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
   // console.log(state);
   return {
-    router: state.router,
-    loginForm: state.loginForm,
-    currentUser: state.currentUser,
+    user: state.user,
   };
 };
 

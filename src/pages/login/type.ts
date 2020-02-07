@@ -1,22 +1,18 @@
 import { LoginFormI, UserI } from "_constants/interface";
-import {
-  SetWeChatCodeActionFuncI,
-  SetLoginFormActionFuncT,
-  SubmitLoginFormActionFuncT,
-  SetCurrentUserActionFuncT,
-} from "_actions/user";
+import { SetUserActionFuncT } from "_actions/user";
 
 export interface MapStateToPropsI {
-  router: { location: Location };
-  loginForm: LoginFormI;
-  currentUser: UserI;
+  // router: { location: Location };
+  // loginForm: LoginFormI;
+  user: UserI;
 }
 
 export interface MapDispatchToPropsI {
-  setWeChatCodeAction: SetWeChatCodeActionFuncI;
-  setLoginFormAction: SetLoginFormActionFuncT;
-  submitLoginFormAction: SubmitLoginFormActionFuncT;
-  setCurrentUserAction: SetCurrentUserActionFuncT;
+  // setWeChatCodeAction: SetWeChatCodeActionFuncI;
+  // setLoginFormAction: SetLoginFormActionFuncT;
+  // submitLoginFormAction: SubmitLoginFormActionFuncT;
+  // setCurrentUserAction: SetCurrentUserActionFuncT;
+  setUserAction: SetUserActionFuncT;
 }
 
 export interface FieldsI {

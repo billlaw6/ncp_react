@@ -1,6 +1,6 @@
-import { ExamIndexI } from "../../constants/interface";
+import { ExamIndexI } from "_constants/interface";
 import * as types from "../action-types";
-import { setExamIndexListAction } from "../actions/dicom";
+import { setExamIndexListAction } from "_actions/dicom";
 
 // 全局变量examIndexList
 const defaultExamIndexList: ExamIndexI[] = [];

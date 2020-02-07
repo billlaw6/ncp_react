@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { UserI } from "../../constants/interface";
-import { setTokenAction, setUserAction } from "../actions/user";
+import { UserI } from "_constants/interface";
+import { setTokenAction, setUserAction } from "_actions/user";
 import * as types from "../action-types";
 
 const defaultToken = "";

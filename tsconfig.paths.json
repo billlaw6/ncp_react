@@ -8,7 +8,8 @@
       "_layout/*": ["Layout/*"],
       "_images/*": ["assets/images/*"],
       "_actions/*": ["store/actions/*"],
-      "_helper": ["helper/index.ts"]
+      "_helper": ["helper/index.ts"],
+      "_services/*":["services/*"]
     }
   }
 }

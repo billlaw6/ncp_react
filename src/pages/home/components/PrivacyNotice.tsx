@@ -1,18 +1,13 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { Modal, Button, Checkbox } from "antd";
-import { UserI } from "_constants/interface";
-import { getPrivacyNotice, agreePrivacyNotice } from "../../../services/user";
-import { connect } from "react-redux";
-import { StoreStateI } from "_constants/interface";
-import { MapStateToPropsI } from "./type";
+import { getPrivacyNotice, agreePrivacyNotice } from "_services/user";
+// import { connect } from "react-redux";
+// import { StoreStateI } from "_constants/interface";
+// import { MapStateToPropsI } from "./type";
 
 import "./PrivacyNotice.less";
-
-interface PrivacyNoticePropsI {
-  user: UserI;
-  onChecked: Function;
-}
+import { PrivacyNoticePropsI } from "./type";
 
 const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
   const { user, onChecked } = props;
@@ -95,12 +90,12 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
 };
 
 // export default PrivacyNotice;
-const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
-  // console.log(state);
-  return {
-    router: state.router,
-    user: state.user,
-  };
-};
+// const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
+//   // console.log(state);
+//   return {
+//     router: state.router,
+//     user: state.user,
+//   };
+// };
 
-export default connect(mapStateToProps)(PrivacyNotice);
+export default PrivacyNotice;

@@ -1,4 +1,4 @@
-import { ActionI, SearchFormI, ExamIndexI } from "../../constants/interface";
+import { ActionI, SearchFormI, ExamIndexI } from "_constants/interface";
 import * as types from "../action-types";
 
 // 用于在SAGA中触发请求
