@@ -10,18 +10,18 @@ export const getExamIndexDetail = async (params: any) => {
   return res;
 };
 
-export const getDicomSeries = async (params: any) => {
-  const res = await axios.get(`/dicom/dicom-series/`, { params: params });
+export const getDicomSeries = async () => {
+  const res = await axios.get(`/dicom/dicom-series/`);
   return res;
 };
 
 export const getDicomSeriesDetail = async (params: any) => {
-  const res = await axios.get(`/dicom/dicom-series/${params.id}`, { params: params });
+  const res = await axios.get(`/dicom/dicom-series/${params.id}`);
   return res;
 };
 
-export const getDicomSeriesMprDetail = async (params: any) => {
-  const res = await axios.get(`/dicom/dicom-series/mpr/${params.id}`, { params: params });
+export const getDicomSeriesMprDetail = async (params: { id: string }) => {
+  const res = await axios.get(`/dicom/dicom-series/mpr/${params.id}`);
   return res;
 };
 

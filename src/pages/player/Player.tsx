@@ -53,35 +53,40 @@ import { isIE as isIEFunc } from "_helper";
 import { CustomHTMLDivElement, ImageI, SeriesListI, SeriesI } from "_constants/interface";
 import { RouteComponentProps } from "react-router-dom";
 
-import axios from "axios";
+// import axios from "axios";
+import {
+  getDicomSeries,
+  getDicomSeriesDetail,
+  getDicomSeriesMprDetail,
+} from "../../services/dicom";
 
 const VIEWPORT_WIDTH_DEFAULT = 890; // 视图默认宽
 const VIEWPORT_HEIGHT_DEFAULT = 508; // 视图默认高
 const MPR_VIEWPORT_WIDTH_DEFAULT = 1152; // mpr 视图默认宽
 const MPR_VIEWPORT_HEIGHT_DEFAULT = 420; // mpr 视图默认高
 
-const req = axios.create({
-  baseURL: "http://115.29.148.227:8083/rest-api",
-  // baseURL: "https://mi.mediclouds.cn/rest-api",
-  timeout: 60 * 1000,
-});
-req.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
+// const req = axios.create({
+//   baseURL: "http://115.29.148.227:8083/rest-api",
+//   // baseURL: "https://mi.mediclouds.cn/rest-api",
+//   timeout: 60 * 1000,
+// });
+// req.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
 /* 获取series列表 */
 const getSeriesList = async (id: string): Promise<SeriesListI> => {
-  const result = await req.get(`/dicom/dicom-series/`, { data: { id } });
+  const result = await getDicomSeries();
   return result.data;
 };
 
 /* 获取序列 */
 const getSeries = async (id: string): Promise<SeriesI> => {
-  const result = await req.get(`/dicom/dicom-series/${id}/`);
+  const result = await getDicomSeriesDetail({ id: id });
   return result.data;
 };
 
 /* 获取mpr序列 */
 const getMprSeries = async (id: string): Promise<SeriesI> => {
-  const result = await req.get(`/dicom/dicom-series/mpr/${id}/`);
+  const result = await getDicomSeriesMprDetail({ id: id });
   return result.data;
 };
 
@@ -601,7 +606,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         if (
           cacheMprSeries &&
           cacheMprSeries[0].length + cacheMprSeries[1].length + cacheMprSeries[2].length ===
-            picTotalCount
+          picTotalCount
         )
           return;
 
@@ -999,7 +1004,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         <i
           className={`iconfont icon-ic icon-ic_mpr player-mpr-btn ${mpr ? "" : "disabled"} ${
             isMpr ? "active" : ""
-          }`}
+            }`}
           onClick={(): void => showMpr(mpr)}
         ></i>
         <Icon
