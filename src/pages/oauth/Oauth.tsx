@@ -19,7 +19,7 @@ class Oauth extends React.Component<any, any> {
       weChatLoginUser(obj.code)
         .then(res => {
           console.log(res);
-          // setUserAction(res);
+          // setUserAction(res.user_info);
         })
         .catch(error => {
           console.log(error);

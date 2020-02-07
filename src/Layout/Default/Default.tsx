@@ -1,6 +1,6 @@
 import React, { Component, ReactElement } from "react";
 import { Layout } from "antd";
-import { connect } from "react-redux";
+import { connect, MapDispatchToProps } from "react-redux";
 
 /* components */
 import Header from "_components/Header/Header";
@@ -10,16 +10,20 @@ import { StoreStateI } from "_constants/interface";
 /* style */
 import "./Default.less";
 
+/* action */
+import { logoutUserAction } from "_actions/user";
+import { LOGOUT_USER } from "store/action-types";
+
 const { Content } = Layout;
 
-class DefalutLayout extends Component<StoreStateI> {
+class DefalutLayout extends Component<StoreStateI & MapDispatchToPropsI> {
   render(): ReactElement {
-    const { children, user } = this.props;
+    const { children, user, logout } = this.props;
     const { avatar, username, cell_phone: cellPhone } = user;
 
     return (
       <Layout id="defaultLayout">
-        <Header avatar={avatar} username={username} cellPhone={cellPhone}></Header>
+        <Header avatar={avatar} username={username} cellPhone={cellPhone} logout={logout}></Header>
         <Content id="content">{children}</Content>
         <Footer></Footer>
       </Layout>
@@ -28,4 +32,10 @@ class DefalutLayout extends Component<StoreStateI> {
 }
 
 const mapStateToProps = (state: StoreStateI): StoreStateI => state;
-export default connect(mapStateToProps)(DefalutLayout);
+interface MapDispatchToPropsI {
+  logout: typeof logoutUserAction;
+}
+const mapDispatchToProps: MapDispatchToPropsI = {
+  logout: logoutUserAction,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(DefalutLayout);

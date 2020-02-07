@@ -91,6 +91,7 @@ function* deleteExamIndexEffect(action: ReturnType<typeof deleteExamIndexListAct
 
 function* rootSaga() {
   yield takeEvery(types.UPDATE_USER, updateUserEffect);
+  yield takeEvery(types.LOGOUT_USER, logoutUserEffect);
   yield takeEvery(types.GET_EXAM_INDEX_LIST, getExamIndexEffect);
   yield takeEvery(types.DELETE_EXAM_INDEX_LIST, deleteExamIndexEffect);
 }
