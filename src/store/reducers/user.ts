@@ -27,6 +27,7 @@ const defaultUser: UserI = {
   unit: "",
   avatar: "",
   privacy_notice: 0,
+  birthday: "",
 };
 
 const userReducer = (state = defaultUser, action: ReturnType<typeof setUserAction>): UserI => {

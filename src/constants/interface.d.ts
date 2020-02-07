@@ -178,6 +178,7 @@ export declare interface UserI {
   avatar: string;
   unionid?: string;
   privacy_notice: number;
+  birthday: string;
 }
 
 // 更新用户信息表单

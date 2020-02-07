@@ -1,9 +1,10 @@
-import React, { Component, ComponentType } from "react";
+import { ComponentType } from "react";
 
 import Home from "_pages/home/index";
 import Player from "_pages/player/Player";
 import Login from "_pages/login/Login";
 import Upload from "_pages/upload/Upload";
+import Profile from "_pages/profile/Profile";
 
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
@@ -50,7 +51,12 @@ const routes: RoutesI[] = [
     name: "oauth",
     path: "/oauth",
     component: Oauth,
-    routes: [],
+  },
+  {
+    name: "profile",
+    path: "/profile",
+    component: Profile,
+    permission: ["login"],
   },
 ];
 

@@ -44,7 +44,6 @@ import {
   SeriesImgCacheListT,
   ImgDrawInfoI,
   MprImgClientRects,
-  MprImgSizeI,
   MprImgAndSizeI,
 } from "./type";
 import "./Player.less";
@@ -54,11 +53,7 @@ import { CustomHTMLDivElement, ImageI, SeriesListI, SeriesI } from "_constants/i
 import { RouteComponentProps } from "react-router-dom";
 
 // import axios from "axios";
-import {
-  getDicomSeries,
-  getDicomSeriesDetail,
-  getDicomSeriesMprDetail,
-} from "../../services/dicom";
+import { getDicomSeries, getDicomSeriesDetail, getDicomSeriesMprDetail } from "_services/dicom";
 
 const VIEWPORT_WIDTH_DEFAULT = 890; // 视图默认宽
 const VIEWPORT_HEIGHT_DEFAULT = 508; // 视图默认高
@@ -606,7 +601,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         if (
           cacheMprSeries &&
           cacheMprSeries[0].length + cacheMprSeries[1].length + cacheMprSeries[2].length ===
-          picTotalCount
+            picTotalCount
         )
           return;
 
@@ -1004,7 +999,7 @@ const Player: FunctionComponent<RouteComponentProps> = props => {
         <i
           className={`iconfont icon-ic icon-ic_mpr player-mpr-btn ${mpr ? "" : "disabled"} ${
             isMpr ? "active" : ""
-            }`}
+          }`}
           onClick={(): void => showMpr(mpr)}
         ></i>
         <Icon

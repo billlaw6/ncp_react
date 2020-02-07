@@ -12,6 +12,17 @@ import en_US from "./locales/en_US";
 import { persistStore } from "redux-persist";
 import { PersistGate } from "redux-persist/es/integration/react";
 
+/* 
+  为使用Antd的datePicker组件，需要正确设置国际化（针对antd组件）
+*/
+// 引入所需组件和国际化文件
+import { ConfigProvider } from "antd";
+import locale from "antd/es/locale/zh_CN";
+// 设置依赖组件moment的国际化
+import moment from "moment";
+import "moment/locale/zh-cn";
+moment.locale("zh-cn");
+
 export const store = configureStore();
 const persistor = persistStore(store);
 
@@ -44,7 +55,9 @@ ReactDOM.render(
         {/* your usual react-router v4/v5 routing */}
         <IntlProvider locale="zh" messages={messages["zh"]}>
           <PersistGate loading={<Loading />} persistor={persistor}>
-            <App />
+            <ConfigProvider locale={locale}>
+              <App />
+            </ConfigProvider>
           </PersistGate>
         </IntlProvider>
       </ConnectedRouter>
