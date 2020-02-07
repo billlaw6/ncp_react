@@ -8,7 +8,7 @@ import Upload from "_pages/upload/Upload";
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
 
-import Oauth from "../pages/user/oauth";
+import Oauth from "../pages/oauth/Oauth";
 
 export interface RoutesI {
   name: string;

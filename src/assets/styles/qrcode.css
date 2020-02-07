@@ -1,5 +1,8 @@
-.impowerBox .qrcode {width: 150px;}
-.impowerBox .title {display: none;}
-.impowerBox .info {display: 200px;}
-.status_icon {width: 200}
-.impowerBox .status {text-align: center;} 
+.qrcode.lightBorder {
+  position: fixed;
+  top: 0;
+  left: 0;
+  border: none;
+  margin-top: 0;
+  width: 200px;
+}

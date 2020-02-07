@@ -1,6 +1,13 @@
 /* config-overrides.js */
 const path = require("path");
-const { override, fixBabelImports, addLessLoader, addWebpackAlias } = require("customize-cra");
+const {
+  override,
+  fixBabelImports,
+  addLessLoader,
+  addWebpackAlias,
+  addWebpackPlugin,
+} = require("customize-cra");
+const copyWebpackPlugin = require("copy-webpack-plugin");
 
 const SRC = path.resolve(__dirname, "src");
 
@@ -14,6 +21,11 @@ module.exports = override(
     javascriptEnable: true,
     // modifyVars: { "@primary-color": "#7398FF" }, // 不注释掉不能修改主题色
   }),
+  addWebpackPlugin(
+    new copyWebpackPlugin([
+      { from: "src/assets/styles/qrcode.css", to: "static/css/[name].[ext]" },
+    ]),
+  ),
   addWebpackAlias({
     ["_components"]: path.join(SRC, "components"),
     ["_pages"]: path.join(SRC, "pages"),
