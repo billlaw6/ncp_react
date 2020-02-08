@@ -17,8 +17,8 @@ function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
     //   console.log("Key: ", key, "  Value: ", value);
     // });
     // console.groupEnd();
-
-    yield put({ type: types.SET_USER, payload: res });
+    console.log(res.data);
+    yield put({ type: types.SET_USER, payload: res.data });
   } catch (error) {
     console.error(error);
     yield put(push("/profile"));

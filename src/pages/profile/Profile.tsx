@@ -32,11 +32,11 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
     /* ======== 此处添加update User Info action == START ======== */
     //  将 [formData] 作为 data
     /* ======== 此处添加update User Info action == END ======== */
-    console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
-    formData.forEach((value, key) => {
-      console.log(" Key: ", key, "  value: ", value);
-    });
-    console.groupEnd();
+    // console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
+    // formData.forEach((value, key) => {
+    //   console.log(" Key: ", key, "  value: ", value);
+    // });
+    // console.groupEnd();
 
     updateUserAction(formData);
     setIsEdit(false);
