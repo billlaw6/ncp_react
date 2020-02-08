@@ -1,19 +1,20 @@
 import React, { FunctionComponent, useState, useRef } from "react";
 import { Form, Input, Row, Col, Select, DatePicker } from "antd";
 import moment, { Moment } from "moment";
-import { connect } from "react-redux";
+import { connect, MapDispatchToProps } from "react-redux";
 
 import { StoreStateI } from "_constants/interface";
-import { MapStateToPropsI } from "./tyle";
+import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
 
 import "./Profile.less";
 import DEFAULT_AVATAR from "_images/avatar.png";
+import { updateUserAction } from "_actions/user";
 
 const { Item } = Form;
 const { Option } = Select;
 
-const Profile: FunctionComponent<MapStateToPropsI> = props => {
-  const { user } = props;
+const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
+  const { user, updateUserAction } = props;
   const $form = useRef<HTMLFormElement>(null);
 
   const [userInfo, setUserInfo] = useState(user); // 网页中的用户信息 默认为服务器端用户信息
@@ -31,6 +32,8 @@ const Profile: FunctionComponent<MapStateToPropsI> = props => {
     /* ======== 此处添加update User Info action == START ======== */
     //  将 [formData] 作为 data
     /* ======== 此处添加update User Info action == END ======== */
+    // updateUserAction(formData);
+    console.log(formData);
     setIsEdit(false);
   };
 
@@ -210,4 +213,7 @@ const Profile: FunctionComponent<MapStateToPropsI> = props => {
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
 });
-export default connect(mapStateToProps)(Profile);
+const mapDispatchToProps: MapDispatchToPropsI = {
+  updateUserAction,
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Profile);
