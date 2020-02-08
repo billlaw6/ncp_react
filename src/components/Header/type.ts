@@ -1,5 +1,5 @@
 export interface HeaderPropsI {
-  username?: string;
+  nickname?: string;
   cellPhone?: string;
   avatar?: string;
   logout?: Function;

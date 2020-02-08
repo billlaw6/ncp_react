@@ -97,8 +97,8 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
               <Input
                 disabled={!isEdit}
                 type="text"
-                name="username"
-                value={userInfo.username}
+                name="nickname"
+                value={userInfo.nickname}
                 onInput={updateInputVal}
               />
             </Item>

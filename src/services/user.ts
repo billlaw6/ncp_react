@@ -1,5 +1,5 @@
 import axios from "./api";
-import { UserI, UserFormI } from "_constants/interface";
+import { UserI } from "_constants/interface";
 
 export const weChatLoginUser = async (params: any) => {
   // console.log(params);

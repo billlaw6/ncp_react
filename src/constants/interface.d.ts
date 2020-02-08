@@ -169,6 +169,7 @@ export declare interface ExamIndexI {
 export declare interface UserI {
   id: number;
   username: string;
+  nickname: string;
   cell_phone: string;
   gender: GenderE;
   age: number;
@@ -179,21 +180,6 @@ export declare interface UserI {
   unionid?: string;
   privacy_notice: number;
   birthday: string;
-}
-
-// 更新用户信息表单
-export declare interface UserFormI {
-  id: number;
-  username: string;
-  cell_phone: string;
-  gender: GenderE;
-  birthday: Date;
-  sign: string;
-  address: string;
-  unit: string;
-  avatar: File;
-  unionid?: string;
-  privacy_notice: number;
 }
 
 // 单张图片

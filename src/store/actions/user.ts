@@ -1,4 +1,4 @@
-import { UserFormI, UserI, ActionI } from "_constants/interface";
+import { UserI, ActionI } from "_constants/interface";
 import * as types from "../action-types";
 
 // 设置后台给的token
@@ -32,9 +32,9 @@ export const updateUserAction: UpdateUserActionFuncT = payload => ({
 });
 
 // 用户注销时操作：发起远程注销，清楚本地变量
-export type LogoutUserActionT = ActionI<string, UserFormI>;
+export type LogoutUserActionT = ActionI<string, void>;
 export interface LogoutUserActionFuncT {
-  (payload: UserFormI): LogoutUserActionT;
+  (payload: void): LogoutUserActionT;
 }
 export const logoutUserAction: LogoutUserActionFuncT = payload => ({
   type: types.LOGOUT_USER,

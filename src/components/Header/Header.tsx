@@ -13,7 +13,7 @@ const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
 const { Header: AntdHeader } = Layout;
 
 const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
-  const { username, cellPhone, logout } = props;
+  const { nickname, cellPhone, logout } = props;
 
   const onClick = (e: ClickParam): void => {
     const { key } = e;
@@ -24,7 +24,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
     <Menu className="header-avatar-menu" onClick={onClick}>
       <MenuItemGroup>
         <ul className="user">
-          <li className="user-name">{username || "匿名"}</li>
+          <li className="user-name">{nickname || "匿名"}</li>
           <li className="user-cell-phone">{cellPhone || "未填写"}</li>
         </ul>
       </MenuItemGroup>
