@@ -48,6 +48,8 @@ const Upload: FunctionComponent = () => {
     updateCurrentLoad(undefined);
   };
 
+  const reload = (): void => {};
+
   const { getRootProps, getInputProps } = useDropzone({
     onDropAccepted: files => {
       if (files && files.length) {
@@ -65,14 +67,13 @@ const Upload: FunctionComponent = () => {
         files.map(item => {
           formData.append("file", item);
         });
+        formData.append("privacy", delPrivacy ? "1" : "0");
 
         axios
-          .post(`http://173.242.127.101:30178/upload`, formData, {
-            // .post(`http://192.168.1.220:3002/upload`, formData, {
+          .post("http://115.29.148.227:8083/rest-api/dicom/upload/", formData, {
             // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
             headers: {
               "Content-Type": "multipart/form-data",
-              // Authorization: headersAuthorization,
             },
             onUploadProgress: function(progressEvent: any) {
               console.log("progressEvent: ", progressEvent);
@@ -158,7 +159,7 @@ const Upload: FunctionComponent = () => {
       <div className="upload-list">
         {uploadList.map(item => {
           const { id, ...others } = item;
-          return <FileProgress key={id} {...others}></FileProgress>;
+          return <FileProgress key={id} {...others} onReload={reload}></FileProgress>;
         })}
       </div>
     </section>
