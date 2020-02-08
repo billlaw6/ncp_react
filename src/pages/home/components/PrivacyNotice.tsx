@@ -25,7 +25,10 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
     getPrivacyNotice()
       .then(result => {
         const { id, content } = result.data;
+        console.log(id);
         if (id) setPrivacyNotice(id);
+        // 在useEffect外才能看见结果
+        // console.log(privacyNotice);
         if (content) setPrivacyNoticeContent(content);
       })
       .catch(error => console.error(error));
@@ -38,10 +41,9 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
     } else {
       // something
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
+      console.log(privacyNotice);
       agreePrivacyNotice({ privacy_notice_id: privacyNotice }).then(
         (): void => {
-          // setShow(false);
-          // onChecked && onChecked();
           setShow(false);
           onChecked && onChecked();
         },

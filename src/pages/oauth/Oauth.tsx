@@ -25,6 +25,8 @@ class Oauth extends React.Component<any, any> {
           history.replace("/");
         })
         .catch(error => {
+          setToken("");
+          setUser({});
           console.log(error);
         });
     } else {

@@ -30,21 +30,9 @@ axios.interceptors.request.use(
       document.cookie.match(regex) === null ? null : document.cookie.match(regex)![1];
     // console.log(localStorage.getItem('persist:root'));
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
-    // console.log(persistRoot.token);
-    // 注意对象的多重解析
-    // console.log(persistRoot.currentUser);
-    // console.log(JSON.parse(persistRoot.currentUser).token);
-    // console.log(JSON.parse(persistRoot.currentUser).token.length);
-    // 使用redux-persist后，token属性JSON.parse(JSON.stringify(object))回来后变成的两个引号
-    if (
-      persistRoot.currentUser &&
-      JSON.parse(persistRoot.currentUser).token &&
-      JSON.parse(persistRoot.currentUser).token.length > 2
-    ) {
-      // console.log("valid token" + JSON.parse(persistRoot.currentUser).token);
-      config.headers.Authorization = "Token " + JSON.parse(persistRoot.currentUser).token;
-    } else {
-      console.log("invalide token");
+    if (persistRoot.token && persistRoot.token.length > 2) {
+      console.log("Token " + persistRoot.token);
+      config.headers.Authorization = "Token " + JSON.parse(persistRoot.token);
     }
 
     if (config.method === "post") {
@@ -93,7 +81,7 @@ axios.interceptors.response.use(
   },
   (error: any) => {
     // 两种错误返回类型
-    let { response } = error;
+    const { response } = error;
     console.log(response);
     if (response) {
       // 服务器返回了结果
