@@ -104,7 +104,7 @@ axios.interceptors.response.use(
           // persistRoot.token = '';
           // console.log(persistRoot);
           // localStorage.setItem('persist:root', JSON.stringify(persistRoot));
-          history.push("/login");
+          // history.push("/login");
           return Promise.reject(error);
         case 404: // 资源找不到；
           history.push("/");
