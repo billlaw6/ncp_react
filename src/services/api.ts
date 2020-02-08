@@ -31,7 +31,7 @@ axios.interceptors.request.use(
     // console.log(localStorage.getItem('persist:root'));
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
     if (persistRoot.token && persistRoot.token.length > 2) {
-      console.log("Token " + persistRoot.token);
+      console.log("Token " + JSON.parse(persistRoot.token));
       config.headers.Authorization = "Token " + JSON.parse(persistRoot.token);
     }
 

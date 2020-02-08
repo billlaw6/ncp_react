@@ -25,6 +25,7 @@ function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
     yield put({ type: types.SET_EXAM_INDEX_LIST, payload: [] });
     yield put({ type: types.SET_TOKEN, payload: "" });
     yield put({ type: types.SET_USER, payload: {} });
+    yield put(push("/login"));
   } catch (error) {
     console.error(error);
   }

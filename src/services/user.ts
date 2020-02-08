@@ -2,7 +2,7 @@ import axios from "./api";
 import { UserI, UserFormI } from "_constants/interface";
 
 export const weChatLoginUser = async (params: any) => {
-  console.log(params);
+  // console.log(params);
   const res = await axios.post(`/user/wechat-oauth2-login/`, params);
   return res;
 };
