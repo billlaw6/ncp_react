@@ -9,13 +9,15 @@ import DefaultLayout from "_layout/Default/Default";
 class RouteWithSubRoutes extends Component<RoutesI & MapStateToPropsI> {
   // 二级路由路径需要非exact匹配？从路由配置里取值更灵活
   componentDidMount(): void {
-    const { token } = this.props;
-    if (token.length > 0) {
-      console.log(token);
-    } else {
-      console.log(token);
-      console.log(token.length);
-      history.push({ pathname: "/login" });
+    const { permission = [], token } = this.props;
+    if (permission.length > 0) {
+      if (token.length > 0) {
+        console.log(token);
+      } else {
+        console.log(token);
+        console.log(token.length);
+        history.push({ pathname: "/login" });
+      }
     }
     // 使用localStorage的值会有滞后，首次登录会校验错误
     // const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
