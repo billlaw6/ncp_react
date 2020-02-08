@@ -32,8 +32,13 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
     /* ======== 此处添加update User Info action == START ======== */
     //  将 [formData] 作为 data
     /* ======== 此处添加update User Info action == END ======== */
-    // updateUserAction(formData);
-    console.log(formData);
+    console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
+    formData.forEach((value, key) => {
+      console.log(" Key: ", key, "  value: ", value);
+    });
+    console.groupEnd();
+
+    updateUserAction(formData);
     setIsEdit(false);
   };
 
@@ -56,7 +61,7 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
     setUserInfo(Object.assign({}, userInfo, { [name]: value }));
   };
 
-  console.log("user: ", user);
+  // console.log("user: ", user);
 
   return (
     <section className="profile">
@@ -125,8 +130,8 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
                   <DatePicker
                     className="profile-form-birthday"
                     disabled={!isEdit}
-                    value={moment(userInfo.birthday ? Date.parse(userInfo.birthday) : Date.now())}
-                    onChange={(date: Moment | null, dateString: string): void => {
+                    value={moment(userInfo.birthday)}
+                    onChange={(_date: Moment | null, dateString: string): void => {
                       setUserInfo(
                         Object.assign({}, userInfo, {
                           birthday: dateString,
@@ -215,5 +220,5 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   updateUserAction,
-}
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

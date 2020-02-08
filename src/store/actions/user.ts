@@ -22,9 +22,9 @@ export const setUserAction: SetUserActionFuncT = payload => ({
 });
 
 // 需要监听：用于用户信息更新
-export type UpdateUserActionT = ActionI<string, UserFormI>;
+export type UpdateUserActionT = ActionI<string, FormData>;
 export interface UpdateUserActionFuncT {
-  (payload: UserFormI): UpdateUserActionT;
+  (payload: FormData): UpdateUserActionT;
 }
 export const updateUserAction: UpdateUserActionFuncT = payload => ({
   type: types.UPDATE_USER,

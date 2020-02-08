@@ -12,6 +12,12 @@ import { push } from "connected-react-router";
 function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
   try {
     const res = yield call(updateUserInfo, action.payload);
+    console.group("==== formData In Saga ====");
+    action.payload.forEach((value, key) => {
+      console.log("Key: ", key, "  Value: ", value);
+    });
+    console.groupEnd();
+
     yield put({ type: types.SET_USER, payload: res });
   } catch (error) {
     console.error(error);

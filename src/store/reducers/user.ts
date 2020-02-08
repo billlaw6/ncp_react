@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { UserI } from "_constants/interface";
-import { setTokenAction, setUserAction } from "_actions/user";
+import { setTokenAction, setUserAction, updateUserAction } from "_actions/user";
 import * as types from "../action-types";
 
 const defaultToken = "";
@@ -30,9 +30,13 @@ const defaultUser: UserI = {
   birthday: "",
 };
 
-const userReducer = (state = defaultUser, action: ReturnType<typeof setUserAction>): UserI => {
+const userReducer = (
+  state = defaultUser,
+  action: ReturnType<typeof setUserAction> | ReturnType<typeof updateUserAction>,
+): UserI => {
   switch (action.type) {
     case types.SET_USER: {
+      console.log("action payload: ", action.payload as FormData);
       return {
         ...defaultUser,
         ...action.payload,
