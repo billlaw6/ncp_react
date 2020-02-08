@@ -15,8 +15,8 @@ class Oauth extends React.Component<any, any> {
     const obj = qs.parse(query);
     // console.log(obj);
     if (obj.code) {
-      // const res = await weChatLoginUser(obj.code);
-      // setUserAction(res);
+      // 清空旧的token，以免因旧token导致401报错
+      setToken("");
       weChatLoginUser(obj)
         .then(res => {
           // console.log(res.data.user_info);
