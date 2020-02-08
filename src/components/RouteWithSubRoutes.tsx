@@ -29,7 +29,7 @@ class RouteWithSubRoutes extends Component<RoutesI> {
     ) {
       // console.log(persistRoot.currentUser);
     } else {
-      // history.replace("/login");
+      history.replace("/login");
     }
   }
   render(): ReactElement {
