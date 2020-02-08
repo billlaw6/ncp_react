@@ -47,7 +47,10 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
           setShow(false);
           onChecked && onChecked();
         },
-        err => console.error(err),
+        err => {
+          setShow(false);
+          console.error(err);
+        },
       );
       //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
