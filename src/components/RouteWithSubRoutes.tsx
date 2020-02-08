@@ -21,12 +21,7 @@ class RouteWithSubRoutes extends Component<RoutesI> {
   // 二级路由路径需要非exact匹配？从路由配置里取值更灵活
   componentDidMount(): void {
     const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
-    if (
-      persistRoot &&
-      persistRoot.currentUser &&
-      JSON.parse(persistRoot.currentUser).token &&
-      JSON.parse(persistRoot.currentUser).token.length > 2
-    ) {
+    if ( persistRoot && persistRoot.token && JSON.parse(persistRoot.token) > 2) {
       // console.log(persistRoot.currentUser);
     } else {
       history.replace("/login");
