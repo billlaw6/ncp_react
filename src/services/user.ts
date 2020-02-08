@@ -19,7 +19,7 @@ export const getUserInfo = async () => {
 
 // export const updateUserInfo = async (params: UserFormI): Promise<UserI> => {
 export const updateUserInfo = async (params: any) => {
-  const res = await axios.get(`/user/update/`, params);
+  const res = await axios.post(`/user/update/`, params);
   return res;
 };
 

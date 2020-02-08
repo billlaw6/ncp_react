@@ -80,7 +80,8 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
                 disabled={!isEdit}
                 type="file"
                 name="avatar"
-                accept="image/png, image/jpg, image/jpeg, image/gif"
+                // accept="image/png, image/jpg, image/jpeg, image/gif"
+                accept="image/png"
                 onChange={previewAvatar}
               />
               <img src={userInfo.avatar || DEFAULT_AVATAR} alt="avatar" />
@@ -88,7 +89,7 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
             <span onClick={(): void => setIsEdit(true)}>编辑信息</span>
             <div className="profile-form-avatar-desc">
               <span>选择新头像</span>
-              <span>你可以选择PNG/JPG格式的图片作为头像</span>
+              <span>你可以选择PNG格式的图片作为头像</span>
             </div>
           </div>
           <div className="profile-form-info">
@@ -170,7 +171,7 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
             </Item>
             <Item label="手机" colon={false}>
               <Input
-                disabled={!isEdit}
+                disabled={true}
                 type="number"
                 name="cell_phone"
                 value={userInfo.cell_phone}
