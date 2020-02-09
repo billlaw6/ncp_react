@@ -5,6 +5,11 @@ export const getExamIndex = async (params: any) => {
   return res;
 };
 
+export const deleteExamIndex = async (params: string[]) => {
+  const res = await axios.get(`/dicom/exam-index/del/`, { params: params });
+  return res;
+};
+
 export const getExamIndexDetail = async (params: any) => {
   const res = await axios.get(`/dicom/exam-index/${params.id}`, { params: params });
   return res;

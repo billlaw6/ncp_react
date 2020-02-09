@@ -2,7 +2,7 @@ import { call, put, takeEvery } from "redux-saga/effects";
 import { updateUserAction, logoutUserAction } from "_actions/user";
 import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
 import { logoutUser, updateUserInfo } from "_services/user";
-import { getExamIndex } from "_services/dicom";
+import { getExamIndex, deleteExamIndex } from "_services/dicom";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 // import { store } from "../index";
@@ -52,7 +52,8 @@ function* getExamIndexEffect(action: ReturnType<typeof getExamIndexListAction>) 
 
 function* deleteExamIndexEffect(action: ReturnType<typeof deleteExamIndexListAction>) {
   try {
-    const res = yield call(getExamIndex, action.payload);
+    const res = yield call(deleteExamIndex, action.payload);
+    // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
     const defaultExamIndexSearchForm = {};
     yield put({ type: types.GET_EXAM_INDEX_LIST, payload: defaultExamIndexSearchForm });
   } catch (error) {

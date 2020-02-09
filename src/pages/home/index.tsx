@@ -14,7 +14,7 @@ import {
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
-import { getExamIndexListAction } from "_actions/dicom";
+import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
 
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
@@ -336,6 +336,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   delDicom = async (): Promise<void> => {
     const { selections } = this.state;
     console.log("del selected dicom: ", selections);
+    deleteExamIndexListAction(selections);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
