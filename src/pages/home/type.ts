@@ -1,5 +1,5 @@
 import { ExamIndexI, UserI } from "_constants/interface";
-import { getExamIndexListAction } from "_actions/dicom";
+import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
@@ -9,6 +9,7 @@ export interface MapStateToPropsI {
 }
 export interface MapDispatchToPropsI {
   getList: typeof getExamIndexListAction;
+  delList: typeof deleteExamIndexListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;

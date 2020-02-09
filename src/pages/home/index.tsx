@@ -335,8 +335,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
    */
   delDicom = async (): Promise<void> => {
     const { selections } = this.state;
+    const { delList } = this.props;
     console.log("del selected dicom: ", selections);
-    deleteExamIndexListAction(selections);
+    delList(selections);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
@@ -372,5 +373,6 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   getList: getExamIndexListAction,
+  delList: deleteExamIndexListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
