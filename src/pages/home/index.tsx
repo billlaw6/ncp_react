@@ -203,7 +203,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
   getCurrentItem = (): ExamIndexI[] => {
     const { examIndexList } = this.props;
     const { page } = this.state;
-    return examIndexList.slice((page - 1) * DEFAULT_PAGE_SIZE, page * DEFAULT_PAGE_SIZE);
+    return this.sortList(examIndexList).slice(
+      (page - 1) * DEFAULT_PAGE_SIZE,
+      page * DEFAULT_PAGE_SIZE,
+    );
   };
 
   controller = (): ReactElement => {
@@ -340,6 +343,30 @@ class Home extends Component<HomePropsI, HomeStateI> {
     delList(selections);
   };
   /* === APIS 与服务器交互数据的方法 END === */
+
+  /**
+   * 排序列表
+   *
+   * @memberof Home
+   */
+  sortList = (list: ExamIndexI[]): ExamIndexI[] => {
+    const { sortType } = this.state;
+
+    return list.sort((a, b) => {
+      if (sortType === SortTypeEnum.TIME) {
+        const studyDateA = a.study_date;
+        const studyDateB = b.study_date;
+        return studyDateA < studyDateB ? 1 : -1;
+      }
+      if (sortType === SortTypeEnum.TYPE) {
+        const modalityA = a.modality;
+        const modalityB = b.modality;
+        return modalityA < modalityB ? -1 : 1;
+      }
+
+      return 0;
+    });
+  };
 
   render(): ReactElement {
     const { examIndexList, user } = this.props;
