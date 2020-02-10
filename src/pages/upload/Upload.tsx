@@ -30,6 +30,7 @@ const Upload: FunctionComponent = () => {
   const [currentLoad, updateCurrentLoad] = useState<UploadStatusI | undefined>(undefined);
   const [uploadList, updateLoadList] = useState<UploadStatusI[]>([]);
   const [delPrivacy, changeDelPrivacy] = useState(true);
+  const [reupdateMap, setReupdateMap] = useState(new Map<string, FormData>()); // 重新上传的Map
 
   const _updateLoadList = (item: UploadStatusI): void => {
     const { id, status } = item;
@@ -48,7 +49,59 @@ const Upload: FunctionComponent = () => {
     updateCurrentLoad(undefined);
   };
 
-  const reload = (): void => {};
+  const upload = async (formData: FormData, progressInfo: UploadStatusI): Promise<void> => {
+    const { id } = progressInfo;
+    const URL = "http://115.29.148.227:8083/rest-api/dicom/upload/";
+    // const URL = "http://125.29.148.227:8083/rest-api/dicom/upload/";
+    try {
+      await axios.post(URL, formData, {
+        // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        onUploadProgress: function(progressEvent: any) {
+          // console.log("progressEvent: ", progressEvent);
+          const { loaded, total } = progressEvent;
+          updateCurrentLoad(
+            Object.assign({}, progressInfo, {
+              progress: (loaded / total) * 100,
+            }),
+          );
+        },
+      });
+
+      updateCurrentLoad(
+        Object.assign({}, progressInfo, {
+          progress: 100,
+          status: FileProgressStatusEnum.SUCCESS,
+        }),
+      );
+
+      reupdateMap.get(id) && reupdateMap.delete(id);
+    } catch (error) {
+      updateCurrentLoad(
+        Object.assign({}, progressInfo, {
+          status: FileProgressStatusEnum.FAIL,
+        }),
+      );
+      setReupdateMap(reupdateMap.set(id, formData));
+    }
+  };
+
+  const reload = (id: string): void => {
+    const targetLoad = uploadList.find(item => item.id === id);
+    if (!targetLoad) return;
+    const currentFormData = reupdateMap.get(id);
+    if (!currentFormData) return;
+
+    const currentLoadStatus = {
+      ...targetLoad,
+      progress: 0,
+      status: FileProgressStatusEnum.PENDING,
+    };
+    updateCurrentLoad(currentLoadStatus);
+    upload(currentFormData, currentLoadStatus);
+  };
 
   const { getRootProps, getInputProps } = useDropzone({
     onDropAccepted: files => {
@@ -68,39 +121,43 @@ const Upload: FunctionComponent = () => {
           formData.append("file", item);
         });
         formData.append("privacy", delPrivacy ? "1" : "0");
-
-        axios
-          .post("http://115.29.148.227:8083/rest-api/dicom/upload/", formData, {
-            // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-            onUploadProgress: function(progressEvent: any) {
-              console.log("progressEvent: ", progressEvent);
-              const { loaded, total } = progressEvent;
-              updateCurrentLoad(
-                Object.assign({}, progressInfo, {
-                  progress: (loaded / total) * 100,
-                }),
-              );
-            },
-          })
-          .then(result => {
-            // console.log("result: ", uploadList);
-            updateCurrentLoad(
-              Object.assign({}, progressInfo, {
-                progress: 100,
-                status: FileProgressStatusEnum.SUCCESS,
-              }),
-            );
-          })
-          .catch(err => {
-            updateCurrentLoad(
-              Object.assign({}, progressInfo, {
-                status: FileProgressStatusEnum.FAIL,
-              }),
-            );
-          });
+        upload(formData, progressInfo);
+        // axios
+        //   .post("http://115.29.148.227:8083/rest-api/dicom/upload/", formData, {
+        //     // .post(`${axios.defaults.baseURL}dicom/upload/`, formData, {
+        //     headers: {
+        //       "Content-Type": "multipart/form-data",
+        //     },
+        //     onUploadProgress: function(progressEvent: any) {
+        //       console.log("progressEvent: ", progressEvent);
+        //       const { loaded, total } = progressEvent;
+        //       updateCurrentLoad(
+        //         Object.assign({}, progressInfo, {
+        //           progress: (loaded / total) * 100,
+        //         }),
+        //       );
+        //     },
+        //   })
+        //   .then(result => {
+        //     // console.log("result: ", uploadList);
+        //     updateCurrentLoad(
+        //       Object.assign({}, progressInfo, {
+        //         progress: 100,
+        //         status: FileProgressStatusEnum.SUCCESS,
+        //       }),
+        //     );
+        //     if (reupdateMap.get(parseInt(progressInfo.id, 10))) {
+        //       reupdateMap.delete(parseInt(progressInfo.id, 10));
+        //     }
+        //   })
+        //   .catch(err => {
+        //     updateCurrentLoad(
+        //       Object.assign({}, progressInfo, {
+        //         status: FileProgressStatusEnum.FAIL,
+        //       }),
+        //     );
+        //     setReupdateMap(reupdateMap.set(parseInt(progressInfo.id, 10), formData));
+        //   });
       }
     },
   });
@@ -159,7 +216,9 @@ const Upload: FunctionComponent = () => {
       <div className="upload-list">
         {uploadList.map(item => {
           const { id, ...others } = item;
-          return <FileProgress key={id} {...others} onReload={reload}></FileProgress>;
+          return (
+            <FileProgress key={id} {...others} onReload={(): void => reload(id)}></FileProgress>
+          );
         })}
       </div>
     </section>
