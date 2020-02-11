@@ -197,6 +197,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     return (
       <div className="temp-reports">
         <div className="temp-reports-header">我的上报卡</div>
+        <a href="/temp-report">新建体温上报</a>
         <Table
           ref="temp-reports-table"
           rowSelection={rowSelection}

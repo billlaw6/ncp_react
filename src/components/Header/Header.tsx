@@ -41,7 +41,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
 };
 
 const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
-  const { name, empCode, cellPhone, logout } = props
+  const { name, empCode, cellPhone, logout } = props;
 
   return (
     <AntdHeader id="header">

@@ -14,7 +14,7 @@ class RouteWithSubRoutes extends Component<RoutesI & MapStateToPropsI> {
       if (token.length > 0) {
         console.log(token);
       } else {
-        // history.push({ pathname: "/login" });
+        history.push({ pathname: "/login" });
       }
     }
   }
