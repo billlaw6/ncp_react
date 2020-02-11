@@ -18,10 +18,11 @@ const Register: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = prop
 
   const defaultUserRegister = {
     role: 1,
-    cell_phone: "",
-    password: "",
-    password1: "",
-  }
+    cell_phone: "18001163901",
+    name: 'lb',
+    password1: "abc",
+    password2: "abc",
+  };
   const [userRegister, setUserRegister] = useState(defaultUserRegister); // 网页中的用户信息 默认为服务器端用户信息
   const [isEdit, setIsEdit] = useState(true); // 网页中的用户信息 默认为服务器端用户信息
 
@@ -57,6 +58,9 @@ const Register: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = prop
   return (
     <section className="register">
       <div className="register-header">注册用户</div>
+      <div className="register-statement">
+        有工号的职工请直接使用工号<a href="/login">登录</a>，默认密码为111111
+      </div>
       <div className="register-content">
         <form
           className="register-form"
@@ -66,89 +70,52 @@ const Register: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = prop
           method="post"
         >
           <div className="register-form-info">
-            <Row className="register-hoz" gutter={22}>
-              <Col span={12}>
-                <Item label="人员类别" colon={false}>
-                  <Select
-                    dropdownClassName="register-form-gender"
-                    disabled={false}
-                    value={userRegister.role}
-                    onChange={(value: number): void =>
-                      setUserRegister(Object.assign({}, userRegister, { role: value }))
-                    }
-                  >
-                    <Option value={0}>在职职工</Option>
-                    <Option value={1}>外包公司</Option>
-                    <Option value={2}>医辅人员</Option>
-                    <Option value={3}>学生</Option>
-                  </Select>
+            <Item label="手机号码" colon={false}>
+              <Input
+                disabled={false}
+                type="string"
+                name="cell_phone"
+                value={userRegister.cell_phone}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Item label="密码" colon={false}>
+              <Input
+                disabled={false}
+                type="password"
+                name="password1"
+                value={userRegister.password1}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Item label="重复密码" colon={false}>
+              <Input
+                disabled={false}
+                type="password"
+                name="password2"
+                value={userRegister.password2}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Row
+              className="register-form-btns"
+              gutter={35}
+              type="flex"
+              align="middle"
+              justify="center"
+              style={{ visibility: "visible" }}
+            >
+              <Col span={10}>
+                <Item>
                   <Input
-                    style={{ display: "none" }}
-                    type="text"
-                    name="role"
-                    value={userRegister.role}
-                    onChange={updateInputVal}
+                    className="register-form-submit"
+                    type="button"
+                    name="submit"
+                    value="注册"
+                    onClick={onSubmit}
                   ></Input>
                 </Item>
               </Col>
-              <Item label="手机" colon={false}>
-                <Input
-                  disabled={true}
-                  type="string"
-                  name="cell_phone"
-                  value={userRegister.cell_phone}
-                  onInput={updateInputVal}
-                />
-              </Item>
-              <Item label="密码" colon={false}>
-                <Input
-                  disabled={true}
-                  type="password"
-                  name="password"
-                  value={userRegister.password}
-                  onInput={updateInputVal}
-                />
-              </Item>
-              <Item label="重复密码" colon={false}>
-                <Input
-                  disabled={true}
-                  type="string"
-                  name="password1"
-                  value={userRegister.password1}
-                  onInput={updateInputVal}
-                />
-              </Item>
-              <Row
-                className="register-form-btns"
-                gutter={35}
-                type="flex"
-                align="middle"
-                justify="center"
-                style={{ visibility: "visible" }}
-              >
-                <Col span={5}>
-                  <Item>
-                    <Input
-                      className="register-form-cancel"
-                      type="button"
-                      name="cancel"
-                      value="取消"
-                      onClick={onCancel}
-                    ></Input>
-                  </Item>
-                </Col>
-                <Col span={5}>
-                  <Item>
-                    <Input
-                      className="register-form-submit"
-                      type="button"
-                      name="submit"
-                      value="保存"
-                      onClick={onSubmit}
-                    ></Input>
-                  </Item>
-                </Col>
-              </Row>
             </Row>
           </div>
         </form>

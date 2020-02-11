@@ -1,7 +1,12 @@
 import axios from "./api";
 
-export const getTempReport = async () => {
-  const res = await axios.get(`/report/temp/`);
+export const submitTempReport = async (params: any) => {
+  const res = await axios.post(`/report/temp/`, params );
+  return res;
+};
+
+export const getTempReportList = async (params: any) => {
+  const res = await axios.get(`/report/temp/`, { params: params });
   return res;
 };
 

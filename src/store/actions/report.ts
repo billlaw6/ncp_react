@@ -5,7 +5,7 @@ import * as types from "../action-types";
 interface SearchFormI {
   keyword: string;
   dtRange: [Date, Date];
-};
+}
 
 export type GetTempReportListActionT = ActionI<string, SearchFormI>;
 export interface GetTempReportListActionFuncI {

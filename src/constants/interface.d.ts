@@ -32,13 +32,27 @@ export declare interface UserI {
   name: string;
   role: RoleE;
   department: string;
-  duties: DutiesE,
+  duties: DutiesE;
   cell_phone: string;
   gender: GenderE;
   birthday?: string;
   age: number;
   address: string;
   unit?: string;
+  groups?: string[];
+  pinyin?: "";
+  py?: "";
+}
+
+// 科室字典
+export declare interface DepartmentI {
+  code: string;
+  name: string;
+  pinyin: string;
+  py: string;
+  is_active: boolean;
+  created_at: Date;
+  staff: UserI[];
 }
 
 // 体温报告
@@ -74,6 +88,7 @@ export declare interface StoreStateI {
   token: string;
   user: UserI;
   tempReportList: TempReportI[];
+  departmentList: DepartmentI[];
 }
 
 export declare interface CustomHTMLDivElement extends HTMLDivElement {

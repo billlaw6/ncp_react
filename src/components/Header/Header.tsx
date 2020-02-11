@@ -24,7 +24,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
       <MenuItemGroup>
         <ul className="user">
           <li className="user-name">{name || "未登录"}</li>
-          <li className="emp-code">{empCode|| "未登录"}</li>
+          <li className="emp-code">{empCode || "未登录"}</li>
           <li className="user-cell-phone">{cellPhone || "未填写"}</li>
         </ul>
       </MenuItemGroup>
@@ -47,15 +47,13 @@ const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   return (
     <AntdHeader id="header">
       <div className="header-content">
-        <a className="logo" href="/">
-        </a>
-        <Dropdown
+        <a className="logo" href="/"></a>{/* <Dropdown
           className="avatar"
           overlay={getAvatarMenu(props)}
           overlayClassName="avatar-dropdown"
           placement="bottomRight"
         >
-        </Dropdown>
+        </Dropdown> */}
       </div>
     </AntdHeader>
   );

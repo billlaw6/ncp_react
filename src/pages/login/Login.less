@@ -1,138 +1,135 @@
+@primaryColor: #7594ff;
+
 .login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  width: 100%;
-  min-width: 1280px;
-  max-width: 1920px;
-  max-height: 1080px;
-  min-height: 100%;
-  margin: 0 auto;
-
-  &-spinner,
-  &-content {
-    flex-grow: 1;
-    width: 50%;
-    height: 100%;
-  }
-
-  &-spinner {
-    &-item {
-      height: 100%;
-      max-height: 1080px;
-      background-size: cover;
-      background-position: unset;
-    }
-  }
+  width: 80%;
+  margin: 0 auto 40px;
 
   &-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    margin: 0 auto;
+    max-width: 662px;
+
     &-title {
-      position: relative;
+      padding: 28px 0 18px;
       font-size: 22px;
-      margin-bottom: 34px;
-
-      &::after,
-      &::before {
-        display: block;
-        position: absolute;
-        content: "";
-        width: 130px;
-        height: 1px;
-        background-color: #bfbfbf;
-        top: 50%;
-        transform: translateY(-50%);
-      }
-
-      &::after {
-        right: -154px;
-      }
-
-      &::before {
-        left: -154px;
-      }
+      font-weight: 500;
     }
+  }
 
-    &-imgs {
-      position: relative;
-      width: 200px;
-      height: 200px;
-      // display: flex;
-      // align-items: center;
-      // justify-content: center;
-      margin-bottom: 34px;
-      [alt="wechat-scan"] {
-        width: 235px;
-        position: absolute;
-        top: 50%;
-        transform: translate(120px, -50%);
-        right: 0;
-        z-index: 1;
-        transition: transform 400ms, opacity 400ms;
-        opacity: 1;
-      }
+  &-form {
+    &-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 24px;
 
-      & + span {
-        color: #bfbfbf;
-      }
-
-      &.hidden {
-        #wechatQrcode {
-          transform: translate(0, -50%);
-          transition: transform 400ms;
-        }
-
-        [alt="wechat-scan"] {
-          transform: translate(0, -50%);
-          opacity: 0;
-          transition: all 400ms;
+      > span {
+        cursor: pointer;
+        font-weight: 500;
+        &:hover {
+          color: @primaryColor;
         }
       }
     }
-  }
 
-  &-logo {
-    width: 118px;
-    margin-bottom: 34px;
-  }
-
-  .ant-carousel,
-  .slick-slider,
-  .slick-list,
-  .slick-track,
-  .slick-slide div {
-    height: 100%;
-    max-height: 1080px;
-  }
-
-  .slick-dots-bottom {
-    bottom: 66px;
-  }
-  .ant-carousel .slick-dots li {
-    margin: 0 4px;
-    &.slick-active button {
-      width: 66px;
+    &-cancel,
+    &-submit {
+      border-radius: 19px !important;
+      cursor: pointer;
     }
-    button {
-      width: 16px;
-      height: 16px;
-      border-radius: 8px;
-      opacity: 1;
-      // box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+
+    &-cancel {
+      border-color: #bfbfbf !important;
+      color: #bfbfbf !important;
+
+      &:hover {
+        color: #bfbfbf !important;
+        border-color: #bfbfbf !important;
+      }
+    }
+
+    &-submit {
+      border-color: @primaryColor !important;
+      color: @primaryColor !important;
+
+      &:hover {
+        color: #fff !important;
+        background-color: @primaryColor !important;
+      }
+    }
+
+    // &-gender {
+    //   .ant-select-dropdown-menu-item {
+    //     &-active {
+    //       background-color: #fff !important;
+    //     }
+    //     &:hover {
+    //       background-color: #fff !important;
+    //       color: @primaryColor;
+    //     }
+    //   }
+    // }
+
+    &-birthday {
+      width: 100%;
+    }
+    .ant-row {
+      margin-bottom: 8px;
+    }
+
+    label {
+      color: #8c8c8c;
     }
   }
 
-  #wechatQrcode {
+  input {
+    font-size: 14px;
+    color: #595959;
+    font-weight: 500;
+    border-radius: 8px;
+    border-color: #b6b6b6;
+  }
+
+  .ant-input:focus,
+  .ant-input:hover,
+  .ant-select-selection:hover,
+  .ant-select-selection:focus {
+    border-color: @primaryColor;
+  }
+
+  .ant-select-disabled .ant-select-selection,
+  .ant-input-disabled {
+    cursor: default;
+    background: transparent;
+    border-color: #e8e8e8;
+    color: #595959;
+    &:hover {
+      border-color: #e8e8e8;
+    }
+  }
+
+  .ant-select-disabled {
+    .ant-select-selection {
+      background-color: #fff;
+    }
+    .ant-select-arrow {
+      display: none;
+    }
+  }
+
+  &-editing {
+    &.login-form-header > span {
+      display: none;
+    }
+
+    .login-form-avatar-desc {
+      display: flex;
+    }
+  }
+
+  .text-count {
+    display: inline-block;
     position: absolute;
-    top: 50%;
-    left: 0;
-    transform: translate(-120px, -50%);
-    border: none;
-    z-index: 2;
-    transition: transform 400ms;
+    top: -48px;
+    right: 0;
+    color: #bfbfbf;
   }
 }

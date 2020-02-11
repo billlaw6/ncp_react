@@ -14,11 +14,24 @@ export interface MapDispatchToPropsI {
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
 export interface HomeStateI {
+  viewType: ViewTypeEnum; // 视图模式
+  sortType: SortTypeEnum; // 排序规则
   isSelectable: boolean; // 是否是可选择的
   page: number; // 当前在第几页 从1开始
-  selectedRowKeys: []; //当前已选择的id 集
-  loading: false,
+  selections: string[]; //当前已选择的dicom id 集
   redirectReport: boolean; // 是否重定向到report页
+}
+
+// 排序类型
+export enum SortTypeEnum {
+  TIME = "time",
+  TYPE = "type",
+}
+
+// 视图类型
+export enum ViewTypeEnum {
+  GRID = "grid",
+  LIST = "list",
 }
 
 export interface TableDataI {
@@ -32,5 +45,5 @@ export interface TableDataI {
   foreign_flag: number;
   from_where: string;
   created_at: Date;
-  filters: any;
+  // desc: string | ReactElement;
 }

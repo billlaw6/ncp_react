@@ -1,5 +1,16 @@
-import { UserI, ActionI } from "_constants/interface";
+import { UserI, ActionI, DepartmentI } from "_constants/interface";
 import * as types from "../action-types";
+
+
+// 需要监听：用于用户注册
+export type LoginUserActionT = ActionI<string, FormData>;
+export interface LoginUserActionFuncT {
+  (payload: FormData): LoginUserActionT;
+}
+export const loginUserAction: LoginUserActionFuncT = payload => ({
+  type: types.LOGIN_USER,
+  payload,
+});
 
 // 设置后台给的token
 export type SetTokenActionT = ActionI<string, string>;
@@ -51,56 +62,23 @@ export const logoutUserAction: LogoutUserActionFuncT = payload => ({
   payload,
 });
 
-// export type SubmitLoginFormActionT = ActionI<string, LoginFormI>;
-// export interface SubmitLoginFormActionFuncT {
-//   (payload: LoginFormI): SubmitLoginFormActionT;
-// }
-// export const submitLoginFormAction: SubmitLoginFormActionFuncT = payload => ({
-//   type: types.SUBMIT_LOGIN_FORM,
-//   payload,
-// });
+interface SearchFormI {
+  keyword: string;
+}
+export type GetDepartmentListActionT = ActionI<string, SearchFormI>;
+export interface GetDepartmentListActionFuncT {
+  (payload: SearchFormI): GetDepartmentListActionT;
+}
+export const getDepartmentListAction: GetDepartmentListActionFuncT = payload => ({
+  type: types.GET_DEPARTMENT_LIST,
+  payload,
+});
 
-// export type SetUserInfoActionT = ActionI<string, UserI>;
-// export interface SetUserInfoActionFuncT {
-//   (payload: UserI): SetUserInfoActionT;
-// }
-// export const setUserInfoAction: SetUserInfoActionFuncT = payload => ({
-//   type: types.SET_USER_INFO,
-//   payload,
-// });
-
-// export type SetUserListActionT = ActionI<string, UserI[]>;
-// export interface SetUserListActionFuncT {
-//   (payload: UserI[]): SetUserListActionT;
-// }
-// export const setUserListAction: SetUserListActionFuncT = payload => ({
-//   type: types.SET_USER_LIST,
-//   payload,
-// });
-
-// export type UpdateUserInfoActionT = ActionI<string, UserI>;
-// export interface UpdateUserInfoActionFuncT {
-//   (payload: UserI): UpdateUserInfoActionT;
-// }
-// export const updateUserInfoAction: UpdateUserInfoActionFuncT = payload => ({
-//   type: types.UPDATE_USER_INFO,
-//   payload,
-// });
-
-// export type AgreePrivacyNoticeT = ActionI<string, { privacy_notice_id: number }>;
-// export interface AgreePrivacyNoticeActionFuncT {
-//   (payload: { privacy_notice_id: number }): AgreePrivacyNoticeT;
-// }
-// export const agreePrivacyNoticeAction: AgreePrivacyNoticeActionFuncT = payload => ({
-//   type: types.AGREE_PRIVACY_NOTICE,
-//   payload,
-// });
-
-// export type SetWeChatCodeActionT = ActionI<string, string>;
-// export interface SetWeChatCodeActionFuncI {
-//   (payload: string): SetWeChatCodeActionT;
-// }
-// export const setWeChatCodeAction: SetWeChatCodeActionFuncI = payload => ({
-//   type: types.SET_WECHAT_CODE,
-//   payload,
-// });
+export type SetDepartmentListActionT = ActionI<string, DepartmentI[]>;
+export interface SetDepartmentListActionFuncT {
+  (payload: DepartmentI[]): SetDepartmentListActionT;
+}
+export const setDepartmentListAction: SetDepartmentListActionFuncT = payload => ({
+  type: types.SET_DEPARTMENT_LIST,
+  payload,
+});

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
-import { UserI } from "_constants/interface";
-import { setTokenAction, setUserAction, updateUserAction } from "_actions/user";
+import { UserI, DepartmentI } from "_constants/interface";
+import { setTokenAction, setUserAction, updateUserAction, setDepartmentListAction } from "_actions/user";
 import * as types from "../action-types";
 
 const defaultToken = "";
@@ -36,7 +36,7 @@ const userReducer = (
 ): UserI => {
   switch (action.type) {
     case types.SET_USER: {
-      console.log("action payload: ", action.payload as FormData);
+      // console.log("action payload: ", action.payload as FormData);
       return {
         ...defaultUser,
         ...action.payload,
@@ -48,4 +48,20 @@ const userReducer = (
   }
 };
 
-export { tokenReducer, userReducer };
+const defaultDepartmentList: DepartmentI[] = [];
+
+const departmentListReducer = (
+  state = defaultDepartmentList,
+  action: ReturnType<typeof setDepartmentListAction>,
+): DepartmentI[] => {
+  switch (action.type) {
+    case types.SET_DEPARTMENT_LIST: {
+      return action.payload;
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
+export { tokenReducer, userReducer, departmentListReducer };

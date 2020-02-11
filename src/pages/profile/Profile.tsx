@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useRef } from "react";
+import React, { FunctionComponent, useEffect, useState, useRef } from "react";
 import { Form, Input, Row, Col, Select, DatePicker } from "antd";
 import moment, { Moment } from "moment";
 import { connect, MapDispatchToProps } from "react-redux";
@@ -7,18 +7,23 @@ import { StoreStateI } from "_constants/interface";
 import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
 
 import "./Profile.less";
-import DEFAULT_AVATAR from "_images/avatar.png";
-import { updateUserAction } from "_actions/user";
+import { getDepartmentListAction, updateUserAction } from "_actions/user";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
-  const { user, updateUserAction } = props;
+  const { user, departmentList, getDepartmentList, updateUser } = props;
   const $form = useRef<HTMLFormElement>(null);
 
   const [userInfo, setUserInfo] = useState(user); // 网页中的用户信息 默认为服务器端用户信息
   const [isEdit, setIsEdit] = useState(false); // 是否是编辑模式
+
+  useEffect(() => {
+    console.log("profile mounted");
+    // console.log(user);
+    getDepartmentList({ keyword: "" });
+  }, []);
 
   // 取消修改
   const onCancel = (): void => {
@@ -32,36 +37,23 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
     /* ======== 此处添加update User Info action == START ======== */
     //  将 [formData] 作为 data
     /* ======== 此处添加update User Info action == END ======== */
-    // console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
-    // formData.forEach((value, key) => {
-    //   console.log(" Key: ", key, "  value: ", value);
-    // });
+    console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
+    formData.forEach((value, key) => {
+      console.log(" Key: ", key, "  value: ", value);
+    });
     // console.groupEnd();
-
-    updateUserAction(formData);
+    // console.log(formData.get('id'));
+    updateUser(formData);
     setIsEdit(false);
-  };
-
-  const previewAvatar = (e: React.FormEvent<HTMLInputElement>): void => {
-    const $el = e.currentTarget;
-    const { files } = $el;
-    if (!files) return;
-
-    const avatarData = files[0];
-    if (!avatarData) return;
-    const url = URL.createObjectURL(avatarData);
-    setUserInfo(Object.assign({}, userInfo, { avatar: url }));
   };
 
   // 更新页面中的用户信息
   const updateInputVal = (e: React.FormEvent<HTMLInputElement>): void => {
     const $el = e.currentTarget;
     const { name, value } = $el;
-    if (name === "sign" && value.length > 30) return;
+    if (name === "emp_code" && value.length !== 5) return;
     setUserInfo(Object.assign({}, userInfo, { [name]: value }));
   };
-
-  // console.log("user: ", user);
 
   return (
     <section className="profile">
@@ -87,125 +79,157 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
                 onInput={updateInputVal}
               />
             </Item>
-            <Row className="profile-hoz" gutter={22}>
-              <Col span={12}>
-                <Item label="性别" colon={false}>
-                  <Select
-                    dropdownClassName="profile-form-gender"
-                    disabled={!isEdit}
-                    value={userInfo.gender}
-                    onChange={(value: number): void =>
-                      setUserInfo(Object.assign({}, userInfo, { gender: value }))
-                    }
-                  >
-                    <Option value={0}>保密</Option>
-                    <Option value={1}>男</Option>
-                    <Option value={2}>女</Option>
-                  </Select>
-                  <Input
-                    style={{ display: "none" }}
-                    type="text"
-                    name="gender"
-                    value={userInfo.gender}
-                    onChange={updateInputVal}
-                  ></Input>
-                </Item>
-              </Col>
-              <Col span={12}>
-                <Input
-                  type="number"
-                  name="age"
-                  value={userInfo.age}
-                  onInput={updateInputVal}
-                ></Input>
-              </Col>
-            </Row>
-            <Row className="profile-hoz" gutter={22}>
-              <Col span={12}>
-                <Item label="人员类别" colon={false}>
-                  <Select
-                    dropdownClassName="profile-form-gender"
-                    disabled={!isEdit}
-                    value={userInfo.role}
-                    onChange={(value: number): void =>
-                      setUserInfo(Object.assign({}, userInfo, { role: value }))
-                    }
-                  >
-                    <Option value={0}>在职职工</Option>
-                    <Option value={1}>外包公司</Option>
-                    <Option value={2}>医辅人员</Option>
-                    <Option value={3}>学生</Option>
-                  </Select>
-                  <Input
-                    style={{ display: "none" }}
-                    type="text"
-                    name="role"
-                    value={userInfo.role}
-                    onChange={updateInputVal}
-                  ></Input>
-                </Item>
-              </Col>
-              <Item label="地址" colon={false}>
-                <Input
-                  disabled={!isEdit}
-                  type="text"
-                  name="address"
-                  value={userInfo.address}
-                  onInput={updateInputVal}
-                />
-              </Item>
-              <Item label="手机" colon={false}>
-                <Input
-                  disabled={true}
-                  type="number"
-                  name="cell_phone"
-                  value={userInfo.cell_phone}
-                  onInput={updateInputVal}
-                />
-              </Item>
-              <Row
-                className="profile-form-btns"
-                gutter={35}
-                type="flex"
-                align="middle"
-                justify="center"
-                style={{ visibility: isEdit ? "visible" : "hidden" }}
+            <Item label="性别" colon={false}>
+              <Select
+                disabled={!isEdit}
+                defaultValue={userInfo.gender}
+                onChange={(value: number): void =>
+                  setUserInfo(Object.assign({}, userInfo, { gender: value }))
+                }
               >
-                <Col span={5}>
-                  <Item>
-                    <Input
-                      className="profile-form-cancel"
-                      type="button"
-                      name="cancel"
-                      value="取消"
-                      onClick={onCancel}
-                    ></Input>
-                  </Item>
-                </Col>
-                <Col span={5}>
-                  <Item>
-                    <Input
-                      className="profile-form-submit"
-                      type="button"
-                      name="submit"
-                      value="保存"
-                      onClick={onSubmit}
-                    ></Input>
-                  </Item>
-                </Col>
-              </Row>
+                <Option value={0}>保密</Option>
+                <Option value={1}>男</Option>
+                <Option value={2}>女</Option>
+              </Select>
+              <Input
+                style={{ display: 'none' }}
+                disabled={!isEdit}
+                type="text"
+                name="gender"
+                value={userInfo.gender}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Item label="年龄" colon={false}>
+              <Input
+                disabled={!isEdit}
+                type="number"
+                name="age"
+                value={userInfo.age}
+                onInput={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="人员类别" colon={false}>
+              <Select
+                disabled={!isEdit}
+                dropdownClassName="profile-form-gender"
+                value={userInfo.role}
+                onChange={(value: number): void =>
+                  setUserInfo(Object.assign({}, userInfo, { role: value }))
+                }
+              >
+                <Option value={0}>在职职工</Option>
+                <Option value={1}>外包公司</Option>
+                <Option value={2}>医辅人员</Option>
+                <Option value={3}>学生</Option>
+              </Select>
+              <Input
+                style={{ display: "none" }}
+                type="text"
+                name="role"
+                disabled={!isEdit}
+                value={userInfo.role}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="所在科室"
+              style={{ display: userInfo.role === 0 ? 'block' : 'none' }}
+              colon={false}>
+              <Select
+                disabled={!isEdit}
+                showSearch
+                defaultValue={userInfo.department}
+                onChange={(value: string): void =>
+                  setUserInfo(Object.assign({}, userInfo, { department: value }))
+                }
+                filterOption={(input, option) => {
+                  // console.log(option.props.title);
+                  if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                    return true;
+                  } else {
+                    return false;
+                  }
+                }
+                }
+              >
+                {departmentList.map((item) => {
+                  return (
+                    <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                  )
+                })}
+              </Select>
+              <Input
+                style={{ display: "none" }}
+                disabled={!isEdit}
+                type="text"
+                name="department"
+                value={userInfo.department}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="地址" colon={false}>
+              <Input
+                disabled={!isEdit}
+                type="text"
+                name="address"
+                value={userInfo.address}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Item label="手机" colon={false}>
+              <Input
+                disabled={!isEdit}
+                type="number"
+                name="cell_phone"
+                value={userInfo.cell_phone}
+                onInput={updateInputVal}
+              />
+            </Item>
+            <Row
+              className="profile-form-btns"
+              gutter={35}
+              type="flex"
+              align="middle"
+              justify="center"
+              style={{ visibility: isEdit ? "visible" : "hidden" }}
+            >
+              <Col span={5}>
+                <Item>
+                  <Input
+                    className="profile-form-cancel"
+                    type="button"
+                    name="cancel"
+                    value="取消"
+                    onClick={onCancel}
+                  ></Input>
+                </Item>
+              </Col>
+              <Col span={5}>
+                <Item>
+                  <Input
+                    className="profile-form-submit"
+                    type="button"
+                    name="submit"
+                    value="保存"
+                    onClick={onSubmit}
+                  ></Input>
+                </Item>
+              </Col>
             </Row>
           </div>
         </form>
       </div>
-    </section>
+    </section >
   );
 };
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
+  departmentList: state.departmentList,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  updateUserAction,
+  getDepartmentList: getDepartmentListAction,
+  updateUser: updateUserAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

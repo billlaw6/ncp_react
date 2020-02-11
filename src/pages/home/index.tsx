@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
-import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
+import { Button, Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
+// import ReactHTMLTableToExcel from "react-html-table-to-excel";
 import { StoreStateI, TempReportI } from "_constants/interface";
 
 import {
   MapStateToPropsI,
   HomePropsI,
   HomeStateI,
-  ViewTypeEnum,
-  SortTypeEnum,
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
@@ -30,54 +29,165 @@ class Home extends Component<HomePropsI, HomeStateI> {
     super(props);
 
     this.state = {
-      viewType: ViewTypeEnum.GRID,
-      sortType: SortTypeEnum.TIME,
       isSelectable: false,
       page: 1,
-      selections: [],
-      redirectUpload: false,
+      selectedRowKeys: [],
+      loading: false,
+      redirectReport: false,
     };
   }
 
   componentDidMount(): void {
-    const { getList } = this.props;
+    const { tempReportList, getList } = this.props;
     getList && getList({ dtRange: [new Date(), new Date()], keyword: "" });
   }
 
-  list = (): ReactElement | undefined => {
-    const { selections, isSelectable, page } = this.state;
-    const columns: ColumnProps<TableDataI>[] = [
-      { title: "人员类别", dataIndex: "role" },
+  onSelectChange = (selectedRowKeys: any) => {
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    this.setState({ selectedRowKeys })
+  }
+
+  handleDownloadClick = () => {
+    console.log('donwload clicked');
+  }
+
+  render(): ReactElement {
+    const { loading, selectedRowKeys, isSelectable, page } = this.state;
+    const rowSelection = {
+      selectedRowKeys,
+      onChange: this.onSelectChange,
+    }
+    const hasSelected = selectedRowKeys.length > 0;
+    const columns: any = [
+      {
+        title: "人员类别",
+        dataIndex: "role",
+        key: 'role',
+        filters: [
+          {
+            text: "在职职工",
+            value: 0,
+          },
+          {
+            text: "外包公司",
+            value: 1,
+          },
+          {
+            text: "医辅人员",
+            value: 2,
+          },
+          {
+            text: "学生",
+            value: 3,
+          },
+        ],
+        onFilter: (value: number, record: any) => record.role == value,
+        render: (value: string) => {
+          const roleDict = ['在职职工', '外包公司', '医辅人员', '学生',]
+          const index = Number(value);
+          return <span>{roleDict[index]}</span>
+        }
+      },
       {
         title: "姓名",
         dataIndex: "name",
-        render: (text: string, record): ReactElement | string => {
+        key: 'name',
+        render: (text: string, record: any): ReactElement | string => {
           const { id } = record;
-          return isSelectable ? (
-            <>
-              <Checkbox value={id} checked={selections.indexOf(id) > -1}></Checkbox>
+          return (
+            <span>
               <span>{text}</span>
-            </>
-          ) : (
-            text
-          );
+            </span>
+          )
         },
       },
-      { title: "工号", dataIndex: "emp_code" },
-      { title: "所在部门", dataIndex: "department" },
-      { title: "是否发热", dataIndex: "is_fever" },
-      { title: "体温", dataIndex: "temperature" },
-      { title: "是否离京", dataIndex: "foreign_flag" },
-      { title: "从哪归来", dataIndex: "from_where" },
+      {
+        title: "工号",
+        dataIndex: "emp_code",
+        key: "emp_code"
+      },
+      {
+        title: "所在部门",
+        dataIndex: "department",
+        key: "department",
+        sorter: (a: any, b: any) => a.department - b.department,
+      },
+      {
+        title: "是否发热",
+        dataIndex: "is_fever",
+        key: "is_fever",
+        filters: [
+          {
+            text: "不发热",
+            value: 0,
+          },
+          {
+            text: "发热",
+            value: 1,
+          },
+        ],
+        onFilter: (value: number, record: any) => record.is_fever == value,
+        render: (value: number) => {
+          const color = value ? "red" : "green";
+          const fever = value ? "是" : "否";
+          return <span style={{ color: color }}> {fever}</span >
+        },
+      },
+      {
+        title: "体温",
+        dataIndex: "temperature",
+        key: "temperature",
+        render: (value: number) => {
+          const color = value > 37.2 ? "red" : "green";
+          const temprature = value > 37.2 ? value : "";
+          return <span style={{ color: color }}> {value}</span >
+        },
+        sorter: (a: any, b: any) => a.temperature - b.temperature,
+      },
+      {
+        title: "是否离京",
+        dataIndex: "foreign_flag",
+        key: "foreign_flag",
+        filters: [
+          {
+            text: "未离京",
+            value: 0,
+          },
+          {
+            text: "离京归来",
+            value: 1,
+          },
+        ],
+        onFilter: (value: number, record: any) => record.foreign_flag == value,
+        render: (value: number) => {
+          const color = value ? "red" : "green";
+          const foreign = value ? "是" : "否";
+          return <span style={{ color: color }}> {foreign}</span >
+        },
+      },
+      {
+        title: "从哪归来",
+        dataIndex: "from_where",
+        key: "from_where",
+      },
+      {
+        title: "上报日期",
+        dataIndex: "created_at",
+        key: "created_at",
+        render: (value: string) => {
+          const dt = value.substr(0, 10);
+          return <span> {dt} </span >
+        },
+        sorter: (a: any, b: any) => a.created_at - b.created_at,
+      },
     ];
 
-    const dataSource: TableDataI[] = [];
-    const renderList = this.getCurrentItem();
+    const dataSource: any = this.props.tempReportList;
 
     const paginationConfig: PaginationConfig = {
       current: page,
       defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: renderList.length,
+      total: dataSource.length,
       hideOnSinglePage: true,
       onChange: (page): void => {
         this.setState({ page });
@@ -85,153 +195,44 @@ class Home extends Component<HomePropsI, HomeStateI> {
     };
 
     return (
-      <Table
-        className="dicom-list dicom-list-table"
-        rowKey={"id"}
-        columns={columns}
-        dataSource={dataSource}
-        pagination={paginationConfig}
-        onRow={(record): TableEventListeners => {
-          return {
-            onClick: (): void => {
-              this.onClickItem(record.id);
-            },
-          };
-        }}
-      ></Table>
-    );
-  };
+      <div className="temp-reports">
+        <div className="temp-reports-header">我的上报卡</div>
+        <Table
+          ref="temp-reports-table"
+          rowSelection={rowSelection}
+          className="temp-report-list temp-report-list-table"
+          rowKey={"id"}
+          columns={columns}
+          dataSource={dataSource}
+          // dataSource={tempReportList}
+          pagination={paginationConfig}
+          onRow={(record): TableEventListeners => {
+            return {
+              onClick: (): void => {
+                // this.onClickItem(record.id);
+              },
+            };
+          }}
+        ></Table>
 
-  dicoms = (): ReactElement | undefined => {
-    const { page, isSelectable, selections } = this.state;
-    const renderList = this.getCurrentItem();
+        <Button
+          style={{
+            margin: '15px',
+            float: 'right',
+          }}
+          onClick={this.handleDownloadClick}>
+          下载全部数据到Excel文件
+          </Button>
 
-    if (renderList && renderList.length) {
-      const rows: ReactElement[] = [];
-      let cols: ReactElement[] = [];
-      const gutter: [Gutter, Gutter] = [
-        { xs: 8, sm: 16, md: 24 },
-        { xs: 20, sm: 30, md: 40 },
-      ];
-
-      let count = 0;
-
-      renderList.forEach(item => {
-        const { id, name, emp_code, role, is_fever, temperature, foreign_flag, from_where } = item;
-        if (count >= 4) {
-          count = 0;
-          rows.push(
-            <Row key={rows.length} type="flex" gutter={gutter} align="middle">
-              {cols}
-            </Row>,
-          );
-          cols = [];
-        }
-
-        cols.push(
-          <Col key={id} xs={24} md={12} lg={8} xl={6}>
-          </Col>,
-        );
-      });
-
-      rows.push(
-        <Row key={rows.length} type="flex" gutter={gutter} align="top">
-          {cols}
-        </Row>,
-      );
-
-      return (
-        <div className="dicom-list dicom-list-square">
-          {rows}
-          <Pagination
-            hideOnSinglePage={true}
-            current={page}
-            defaultPageSize={DEFAULT_PAGE_SIZE}
-            total={renderList.length}
-            onChange={(page): void => {
-              this.setState({ page });
-            }}
-          ></Pagination>
-        </div>
-      );
-    }
-  };
-
-  onClickItem = (id: string): void => {
-    const { history, tempReportList } = this.props;
-    const { isSelectable, selections } = this.state;
-
-    if (isSelectable) {
-      const nextSelections = selections.filter(item => item !== id);
-      if (nextSelections.length === selections.length) {
-        nextSelections.push(id);
-      }
-      this.setState({ selections: nextSelections });
-    } else {
-      const currentReport = tempReportList.find(item => item.id === id);
-      if (currentReport) {
-        const { id } = currentReport;
-      }
-    }
-  };
-
-  getCurrentItem = (): TempReportI[] => {
-    const { tempReportList } = this.props;
-    const { page } = this.state;
-    return this.sortList(tempReportList).slice(
-      (page - 1) * DEFAULT_PAGE_SIZE,
-      page * DEFAULT_PAGE_SIZE,
-    );
-  };
-
-  controller = (): ReactElement => {
-    const { tempReportList } = this.props;
-    const { isSelectable, viewType } = this.state;
-    return (
-      <div id="controller" className={`controller`}>
-        <div className="controller-left">
-          <span className="controller-title">报告列表</span>
-          <LinkButton className="controller-upload" to="/temp-report" icon="cloud-upload">
-            填报
-          </LinkButton>
-          <div className={`controller-del ${isSelectable ? "controller-del-open" : ""}`}>
-            <Icon
-              className="iconfont"
-              type={isSelectable ? "arrow-left" : "delete"}
-              onClick={(): void => this.setState({ isSelectable: !isSelectable, selections: [] })}
-            />
-            <span onClick={this.selectedAll}>全选</span>
-            <span onClick={this.showConfirm}>审核</span>
-          </div>
-        </div>
-        <div className={`controller-right ${tempReportList.length ? "" : "hidden"}`}>
-          <Dropdown overlay={this.dropdownContent()} placement="bottomRight">
-            <Icon className="controller-select-sort iconfont" type="sort-ascending" />
-          </Dropdown>
-          <Icon
-            className="controller-select-view iconfont"
-            type={viewType === ViewTypeEnum.GRID ? "menu" : "appstore"}
-            onClick={this.changeViewType}
-          />
-        </div>
+        {/* <ReactHTMLTableToExcel
+          id = "export-table-xls-button"
+          className="download-excel-button"
+          table="table-to-xls"
+          filename={"体温报告" + 123}
+          sheet={"体温报告" + 123}
+          buttonText="导出表格到Excel"/> */}
       </div>
     );
-  };
-
-  selectedAll = (): void => {
-    const currentItems = this.getCurrentItem();
-    this.setState({
-      selections:
-        currentItems.length === this.state.selections.length
-          ? []
-          : currentItems.map(item => item.id),
-    });
-  };
-
-  changeViewType = (): void => {
-    const nextType =
-      this.state.viewType === ViewTypeEnum.GRID ? ViewTypeEnum.LIST : ViewTypeEnum.GRID;
-    this.setState({ viewType: nextType });
   };
 
   showConfirm = (): void => {
@@ -243,129 +244,38 @@ class Home extends Component<HomePropsI, HomeStateI> {
       cancelText: "取消",
       okText: "确定",
       onOk: async (): Promise<void> => {
-        await this.delDicom();
+        await this.checkTempReport();
         this.setState({
           isSelectable: false,
-          selections: [],
+          selectedRowKeys: [],
         });
       },
       onCancel: (): void => {
         this.setState({
           isSelectable: false,
-          selections: [],
+          selectedRowKeys: [],
         });
       },
     });
   };
 
-  /**
-   * 返回列表排序的内容部分
-   *
-   * @memberof Home
-   */
-  dropdownContent = (): ReactElement => {
-    const { sortType } = this.state;
-    return (
-      <Menu
-        className="home-dicom-sort"
-        onClick={(data): void => {
-          this.setState({ sortType: data.key as SortTypeEnum });
-        }}
-      >
-        <Menu.Item disabled={sortType === SortTypeEnum.TIME} key={SortTypeEnum.TIME}>
-          时间排序
-        </Menu.Item>
-        <Menu.Item disabled={sortType === SortTypeEnum.TYPE} key={SortTypeEnum.TYPE}>
-          人员类别排序
-        </Menu.Item>
-      </Menu>
-    );
-  };
-
-  /**
-   * 当确认隐私后 如果没有影响列表 跳转到upload界面
-   *
-   * @memberof Home
-   */
-  onChecked = (): void => {
-    const { tempReportList } = this.props;
-    if (!tempReportList.length) this.setState({ redirectUpload: true });
-  };
-
   /* === APIS 与服务器交互数据的方法 START === */
 
   /**
-   * 更新指定dicom的desc
-   *
-   * @param {string} id dicom id
-   * @param {string} value 更新的desc
+   * 审核所选报告
    *
    * @memberof Home
    */
-  updateDesc = (id: string, value: string): void => {
-    console.log("update desc ", id, value);
-  };
-
-  /**
-   * 审核所选dicom
-   *
-   * @memberof Home
-   */
-  delDicom = async (): Promise<void> => {
-    const { selections } = this.state;
+  checkTempReport = async (): Promise<void> => {
+    const { selectedRowKeys } = this.state;
     const { checkList } = this.props;
-    console.log("check selected reports: ", selections);
-    checkList(selections);
+    console.log("check selected reports: ", selectedRowKeys);
+    checkList(selectedRowKeys);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
-  /**
-   * 排序列表
-   *
-   * @memberof Home
-   */
-  sortList = (list: TempReportI[]): TempReportI[] => {
-    const { sortType } = this.state;
-
-    return list.sort((a, b) => {
-      if (sortType === SortTypeEnum.TIME) {
-        const createdAtA = a.created_at;
-        const createdAtB = b.created_at;
-        return createdAtA < createdAtB ? 1 : -1;
-      }
-      if (sortType === SortTypeEnum.TYPE) {
-        const roleA = a.role;
-        const roleB = b.role;
-        return roleA < roleB ? -1 : 1;
-      }
-
-      return 0;
-    });
-  };
-
-  render(): ReactElement {
-    const { tempReportList, user } = this.props;
-    const { viewType, redirectUpload } = this.state;
-
-    if (redirectUpload) return <Redirect to="/upload" />;
-    else
-      return (
-        <section className="home">
-          {this.controller()}
-          {tempReportList.length ? (
-            viewType === ViewTypeEnum.GRID ? (
-              this.dicoms()
-            ) : (
-              this.list()
-            )
-          ) : (
-            <div className="home-empty">
-            </div>
-          )}
-        </section>
-      );
-  }
 }
+
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   tempReportList: state.tempReportList,

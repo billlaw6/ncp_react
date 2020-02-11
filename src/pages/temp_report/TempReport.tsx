@@ -8,12 +8,15 @@ import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
 
 import "./TempReport.less";
 import { RadioChangeEvent } from "antd/lib/radio";
+import { history } from "../../store/configureStore";
+
+import { submitTempReport } from "_services/report";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
-  const { user } = props;
+  const { user, departmentList } = props;
   const $form = useRef<HTMLFormElement>(null);
 
   const defaultTempReport = {
@@ -24,7 +27,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
     temperature: 37.2,
     foreign_flag: 0,
     from_where: "",
-  }
+  };
   const [tempReport, setTempReport] = useState(defaultTempReport); // 网页中的用户信息 默认为服务器端用户信息
   const [isEdit, setIsEdit] = useState(false); // 是否是编辑模式
   const [displayTemperature, setDisplayTemperature] = useState(false); // 是否显示体温录入框
@@ -47,11 +50,15 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
       console.log(" Key: ", key, "  value: ", value);
     });
     console.groupEnd();
+    submitTempReport(formData).then((res) => {
+      history.push("/");
+    }).catch((err) => {
+      console.log(err);
+    });
 
     // setIsEdit(false);
   };
 
-  // 更新页面中的用户信息
   const updateInputVal = (e: React.FormEvent<HTMLInputElement>): void => {
     const $el = e.currentTarget;
     const { name, value } = $el;
@@ -73,7 +80,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
           <div className="temp-report-form-info">
             <Item label="姓名" colon={false}>
               <Input
-                disabled={false}
+                disabled={true}
                 type="text"
                 name="name"
                 value={tempReport.name}
@@ -82,73 +89,103 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
             </Item>
             <Item label="员工编码" colon={false}>
               <Input
-                disabled={false}
+                disabled={true}
                 type="text"
                 name="emp_code"
                 value={tempReport.emp_code}
                 onInput={updateInputVal}
               />
             </Item>
-            <Item label="所属科室" colon={false}>
-              <Input
-                disabled={false}
-                type="text"
-                name="department"
-                value={tempReport.department}
-                onInput={updateInputVal}
-              />
-            </Item>
-            <Row className="temp-report-hoz" gutter={22}>
-              <Col span={12}>
-                <Item label="是否发热" colon={false}>
-                  <Radio.Group
-                    className="temp-report-form-gender"
-                    disabled={!isEdit}
-                    value={tempReport.is_fever}
-                    onChange={(e: RadioChangeEvent): void => {
-                      // setTempReport(Object.assign({}, tempReport, { is_fever: e.value }));
-                      console.log(e);
-                    }
-                    }
-                  >
-                    <Radio value={0}>
-                      未发热
-                    </Radio>
-                    <Radio value={1}>
-                      发热
-                    </Radio>
-                  </Radio.Group>
-                  <Input
-                    style={{ display: displayTemperature ? 'block' : 'none' }}
-                    type="number"
-                    name="temperature"
-                    value={tempReport.temperature}
-                    onChange={updateInputVal}
-                  ></Input>
-                </Item>
-              </Col>
-            </Row>
-            <Item label="是否离京" colon={false}>
-              <Radio.Group
-                className="temp-report-form-gender"
-                disabled={!isEdit}
-                value={tempReport.foreign_flag}
-                onChange={(e: RadioChangeEvent): void => {
-                  // setTempReport(Object.assign({}, tempReport, { is_fever: e.value }));
-                  console.log(e);
+            <Item label="所在科室" colon={false}>
+              <Select
+                disabled={true}
+                showSearch
+                defaultValue={tempReport.department}
+                onChange={(value: string): void =>
+                  setTempReport(Object.assign({}, tempReport, { department: value }))
+                }
+                filterOption={(input, option) => {
+                  // console.log(option.props.title);
+                  if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                    return true;
+                  } else {
+                    return false;
+                  }
                 }
                 }
               >
-                <Radio value={0}>
-                  未离京
-                    </Radio>
-                <Radio value={1}>
-                  离京归来
-                    </Radio>
+                {departmentList.map((item) => {
+                  return (
+                    <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                  )
+                })}
+              </Select>
+              <Input
+                style={{ display: "none" }}
+                disabled={true}
+                type="text"
+                name="department"
+                value={tempReport.department}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="是否发热" colon={false}>
+              <Radio.Group
+                className="temp-report-form-gender"
+                disabled={false}
+                value={tempReport.is_fever}
+                onChange={(e: RadioChangeEvent): void => {
+                  // console.log(e.target.value);
+                  setTempReport(Object.assign({}, tempReport, { is_fever: e.target.value }))
+                }}
+              >
+                <Radio value={0}>未发热</Radio>
+                <Radio value={1}>发热</Radio>
               </Radio.Group>
               <Input
-                style={{ display: displayFromWhere ? 'block' : 'none' }}
+                style={{ display: "none" }}
                 type="text"
+                name="is_fever"
+                value={tempReport.is_fever}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="具体温度" style={{ display: tempReport.is_fever ? "block" : "none" }} colon={false}>
+              <Input
+                type="number"
+                name="temperature"
+                disabled={tempReport.is_fever ? false: true}
+                step="0.1"
+                value={tempReport.temperature}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="是否离京" colon={false}>
+              <Radio.Group
+                className="temp-report-form-gender"
+                disabled={false}
+                value={tempReport.foreign_flag}
+                onChange={(e: RadioChangeEvent): void => {
+                  setTempReport(Object.assign({}, tempReport, { foreign_flag: e.target.value }));
+                  // console.log(e);
+                }}
+              >
+                <Radio value={0}>未离京</Radio>
+                <Radio value={1}>离京归来</Radio>
+              </Radio.Group>
+              <Input
+                style={{ display: "none" }}
+                type="text"
+                name="foreign_flag"
+                value={tempReport.is_fever}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item label="从何处归来" style={{ display: tempReport.foreign_flag ? "block" : "none" }} colon={false}>
+              <Input
+                type="text"
+                disabled={tempReport.foreign_flag ? false : true }
                 name="from_where"
                 value={tempReport.from_where}
                 onChange={updateInputVal}
@@ -160,9 +197,9 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
               type="flex"
               align="middle"
               justify="center"
-              style={{ visibility: isEdit ? "visible" : "hidden" }}
+              style={{ visibility: "visible" }}
             >
-              <Col span={5}>
+              <Col span={10}>
                 <Item>
                   <Input
                     className="temp-report-form-cancel"
@@ -173,13 +210,13 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                   ></Input>
                 </Item>
               </Col>
-              <Col span={5}>
+              <Col span={10}>
                 <Item>
                   <Input
                     className="temp-report-form-submit"
                     type="button"
                     name="submit"
-                    value="保存"
+                    value="提交"
                     onClick={onSubmit}
                   ></Input>
                 </Item>
@@ -194,6 +231,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
+  departmentList: state.departmentList,
 });
 // const mapDispatchToProps: MapDispatchToPropsI = {
 // };

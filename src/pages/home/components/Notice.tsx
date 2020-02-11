@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import React, { FunctionComponent, useState, useEffect } from "react";
 import { Modal, Button, Checkbox } from "antd";
-import { getPrivacyNotice, agreePrivacyNotice } from "_services/user";
 // import { connect } from "react-redux";
 // import { StoreStateI } from "_constants/interface";
 // import { MapStateToPropsI } from "./type";
@@ -22,16 +21,16 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
   useEffect(() => {
     // axios
     //   .get("http://115.29.148.227:8083/rest-api/user/privacy-notice/")
-    getPrivacyNotice()
-      .then(result => {
-        const { id, content } = result.data;
-        console.log(id);
-        if (id) setPrivacyNotice(id);
-        // 在useEffect外才能看见结果
-        // console.log(privacyNotice);
-        if (content) setPrivacyNoticeContent(content);
-      })
-      .catch(error => console.error(error));
+    // getPrivacyNotice()
+    //   .then(result => {
+    //     const { id, content } = result.data;
+    //     console.log(id);
+    //     if (id) setPrivacyNotice(id);
+    //     // 在useEffect外才能看见结果
+    //     // console.log(privacyNotice);
+    //     if (content) setPrivacyNoticeContent(content);
+    //   })
+    //   .catch(error => console.error(error));
   }, []);
 
   // 更新用户隐私声明
@@ -42,16 +41,16 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       // something
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
       console.log(privacyNotice);
-      agreePrivacyNotice({ duties_id: privacyNotice }).then(
-        (): void => {
-          setShow(false);
-          onChecked && onChecked();
-        },
-        err => {
-          setShow(false);
-          console.error(err);
-        },
-      );
+      // agreePrivacyNotice({ duties_id: privacyNotice }).then(
+      //   (): void => {
+      //     setShow(false);
+      //     onChecked && onChecked();
+      //   },
+      //   err => {
+      //     setShow(false);
+      //     console.error(err);
+      //   },
+      // );
       //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
       // agreePrivacyNoticeAction({ duties_id: privacyNotice });
