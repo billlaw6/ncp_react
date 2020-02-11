@@ -1,15 +1,13 @@
 import { ComponentType } from "react";
 
 import Home from "_pages/home/index";
-import Player from "_pages/player/Player";
+import Register from "_pages/register/Register";
 import Login from "_pages/login/Login";
-import Upload from "_pages/upload/Upload";
 import Profile from "_pages/profile/Profile";
+import TempReport from "_pages/temp_report/TempReport";
 
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
-
-import Oauth from "../pages/oauth/Oauth";
 
 export interface RoutesI {
   name: string;
@@ -30,32 +28,26 @@ const routes: RoutesI[] = [
     permission: ["login"],
   },
   {
+    name: "register",
+    path: "/register",
+    component: Register,
+  },
+  {
     name: "login",
     path: "/login",
     component: Login,
     layout: FullscreenLayout,
   },
   {
-    name: "player",
-    path: "/player",
-    component: Player,
-    permission: ["login"],
-  },
-  {
-    name: "upload",
-    path: "/upload",
-    component: Upload,
-    permission: ["login"],
-  },
-  {
-    name: "oauth",
-    path: "/oauth",
-    component: Oauth,
-  },
-  {
     name: "profile",
     path: "/profile",
     component: Profile,
+    permission: ["login"],
+  },
+  {
+    name: "tempReport",
+    path: "/temp-report",
+    component: TempReport,
     permission: ["login"],
   },
 ];

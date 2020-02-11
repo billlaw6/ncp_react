@@ -11,6 +11,16 @@ export const setTokenAction: SetTokenActionFuncI = payload => ({
   payload,
 });
 
+// 需要监听：用于用户注册
+export type RegisterUserActionT = ActionI<string, FormData>;
+export interface RegisterUserActionFuncT {
+  (payload: FormData): RegisterUserActionT;
+}
+export const registerUserAction: RegisterUserActionFuncT = payload => ({
+  type: types.REGISTER_USER,
+  payload,
+});
+
 // 设置登录用户全局变量
 export type SetUserActionT = ActionI<string, UserI>;
 export interface SetUserActionFuncT {

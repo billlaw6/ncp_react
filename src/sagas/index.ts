@@ -1,8 +1,8 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { updateUserAction, logoutUserAction } from "_actions/user";
-import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
+import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
 import { logoutUser, updateUserInfo } from "_services/user";
-import { getExamIndex, deleteExamIndex } from "_services/dicom";
+import { getTempReport, checkTempReport } from "_services/report";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
 // import { store } from "../index";
@@ -28,7 +28,7 @@ function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
 function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
   try {
     const res = yield call(logoutUser);
-    yield put({ type: types.SET_EXAM_INDEX_LIST, payload: [] });
+    yield put({ type: types.SET_TEMP_REPORT_LIST, payload: [] });
     yield put({ type: types.SET_TOKEN, payload: "" });
     yield put({ type: types.SET_USER, payload: {} });
     yield put(push("/login"));
@@ -37,71 +37,36 @@ function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
   }
 }
 
-function* getExamIndexEffect(action: ReturnType<typeof getExamIndexListAction>) {
+function* getTempReportEffect(action: ReturnType<typeof getTempReportListAction>) {
   try {
     console.log(action.payload);
-    const res = yield call(getExamIndex, action.payload);
+    const res = yield call(getTempReport);
     // console.log(typeof JSON.parse(res.data));
     console.log(res.data);
     // put对应redux中的dispatch。
-    yield put({ type: types.SET_EXAM_INDEX_LIST, payload: res.data });
+    yield put({ type: types.SET_TEMP_REPORT_LIST, payload: res.data });
   } catch (error) {
     console.log(error.response);
   }
 }
 
-function* deleteExamIndexEffect(action: ReturnType<typeof deleteExamIndexListAction>) {
+function* checkTempReportEffect(action: ReturnType<typeof checkTempReportListAction>) {
   try {
-    const res = yield call(deleteExamIndex, action.payload);
+    const res = yield call(checkTempReport, action.payload);
     // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
-    const defaultExamIndexSearchForm = {};
-    yield put({ type: types.GET_EXAM_INDEX_LIST, payload: defaultExamIndexSearchForm });
+    const defaultTempReportSearchForm = {};
+    yield put({ type: types.GET_TEMP_REPORT_LIST, payload: defaultTempReportSearchForm });
   } catch (error) {
     console.log(error.response);
   }
 }
 
-// function* formLoginE(action: ReturnType<typeof submitLoginFormAction>) {
-//   try {
-//     const res = yield call(loginUser, action.payload);
-//     yield put({ type: types.SET_TOKEN, payload: { token: res.data.key } });
-//     yield put({ type: types.SET_USER, payload: { token: res.data.user_info } });
-//     yield put(push("/"));
-//   } catch (error) {
-//     console.log(error.response);
-//     // 登录失败先清空本地token，防止无效token判定。
-//     yield put({ type: types.SET_TOKEN, payload: "" });
-//     if (error.response) {
-//       const failedPayload = {
-//         ...action.payload,
-//         message: error.response.data.non_field_errors,
-//       };
-//       console.log(failedPayload);
-//     }
-//   }
-//   try {
-//     const res = yield call(getUserInfo);
-//     // console.log(res);
-//     // console.log(store.getState().currentUser);
-//     // 在原状态上部分更新
-//     const currentUserInfo = {
-//       ...store.getState().currentUser,
-//       ...res.data,
-//     };
-//     // console.log(currentUserInfo);
-//     yield put({ type: types.SET_CURRENT_USER, payload: currentUserInfo });
-//   } catch (error) {
-//     console.log("get info error");
-//     console.log(error.response);
-//     yield put(push("/login/"));
-//   }
-// }
 
 function* rootSaga() {
   yield takeEvery(types.UPDATE_USER, updateUserEffect);
   yield takeEvery(types.LOGOUT_USER, logoutUserEffect);
-  yield takeEvery(types.GET_EXAM_INDEX_LIST, getExamIndexEffect);
-  yield takeEvery(types.DELETE_EXAM_INDEX_LIST, deleteExamIndexEffect);
+  yield takeEvery(types.GET_TEMP_REPORT_LIST, getTempReportEffect);
+  yield takeEvery(types.CHECK_TEMP_REPORT_LIST, checkTempReportEffect);
 }
 
 export default rootSaga;

@@ -2,7 +2,6 @@ import React, { FunctionComponent, ReactElement } from "react";
 import { Menu, Layout, Avatar, Dropdown } from "antd";
 import { ClickParam } from "antd/lib/menu";
 
-import logo from "_images/logo_temp.png";
 
 import { HeaderPropsI } from "./type";
 
@@ -13,7 +12,7 @@ const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
 const { Header: AntdHeader } = Layout;
 
 const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
-  const { nickname, cellPhone, logout } = props;
+  const { name, empCode, cellPhone, logout } = props;
 
   const onClick = (e: ClickParam): void => {
     const { key } = e;
@@ -24,7 +23,8 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
     <Menu className="header-avatar-menu" onClick={onClick}>
       <MenuItemGroup>
         <ul className="user">
-          <li className="user-name">{nickname || "匿名"}</li>
+          <li className="user-name">{name || "未登录"}</li>
+          <li className="emp-code">{empCode|| "未登录"}</li>
           <li className="user-cell-phone">{cellPhone || "未填写"}</li>
         </ul>
       </MenuItemGroup>
@@ -42,13 +42,12 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
 };
 
 const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
-  const { avatar } = props;
+  const { name, empCode } = props;
 
   return (
     <AntdHeader id="header">
       <div className="header-content">
         <a className="logo" href="/">
-          <img src={logo}></img>
         </a>
         <Dropdown
           className="avatar"
@@ -56,11 +55,6 @@ const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
           overlayClassName="avatar-dropdown"
           placement="bottomRight"
         >
-          {avatar ? (
-            <Avatar size="default" src={avatar}></Avatar>
-          ) : (
-            <Avatar size="default" icon="user"></Avatar>
-          )}
         </Dropdown>
       </div>
     </AntdHeader>

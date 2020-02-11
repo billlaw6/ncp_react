@@ -75,30 +75,15 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
           method="post"
         >
           <div className={`profile-form-header ${isEdit ? "profile-editing" : ""}`}>
-            <Item className="profile-form-avatar">
-              <Input
-                disabled={!isEdit}
-                type="file"
-                name="avatar"
-                // accept="image/png, image/jpg, image/jpeg, image/gif"
-                accept="image/png"
-                onChange={previewAvatar}
-              />
-              <img src={userInfo.avatar || DEFAULT_AVATAR} alt="avatar" />
-            </Item>
             <span onClick={(): void => setIsEdit(true)}>编辑信息</span>
-            <div className="profile-form-avatar-desc">
-              <span>选择新头像</span>
-              <span>你可以选择PNG格式的图片作为头像</span>
-            </div>
           </div>
           <div className="profile-form-info">
             <Item label="姓名" colon={false}>
               <Input
                 disabled={!isEdit}
                 type="text"
-                name="nickname"
-                value={userInfo.nickname}
+                name="name"
+                value={userInfo.name}
                 onInput={updateInputVal}
               />
             </Item>
@@ -127,87 +112,88 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
                 </Item>
               </Col>
               <Col span={12}>
-                <Item label="出生日期" colon={false}>
-                  <DatePicker
-                    className="profile-form-birthday"
-                    disabled={!isEdit}
-                    value={moment(userInfo.birthday)}
-                    onChange={(_date: Moment | null, dateString: string): void => {
-                      setUserInfo(
-                        Object.assign({}, userInfo, {
-                          birthday: dateString,
-                        }),
-                      );
-                    }}
-                  ></DatePicker>
-                  <Input
-                    style={{ display: "none" }}
-                    type="string"
-                    name="birthday"
-                    value={userInfo.birthday}
-                    onInput={updateInputVal}
-                  ></Input>
-                </Item>
+                <Input
+                  type="number"
+                  name="age"
+                  value={userInfo.age}
+                  onInput={updateInputVal}
+                ></Input>
               </Col>
             </Row>
-            <Item label="个性签名" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="text"
-                name="sign"
-                value={userInfo.sign}
-                onInput={updateInputVal}
-                suffix={<span className="text-count">{userInfo.sign.length}/30</span>}
-              />
-            </Item>
-            <Item label="地址" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="text"
-                name="address"
-                value={userInfo.address}
-                onInput={updateInputVal}
-              />
-            </Item>
-            <Item label="手机" colon={false}>
-              <Input
-                disabled={true}
-                type="number"
-                name="cell_phone"
-                value={userInfo.cell_phone}
-                onInput={updateInputVal}
-              />
-            </Item>
-            <Row
-              className="profile-form-btns"
-              gutter={35}
-              type="flex"
-              align="middle"
-              justify="center"
-              style={{ visibility: isEdit ? "visible" : "hidden" }}
-            >
-              <Col span={5}>
-                <Item>
+            <Row className="profile-hoz" gutter={22}>
+              <Col span={12}>
+                <Item label="人员类别" colon={false}>
+                  <Select
+                    dropdownClassName="profile-form-gender"
+                    disabled={!isEdit}
+                    value={userInfo.role}
+                    onChange={(value: number): void =>
+                      setUserInfo(Object.assign({}, userInfo, { role: value }))
+                    }
+                  >
+                    <Option value={0}>在职职工</Option>
+                    <Option value={1}>外包公司</Option>
+                    <Option value={2}>医辅人员</Option>
+                    <Option value={3}>学生</Option>
+                  </Select>
                   <Input
-                    className="profile-form-cancel"
-                    type="button"
-                    name="cancel"
-                    value="取消"
-                    onClick={onCancel}
+                    style={{ display: "none" }}
+                    type="text"
+                    name="role"
+                    value={userInfo.role}
+                    onChange={updateInputVal}
                   ></Input>
                 </Item>
               </Col>
-              <Col span={5}>
-                <Item>
-                  <Input
-                    className="profile-form-submit"
-                    type="button"
-                    name="submit"
-                    value="保存"
-                    onClick={onSubmit}
-                  ></Input>
-                </Item>
-              </Col>
+              <Item label="地址" colon={false}>
+                <Input
+                  disabled={!isEdit}
+                  type="text"
+                  name="address"
+                  value={userInfo.address}
+                  onInput={updateInputVal}
+                />
+              </Item>
+              <Item label="手机" colon={false}>
+                <Input
+                  disabled={true}
+                  type="number"
+                  name="cell_phone"
+                  value={userInfo.cell_phone}
+                  onInput={updateInputVal}
+                />
+              </Item>
+              <Row
+                className="profile-form-btns"
+                gutter={35}
+                type="flex"
+                align="middle"
+                justify="center"
+                style={{ visibility: isEdit ? "visible" : "hidden" }}
+              >
+                <Col span={5}>
+                  <Item>
+                    <Input
+                      className="profile-form-cancel"
+                      type="button"
+                      name="cancel"
+                      value="取消"
+                      onClick={onCancel}
+                    ></Input>
+                  </Item>
+                </Col>
+                <Col span={5}>
+                  <Item>
+                    <Input
+                      className="profile-form-submit"
+                      type="button"
+                      name="submit"
+                      value="保存"
+                      onClick={onSubmit}
+                    ></Input>
+                  </Item>
+                </Col>
+              </Row>
             </Row>
           </div>
         </form>

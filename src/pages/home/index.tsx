@@ -2,8 +2,7 @@
 import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
 import { Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
-import DicomCard from "_components/DicomCard/DicomCard";
-import { StoreStateI, ExamIndexI } from "_constants/interface";
+import { StoreStateI, TempReportI } from "_constants/interface";
 
 import {
   MapStateToPropsI,
@@ -14,15 +13,13 @@ import {
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
-import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
+import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
 
 import { Gutter } from "antd/lib/grid/row";
 import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/table";
 import LinkButton from "_components/LinkButton/LinkButton";
-import ListDesc from "./components/ListDesc";
-import PrivacyNotice from "./components/PrivacyNotice";
+// import Notice from "./components/Notice";
 
-import emptyImg from "_images/empty.png";
 import "./Home.less";
 import { Redirect } from "react-router";
 
@@ -50,9 +47,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
   list = (): ReactElement | undefined => {
     const { selections, isSelectable, page } = this.state;
     const columns: ColumnProps<TableDataI>[] = [
+      { title: "人员类别", dataIndex: "role" },
       {
-        title: "类型",
-        dataIndex: "modality",
+        title: "姓名",
+        dataIndex: "name",
         render: (text: string, record): ReactElement | string => {
           const { id } = record;
           return isSelectable ? (
@@ -65,24 +63,16 @@ class Home extends Component<HomePropsI, HomeStateI> {
           );
         },
       },
-      { title: "姓名", dataIndex: "patient_name" },
-      { title: "上传日期", dataIndex: "study_date" },
-      { title: "备注", dataIndex: "desc", className: "dicom-list-desc" },
+      { title: "工号", dataIndex: "emp_code" },
+      { title: "所在部门", dataIndex: "department" },
+      { title: "是否发热", dataIndex: "is_fever" },
+      { title: "体温", dataIndex: "temperature" },
+      { title: "是否离京", dataIndex: "foreign_flag" },
+      { title: "从哪归来", dataIndex: "from_where" },
     ];
 
     const dataSource: TableDataI[] = [];
     const renderList = this.getCurrentItem();
-
-    renderList.forEach(data => {
-      const { desc, ...others } = data;
-      const editorDesc = (
-        <ListDesc
-          desc={desc}
-          updateDesc={(value: string): void => this.updateDesc(others.id, value)}
-        ></ListDesc>
-      );
-      dataSource.push({ ...others, desc: editorDesc });
-    });
 
     const paginationConfig: PaginationConfig = {
       current: page,
@@ -127,7 +117,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       let count = 0;
 
       renderList.forEach(item => {
-        const { id, patient_name, study_date, desc, thumbnail, modality } = item;
+        const { id, name, emp_code, role, is_fever, temperature, foreign_flag, from_where } = item;
         if (count >= 4) {
           count = 0;
           rows.push(
@@ -140,18 +130,6 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
         cols.push(
           <Col key={id} xs={24} md={12} lg={8} xl={6}>
-            <DicomCard
-              id={id}
-              patientName={patient_name}
-              studyDate={study_date}
-              desc={desc}
-              thumbnail={thumbnail}
-              modality={modality}
-              checkbox={isSelectable}
-              checked={selections.indexOf(id) > -1}
-              onClick={(): void => this.onClickItem(id)}
-              updateDesc={(value: string): void => this.updateDesc(id, value)}
-            ></DicomCard>
           </Col>,
         );
       });
@@ -180,7 +158,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   onClickItem = (id: string): void => {
-    const { history, examIndexList } = this.props;
+    const { history, tempReportList } = this.props;
     const { isSelectable, selections } = this.state;
 
     if (isSelectable) {
@@ -190,34 +168,31 @@ class Home extends Component<HomePropsI, HomeStateI> {
       }
       this.setState({ selections: nextSelections });
     } else {
-      const currentExam = examIndexList.find(item => item.id === id);
-      if (currentExam) {
-        const { id } = currentExam;
-        history.push("/player", {
-          id,
-        });
+      const currentReport = tempReportList.find(item => item.id === id);
+      if (currentReport) {
+        const { id } = currentReport;
       }
     }
   };
 
-  getCurrentItem = (): ExamIndexI[] => {
-    const { examIndexList } = this.props;
+  getCurrentItem = (): TempReportI[] => {
+    const { tempReportList } = this.props;
     const { page } = this.state;
-    return this.sortList(examIndexList).slice(
+    return this.sortList(tempReportList).slice(
       (page - 1) * DEFAULT_PAGE_SIZE,
       page * DEFAULT_PAGE_SIZE,
     );
   };
 
   controller = (): ReactElement => {
-    const { examIndexList } = this.props;
+    const { tempReportList } = this.props;
     const { isSelectable, viewType } = this.state;
     return (
       <div id="controller" className={`controller`}>
         <div className="controller-left">
-          <span className="controller-title">影像列表</span>
-          <LinkButton className="controller-upload" to="/upload" icon="cloud-upload">
-            上传
+          <span className="controller-title">报告列表</span>
+          <LinkButton className="controller-upload" to="/temp-report" icon="cloud-upload">
+            填报
           </LinkButton>
           <div className={`controller-del ${isSelectable ? "controller-del-open" : ""}`}>
             <Icon
@@ -226,10 +201,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
               onClick={(): void => this.setState({ isSelectable: !isSelectable, selections: [] })}
             />
             <span onClick={this.selectedAll}>全选</span>
-            <span onClick={this.showConfirm}>删除</span>
+            <span onClick={this.showConfirm}>审核</span>
           </div>
         </div>
-        <div className={`controller-right ${examIndexList.length ? "" : "hidden"}`}>
+        <div className={`controller-right ${tempReportList.length ? "" : "hidden"}`}>
           <Dropdown overlay={this.dropdownContent()} placement="bottomRight">
             <Icon className="controller-select-sort iconfont" type="sort-ascending" />
           </Dropdown>
@@ -263,8 +238,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     Modal.confirm({
       centered: true,
       className: "del-confirm",
-      title: "确认删除",
-      content: "确认删除所选文件/文件夹吗？",
+      title: "确认审核",
+      content: "确认审核所选报告吗？",
       cancelText: "取消",
       okText: "确定",
       onOk: async (): Promise<void> => {
@@ -301,7 +276,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           时间排序
         </Menu.Item>
         <Menu.Item disabled={sortType === SortTypeEnum.TYPE} key={SortTypeEnum.TYPE}>
-          种类排序
+          人员类别排序
         </Menu.Item>
       </Menu>
     );
@@ -313,8 +288,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
    * @memberof Home
    */
   onChecked = (): void => {
-    const { examIndexList } = this.props;
-    if (!examIndexList.length) this.setState({ redirectUpload: true });
+    const { tempReportList } = this.props;
+    if (!tempReportList.length) this.setState({ redirectUpload: true });
   };
 
   /* === APIS 与服务器交互数据的方法 START === */
@@ -332,15 +307,15 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   /**
-   * 删除所选dicom
+   * 审核所选dicom
    *
    * @memberof Home
    */
   delDicom = async (): Promise<void> => {
     const { selections } = this.state;
-    const { delList } = this.props;
-    console.log("del selected dicom: ", selections);
-    delList(selections);
+    const { checkList } = this.props;
+    console.log("check selected reports: ", selections);
+    checkList(selections);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
@@ -349,19 +324,19 @@ class Home extends Component<HomePropsI, HomeStateI> {
    *
    * @memberof Home
    */
-  sortList = (list: ExamIndexI[]): ExamIndexI[] => {
+  sortList = (list: TempReportI[]): TempReportI[] => {
     const { sortType } = this.state;
 
     return list.sort((a, b) => {
       if (sortType === SortTypeEnum.TIME) {
-        const studyDateA = a.study_date;
-        const studyDateB = b.study_date;
-        return studyDateA < studyDateB ? 1 : -1;
+        const createdAtA = a.created_at;
+        const createdAtB = b.created_at;
+        return createdAtA < createdAtB ? 1 : -1;
       }
       if (sortType === SortTypeEnum.TYPE) {
-        const modalityA = a.modality;
-        const modalityB = b.modality;
-        return modalityA < modalityB ? -1 : 1;
+        const roleA = a.role;
+        const roleB = b.role;
+        return roleA < roleB ? -1 : 1;
       }
 
       return 0;
@@ -369,7 +344,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   render(): ReactElement {
-    const { examIndexList, user } = this.props;
+    const { tempReportList, user } = this.props;
     const { viewType, redirectUpload } = this.state;
 
     if (redirectUpload) return <Redirect to="/upload" />;
@@ -377,7 +352,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       return (
         <section className="home">
           {this.controller()}
-          {examIndexList.length ? (
+          {tempReportList.length ? (
             viewType === ViewTypeEnum.GRID ? (
               this.dicoms()
             ) : (
@@ -385,21 +360,19 @@ class Home extends Component<HomePropsI, HomeStateI> {
             )
           ) : (
             <div className="home-empty">
-              <img src={emptyImg} alt="no-dicom" />
             </div>
           )}
-          <PrivacyNotice user={user} onChecked={this.onChecked}></PrivacyNotice>
         </section>
       );
   }
 }
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
-  examIndexList: state.examIndexList,
+  tempReportList: state.tempReportList,
   user: state.user,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getList: getExamIndexListAction,
-  delList: deleteExamIndexListAction,
+  getList: getTempReportListAction,
+  checkList: checkTempReportListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

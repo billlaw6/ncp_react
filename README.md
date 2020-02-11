@@ -1,4 +1,4 @@
-# Mediclouds-react
+# ncp_react
 
 ## dev
 
@@ -14,11 +14,11 @@
     - login
 ```
 
-<!-- # Mediclouds-react
+<!-- # ncp_react
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-`create-react-app mediclouds-react --typescript`
+`create-react-app ncp_react --typescript`
 
 ## Available Scripts
 

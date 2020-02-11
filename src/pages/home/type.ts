@@ -1,15 +1,15 @@
-import { ExamIndexI, UserI } from "_constants/interface";
-import { getExamIndexListAction, deleteExamIndexListAction } from "_actions/dicom";
+import { TempReportI, UserI } from "_constants/interface";
+import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
 export interface MapStateToPropsI {
-  examIndexList: ExamIndexI[];
+  tempReportList: TempReportI[];
   user: UserI;
 }
 export interface MapDispatchToPropsI {
-  getList: typeof getExamIndexListAction;
-  delList: typeof deleteExamIndexListAction;
+  getList: typeof getTempReportListAction;
+  checkList: typeof checkTempReportListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
@@ -36,22 +36,14 @@ export enum ViewTypeEnum {
 
 export interface TableDataI {
   id: string;
-  modality: string;
-  patient_name: string;
-  // created_at: Date;
-  desc: string | ReactElement;
-  // patient_id: string;
-  // institution_name: string;
-  study_date: string;
-  thumbnail: string;
-}
-
-/**
- * 表格形式desc编辑模块
- *
- * @interface ListDescPropsI
- */
-export interface ListDescPropsI {
-  desc: string;
-  updateDesc: Function;
+  name: string;
+  role: string;
+  emp_code: string;
+  department: string;
+  is_fever: number;
+  temperature: number;
+  foreign_flag: number;
+  from_where: string;
+  created_at: Date;
+  // desc: string | ReactElement;
 }

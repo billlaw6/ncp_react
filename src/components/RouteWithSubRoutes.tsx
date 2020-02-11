@@ -14,23 +14,9 @@ class RouteWithSubRoutes extends Component<RoutesI & MapStateToPropsI> {
       if (token.length > 0) {
         console.log(token);
       } else {
-        console.log(token);
-        console.log(token.length);
         // history.push({ pathname: "/login" });
       }
     }
-    // 使用localStorage的值会有滞后，首次登录会校验错误
-    // const persistRoot = JSON.parse(localStorage.getItem("persist:root")!);
-    // // console.log(JSON.parse(persistRoot.token).length);
-    // if (persistRoot && persistRoot.token && JSON.parse(persistRoot.token).length > 2) {
-    //   console.log(JSON.parse(persistRoot.token));
-    // } else {
-    //   console.log(persistRoot);
-    //   console.log(persistRoot.token);
-    //   console.log(JSON.parse(persistRoot.token));
-    //   console.log("redirect in route with sub route");
-    history.push({ pathname: "/login" });
-    // }
   }
   render(): ReactElement {
     const { path, exact = false, routes = [], component, layout = DefaultLayout } = this.props;
