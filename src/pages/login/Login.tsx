@@ -22,6 +22,7 @@ const Login: FunctionComponent<LoginPropsI> = props => {
     password: "",
   };
   const [userLogin, setUserLogin] = useState(defaultUserLogin);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isEdit, setIsEdit] = useState(true);
 
   useEffect(() => {

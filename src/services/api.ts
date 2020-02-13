@@ -11,7 +11,7 @@ switch (process.env.NODE_ENV) {
     axios.defaults.baseURL = "http://localhost:8083/rest-api/";
     break;
   case "production":
-    axios.defaults.baseURL = "https://mi.mediclouds.cn/rest-api/";
+    axios.defaults.baseURL = "http://report.carryon.top/rest-api/";
     break;
   default:
     axios.defaults.baseURL = "rest-api/";
