@@ -4,7 +4,8 @@ import * as types from "../action-types";
 // 用于在SAGA中触发请求
 interface SearchFormI {
   keyword: string;
-  dtRange: [Date, Date];
+  start: string; // YYYY-mm-dd HH:MM:SS
+  end: string; // YYYY-mm-dd HH:MM:SS
 }
 
 export type GetTempReportListActionT = ActionI<string, SearchFormI>;

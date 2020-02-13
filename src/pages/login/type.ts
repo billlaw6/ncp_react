@@ -1,13 +1,13 @@
 import { UserI } from "_constants/interface";
-import { LoginUserActionFuncT, GetDepartmentListActionFuncT } from "_actions/user";
+import { LoginUserActionFuncI, GetDepartmentListActionFuncI } from "_actions/user";
 
 export interface MapStateToPropsI {
   user: UserI;
 }
 
 export interface MapDispatchToPropsI {
-  loginUserAction: LoginUserActionFuncT;
-  getDepartmentList: GetDepartmentListActionFuncT;
+  loginUserAction: LoginUserActionFuncI;
+  getDepartmentList: GetDepartmentListActionFuncI;
 }
 
 export type LoginPropsI = MapDispatchToPropsI;

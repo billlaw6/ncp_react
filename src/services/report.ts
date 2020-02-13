@@ -15,6 +15,11 @@ export const checkTempReport = async (params: string[]) => {
   return res;
 };
 
+export const downloadTempReportList = async (params: any) => {
+  const res = await axios.post(`/report/temp/download/`, params );
+  return res;
+}
+
 export const getTempReportDetail = async (params: any) => {
   const res = await axios.get(`/report/temp/${params.id}`, { params: params });
   return res;

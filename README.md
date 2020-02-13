@@ -7,11 +7,6 @@
 ```
 - src // dev dir
   - pages
-    - home // dicom list
-    - player
-    - upload
-    - user
-    - login
 ```
 
 <!-- # ncp_react

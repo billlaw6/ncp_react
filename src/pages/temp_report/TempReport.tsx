@@ -11,6 +11,7 @@ import { RadioChangeEvent } from "antd/lib/radio";
 import { history } from "../../store/configureStore";
 
 import { submitTempReport } from "_services/report";
+import { getTempReportListAction } from "_actions/report";
 
 const { Item } = Form;
 const { Option } = Select;
@@ -51,6 +52,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
     });
     console.groupEnd();
     submitTempReport(formData).then((res) => {
+      // 提交后需要主动重新获取列表
       history.push("/");
     }).catch((err) => {
       console.log(err);
@@ -233,6 +235,7 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   departmentList: state.departmentList,
 });
-// const mapDispatchToProps: MapDispatchToPropsI = {
-// };
-export default connect(mapStateToProps)(TempReport);
+const mapDispatchToProps: MapDispatchToPropsI = {
+  getTempReportList: getTempReportListAction,
+};
+export default connect(mapStateToProps, mapDispatchToProps)(TempReport);

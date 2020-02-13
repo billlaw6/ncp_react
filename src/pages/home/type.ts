@@ -6,6 +6,7 @@ import { ReactElement } from "react";
 export interface MapStateToPropsI {
   tempReportList: TempReportI[];
   user: UserI;
+  token: string;
 }
 export interface MapDispatchToPropsI {
   getList: typeof getTempReportListAction;
@@ -14,11 +15,12 @@ export interface MapDispatchToPropsI {
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
 export interface HomeStateI {
-  isSelectable: boolean; // 是否是可选择的
-  page: number; // 当前在第几页 从1开始
   selectedRowKeys: []; //当前已选择的id 集
   loading: false,
   redirectReport: boolean; // 是否重定向到report页
+  page: number;
+  feverCount: number;
+  foreignCount: number;
 }
 
 export interface TableDataI {
