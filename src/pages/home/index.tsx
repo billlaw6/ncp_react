@@ -126,10 +126,12 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   handleDownloadClick = () => {
     console.log('donwload clicked');
-    const todayStart = moment().startOf('week').format(dateFormat);
+    // const todayStart = moment().startOf('week').format(dateFormat);
+    const todayStart = moment().subtract('days', 7).format(dateFormat);
     const now = moment().locale('zh-cn').format(dateFormat);
-    downloadTempReportList({ start: todayStart, end: now, keyword: "" });
+    // downloadTempReportList({ start: todayStart, end: now, keyword: "" });
     // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
+    // const downloadUrl = "http://123.56.115.20:8083/rest-api/report/temp/download/";
     const downloadUrl = "http://report.carryon.top/rest-api/report/temp/download/";
     axios({
       method: 'get',
