@@ -13,3 +13,7 @@ export const SET_DEPARTMENT_LIST = "set_department_list";
 export const GET_TEMP_REPORT_LIST = "get_temp_report_list";
 export const SET_TEMP_REPORT_LIST = "set_temp_report_list";
 export const CHECK_TEMP_REPORT_LIST = "check_temp_report_list";
+
+export const GET_CADRE_REPORT_LIST = "get_cadre_report_list";
+export const SET_CADRE_REPORT_LIST = "set_cadre_report_list";
+export const CHECK_CADRE_REPORT_LIST = "check_cadre_report_list"

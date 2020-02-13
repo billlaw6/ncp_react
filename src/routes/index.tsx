@@ -5,6 +5,7 @@ import Register from "_pages/register/Register";
 import Login from "_pages/login/Login";
 import Profile from "_pages/profile/Profile";
 import TempReport from "_pages/temp_report/TempReport";
+import CadreReport from "_pages/cadre_report/CadreReport";
 
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
@@ -48,6 +49,12 @@ const routes: RoutesI[] = [
     name: "tempReport",
     path: "/temp-report",
     component: TempReport,
+    permission: ["login"],
+  },
+  {
+    name: "cadreReport",
+    path: "/cadre-report",
+    component: CadreReport,
     permission: ["login"],
   },
 ];

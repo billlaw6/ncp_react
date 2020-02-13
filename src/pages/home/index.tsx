@@ -13,7 +13,7 @@ import {
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
-import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
+import { getTempReportListAction, checkTempReportListAction, getCadreReportListAction, checkCadreReportListAction } from "_actions/report";
 import { Redirect } from "react-router";
 
 import { Gutter } from "antd/lib/grid/row";
@@ -26,6 +26,7 @@ import { downloadTempReportList } from "_services/report";
 import axios from "axios";
 
 import "./Home.less";
+import { userInfo } from "os";
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 const DEFAULT_PAGE_SIZE = 12;
@@ -45,12 +46,12 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   componentDidMount(): void {
-    const { tempReportList, getList } = this.props;
+    const { user, tempReportList, getTempList, getCadreList } = this.props;
     const { feverCount, foreignCount } = this.state;
     // 默认取当天的数据
     const todayStart = moment().startOf('day').format(dateFormat);
     const now = moment().locale('zh-cn').format(dateFormat);
-    getList({ start: todayStart, end: now, keyword: "" });
+    getTempList({ start: todayStart, end: now, keyword: "" });
     tempReportList.forEach((item) => {
       if (item.is_fever) {
         const newFeverCount = feverCount + 1;
@@ -61,6 +62,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
         this.setState({ foreignCount: newForeignCount });
       }
     })
+    // 01职员，02干部，03科室上报员
+    if (user.duty === '02') {
+      getCadreList({ start: todayStart, end: now, keyword: "" });
+    }
   }
 
   showConfirm = (): void => {
@@ -94,9 +99,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
    */
   checkTempReport = async (): Promise<void> => {
     const { selectedRowKeys } = this.state;
-    const { checkList } = this.props;
+    const { checkTempList } = this.props;
     console.log("check selected reports: ", selectedRowKeys);
-    checkList(selectedRowKeys);
+    checkTempList(selectedRowKeys);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
@@ -134,7 +139,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   render(): ReactElement {
-    const { tempReportList } = this.props;
+    const { user, tempReportList } = this.props;
     const { loading, feverCount, foreignCount, selectedRowKeys, page } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -245,7 +250,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             value: 0,
           },
           {
-            text: "离京归来",
+            text: "离京",
             value: 1,
           },
         ],
@@ -253,11 +258,11 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value ? "red" : "green";
           const foreign = value ? "是" : "否";
-          return <span style={{ color: color }}> {foreign}</span >
+          return <span style={{ color: color }}>{foreign}</span >
         },
       },
       {
-        title: "从哪归来",
+        title: "现在在哪",
         dataIndex: "from_where",
         key: "from_where",
       },
@@ -347,6 +352,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           style={{
             margin: "15px",
             float: "right",
+            display: user.duty === "03" ? "block" : "none"
           }}
           disabled={hasSelected ? false : true}
           onClick={this.showConfirm}
@@ -381,7 +387,9 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   token: state.token,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getList: getTempReportListAction,
-  checkList: checkTempReportListAction,
+  getTempList: getTempReportListAction,
+  checkTempList: checkTempReportListAction,
+  getCadreList: getCadreReportListAction,
+  checkCadreList: checkCadreReportListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

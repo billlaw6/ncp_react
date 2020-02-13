@@ -1,4 +1,4 @@
-import { ActionI, TempReportI } from "_constants/interface";
+import { ActionI, TempReportI, CadreReportI } from "_constants/interface";
 import * as types from "../action-types";
 
 // 用于在SAGA中触发请求
@@ -27,12 +27,40 @@ export const checkTempReportListAction: CheckTempReportListActionFuncI = payload
   payload,
 });
 
-// 设置本地影像列表全局变量
 export type SetTempReportListActionT = ActionI<string, TempReportI[]>;
 export interface SetTempReportListActionFuncI {
   (payload: TempReportI[]): SetTempReportListActionT;
 }
 export const setTempReportListAction: SetTempReportListActionFuncI = payload => ({
   type: types.SET_TEMP_REPORT_LIST,
+  payload,
+});
+
+
+export type GetCadreReportListActionT = ActionI<string, SearchFormI>;
+export interface GetCadreReportListActionFuncI {
+  (payload: SearchFormI): GetCadreReportListActionT;
+}
+export const getCadreReportListAction: GetCadreReportListActionFuncI = payload => ({
+  type: types.GET_CADRE_REPORT_LIST,
+  payload,
+});
+
+// 用于saga监听，发起远程删除请求，更新本地数据
+export type CheckCadreReportListActionT = ActionI<string, string[]>;
+export interface CheckCadreReportListActionFuncI {
+  (payload: string[]): CheckCadreReportListActionT;
+}
+export const checkCadreReportListAction: CheckCadreReportListActionFuncI = payload => ({
+  type: types.CHECK_CADRE_REPORT_LIST,
+  payload,
+});
+
+export type SetCadreReportListActionT = ActionI<string, CadreReportI[]>;
+export interface SetCadreReportListActionFuncI {
+  (payload: CadreReportI[]): SetCadreReportListActionT;
+}
+export const setCadreReportListAction: SetCadreReportListActionFuncI = payload => ({
+  type: types.SET_CADRE_REPORT_LIST,
   payload,
 });

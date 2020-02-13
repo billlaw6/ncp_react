@@ -1,5 +1,5 @@
-import { TempReportI, UserI } from "_constants/interface";
-import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
+import { TempReportI, UserI, CadreReportI } from "_constants/interface";
+import { getTempReportListAction, checkTempReportListAction, getCadreReportListAction, checkCadreReportListAction } from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 
@@ -9,8 +9,10 @@ export interface MapStateToPropsI {
   token: string;
 }
 export interface MapDispatchToPropsI {
-  getList: typeof getTempReportListAction;
-  checkList: typeof checkTempReportListAction;
+  getTempList: typeof getTempReportListAction;
+  checkTempList: typeof checkTempReportListAction;
+  getCadreList: typeof getCadreReportListAction;
+  checkCadreList: typeof checkCadreReportListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;

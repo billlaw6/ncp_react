@@ -32,12 +32,13 @@ export declare interface UserI {
   name: string;
   role: RoleE;
   department: string;
-  duties: DutiesE;
+  duties?: DutiesE;
   cell_phone: string;
   gender: GenderE;
   birthday?: string;
   age: number;
   address: string;
+  duty?: string;
   unit?: string;
   groups?: string[];
   pinyin?: "";
@@ -53,6 +54,17 @@ export declare interface DepartmentI {
   is_active: boolean;
   created_at: Date;
   staff: UserI[];
+}
+
+// 干部报告
+export declare interface CadreReportI {
+  id: string;
+  name: string;
+  emp_code: string;
+  department: string;
+  on_duty_flag: number;
+  reason: string;
+  created_at: Date;
 }
 
 // 体温报告

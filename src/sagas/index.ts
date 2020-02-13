@@ -1,11 +1,11 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { getDepartmentListAction, registerUserAction, loginUserAction, updateUserAction, logoutUserAction } from "_actions/user";
-import { getTempReportListAction, checkTempReportListAction } from "_actions/report";
+import { getTempReportListAction, checkTempReportListAction, getCadreReportListAction, checkCadreReportListAction } from "_actions/report";
 import { getDepartmentList, registerUser, loginUser, getUserInfo, logoutUser, updateUserInfo } from "_services/user";
-import { getTempReportList, checkTempReport } from "_services/report";
+import { getTempReportList, checkTempReport, getCadreReportList, checkCadreReport } from "_services/report";
 import * as types from "../store/action-types";
 import { push } from "connected-react-router";
-// import { store } from "../index";
+import { store } from "../index";
 
 // worker Saga : 将在 action 被 dispatch 时调用
 // 用户信息修改页发出updateUserAction
@@ -39,9 +39,13 @@ function* loginUserEffect(action: ReturnType<typeof loginUserAction>) {
     console.log(key_res);
     yield put({ type: types.SET_TOKEN, payload: key_res.data.key});
     const user_res = yield call(getUserInfo);
-    console.log(user_res);
+    // console.log(user_res);
     yield put({ type: types.SET_USER, payload: user_res.data});
-    yield put(push("/temp-report"));
+    if (user_res.data.name === "") {
+      yield put(push("/profile"));
+    } else {
+      yield put(push("/temp-report"));
+    }
   } catch (error) {
     console.error(error);
   }
@@ -112,15 +116,40 @@ function* checkTempReportEffect(action: ReturnType<typeof checkTempReportListAct
   }
 }
 
+function* getCadreReportEffect(action: ReturnType<typeof getCadreReportListAction>) {
+  try {
+    console.log(action.payload);
+    const res = yield call(getCadreReportList, action.payload);
+    // console.log(typeof JSON.parse(res.data));
+    console.log(res.data);
+    // put对应redux中的dispatch。
+    yield put({ type: types.SET_CADRE_REPORT_LIST, payload: res.data });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
+
+function* checkCadreReportEffect(action: ReturnType<typeof checkCadreReportListAction>) {
+  try {
+    const res = yield call(checkCadreReport, action.payload);
+    // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
+    const defaultCadreReportSearchForm = {};
+    yield put({ type: types.GET_CADRE_REPORT_LIST, payload: defaultCadreReportSearchForm });
+  } catch (error) {
+    console.log(error.response);
+  }
+}
 
 function* rootSaga() {
   yield takeEvery(types.REGISTER_USER, registerUserEffect);
   yield takeEvery(types.LOGIN_USER, loginUserEffect);
   yield takeEvery(types.UPDATE_USER, updateUserEffect);
   yield takeEvery(types.LOGOUT_USER, logoutUserEffect);
-  yield takeEvery(types.GET_TEMP_REPORT_LIST, getTempReportEffect);
   yield takeEvery(types.GET_DEPARTMENT_LIST, getDepartmentListEffect);
+  yield takeEvery(types.GET_TEMP_REPORT_LIST, getTempReportEffect);
   yield takeEvery(types.CHECK_TEMP_REPORT_LIST, checkTempReportEffect);
+  yield takeEvery(types.GET_CADRE_REPORT_LIST, getCadreReportEffect);
+  yield takeEvery(types.CHECK_CADRE_REPORT_LIST, checkCadreReportEffect);
 }
 
 export default rootSaga;

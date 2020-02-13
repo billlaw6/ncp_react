@@ -12,7 +12,7 @@ const { Item: MenuItem, ItemGroup: MenuItemGroup, Divider } = Menu;
 const { Header: AntdHeader } = Layout;
 
 const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
-  const { name, cellPhone, logout } = props;
+  const { name, empCode, cellPhone, logout, duty } = props;
 
   const onClick = (e: ClickParam): void => {
     const { key } = e;
@@ -24,6 +24,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
       <MenuItemGroup>
         <ul className="user">
           <li className="user-name">{name || "未登录"}</li>
+          <li className="emp-code">{empCode || "未填写"}</li>
           <li className="user-cell-phone">{cellPhone || "未填写"}</li>
         </ul>
       </MenuItemGroup>
@@ -32,6 +33,22 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
         <MenuItem className="edit-user-info" key="editUserInfo">
           <Link to="/profile">个人信息编辑</Link>
         </MenuItem>
+      </MenuItemGroup>
+      <Divider></Divider>
+      <MenuItemGroup>
+        <MenuItem>
+          <Link to="/temp-report">每日体温上报</Link>
+          {
+            // 01职员，02干部，03科室上报员
+            duty === '02' ?
+          (
+              <Link to="/cadre-report">每日干部在岗上报</Link>
+          ) : ""
+        }
+        </MenuItem>
+      </MenuItemGroup>
+      <Divider></Divider>
+      <MenuItemGroup>
         <MenuItem className="logout" key="logout">
           退出
         </MenuItem>
