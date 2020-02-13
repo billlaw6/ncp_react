@@ -39,24 +39,24 @@ function* registerUserEffect(action: ReturnType<typeof registerUserAction>) {
 
 function* loginUserEffect(action: ReturnType<typeof loginUserAction>) {
   try {
-        yield put({ type: types.SET_TOKEN, payload: "" });
-        const key_res = yield call(loginUser, action.payload);
-        // console.group("==== formData In Saga ====");
-        // action.payload.forEach((value, key) => {
-        //   console.log("Key: ", key, "  Value: ", value);
-        // });
-        // console.groupEnd();
-        // console.log(key_res);
-        yield put({ type: types.SET_TOKEN, payload: key_res.data.key });
-        const user_res = yield call(getUserInfo);
-        // console.log(user_res);
-        yield put({ type: types.SET_USER, payload: user_res.data });
-        if (user_res.data.name === "") {
-          yield put(push("/profile"));
-        } else {
-          yield put(push("/temp-report"));
-        }
-      } catch (error) {
+    yield put({ type: types.SET_TOKEN, payload: "" });
+    const key_res = yield call(loginUser, action.payload);
+    // console.group("==== formData In Saga ====");
+    // action.payload.forEach((value, key) => {
+    //   console.log("Key: ", key, "  Value: ", value);
+    // });
+    // console.groupEnd();
+    // console.log(key_res);
+    yield put({ type: types.SET_TOKEN, payload: key_res.data.key });
+    const user_res = yield call(getUserInfo);
+    // console.log(user_res);
+    yield put({ type: types.SET_USER, payload: user_res.data });
+    if (user_res.data.name === "") {
+      yield put(push("/profile"));
+    } else {
+      yield put(push("/temp-report"));
+    }
+  } catch (error) {
     console.error(error);
   }
 }

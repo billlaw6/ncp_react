@@ -121,7 +121,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   onSelectChange = (selectedRowKeys: any) => {
     // console.log('selectedRowKeys changed: ', selectedRowKeys);
-    this.setState({ selectedRowKeys })
+    this.setState({ selectedRowKeys });
   }
 
   handleDownloadClick = () => {
@@ -129,7 +129,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const todayStart = moment().startOf('week').format(dateFormat);
     const now = moment().locale('zh-cn').format(dateFormat);
     downloadTempReportList({ start: todayStart, end: now, keyword: "" });
-    const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
+    // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
+    const downloadUrl = "/rest-api/report/temp/download/";
     axios({
       method: 'get',
       url: downloadUrl,
@@ -288,7 +289,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
           // console.log(new Date(value));
           const dt = new Date(value);
           // console.log(dt.valueOf());
-          return <span> {date2LocalString(dt, 'yyyy-MM-dd hh:mm:ss')} </span>;
+          return (
+            <span> {date2LocalString(dt, "yyyy-MM-dd hh:mm:ss")} </span>
+          );
         },
         sorter: (a: any, b: any) => {
           // console.log(a);
