@@ -21,6 +21,7 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
 
   return (
     <Menu className="header-avatar-menu" onClick={onClick}>
+      北京大学第三医院每日监测上报
       <MenuItemGroup>
         <ul className="user">
           <li className="user-name">{name || "未登录"}</li>
@@ -37,15 +38,9 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
       <Divider></Divider>
       <MenuItemGroup>
         <MenuItem>
-          <Link to="/temp-report">每日体温上报</Link>
-          {
-            // 01职员，02干部，03科室上报员
-            duty === '02' ?
-          (
-              <Link to="/cadre-report">每日干部在岗上报</Link>
-          ) : ""
-        }
-        </MenuItem>
+  <Link to="/temp-report">每日体温上报</Link>// 01职员，02干部，03科室上报员
+        duty === "02" ? <Link to="/cadre-report">每日干部在岗上报</Link> : ""}
+      </MenuItem>
       </MenuItemGroup>
       <Divider></Divider>
       <MenuItemGroup>

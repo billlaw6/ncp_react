@@ -23,7 +23,13 @@ class DefalutLayout extends Component<StoreStateI & MapDispatchToPropsI> {
 
     return (
       <Layout id="defaultLayout">
-        <Header empCode={empCode} name={name} cellPhone={cellPhone} logout={logout} duty={duty}></Header>
+        <Header
+          empCode={empCode}
+          name={name}
+          cellPhone={cellPhone}
+          logout={logout}
+          duty={duty}
+        ></Header>
         <Content id="content">{children}</Content>
         <Footer></Footer>
       </Layout>

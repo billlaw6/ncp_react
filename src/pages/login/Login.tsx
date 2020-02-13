@@ -55,7 +55,8 @@ const Login: FunctionComponent<LoginPropsI> = props => {
       <div className="login-content">
         <span className="login-content-title">登录</span>
         <div className="register-statement">
-          没有工号的用户请先使用手机号<a href="/register">注册</a>，有工号的老师请直接用工号登录，默认密码：111111。
+          没有工号的用户请先使用手机号<a href="/register">注册</a>
+          ，有工号的老师请直接用工号登录，默认密码：111111。
         </div>
         <div className="login-content">
           <form

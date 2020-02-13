@@ -13,7 +13,12 @@ import {
   MapDispatchToPropsI,
   TableDataI,
 } from "./type";
-import { getTempReportListAction, checkTempReportListAction, getCadreReportListAction, checkCadreReportListAction } from "_actions/report";
+import {
+  getTempReportListAction,
+  checkTempReportListAction,
+  getCadreReportListAction,
+  checkCadreReportListAction,
+} from "_actions/report";
 import { Redirect } from "react-router";
 
 import { Gutter } from "antd/lib/grid/row";
@@ -46,27 +51,36 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   componentDidMount(): void {
-    const { user, tempReportList, getTempList, getCadreList } = this.props;
-    const { feverCount, foreignCount } = this.state;
-    // 默认取当天的数据
-    const todayStart = moment().startOf('day').format(dateFormat);
-    const now = moment().locale('zh-cn').format(dateFormat);
-    getTempList({ start: todayStart, end: now, keyword: "" });
-    tempReportList.forEach((item) => {
-      if (item.is_fever) {
-        const newFeverCount = feverCount + 1;
-        this.setState({ feverCount: newFeverCount });
-      }
-      if (item.foreign_flag) {
-        const newForeignCount = foreignCount + 1;
-        this.setState({ foreignCount: newForeignCount });
-      }
-    })
-    // 01职员，02干部，03科室上报员
-    if (user.duty === '02') {
-      getCadreList({ start: todayStart, end: now, keyword: "" });
-    }
-  }
+                              const {
+                                user,
+                                tempReportList,
+                                getTempList,
+                                getCadreList,
+                              } = this.props;
+                              const { feverCount, foreignCount } = this.state;
+                              // 默认取当天的数据
+                              const todayStart = moment()
+                                .startOf("day")
+                                .format(dateFormat);
+                              const now = moment()
+                                .locale("zh-cn")
+                                .format(dateFormat);
+                              getTempList({ start: todayStart, end: now, keyword: "" });
+                              tempReportList.forEach(item => {
+                                if (item.is_fever) {
+                                  const newFeverCount = feverCount + 1;
+                                  this.setState({ feverCount: newFeverCount });
+                                }
+                                if (item.foreign_flag) {
+                                  const newForeignCount = foreignCount + 1;
+                                  this.setState({ foreignCount: newForeignCount });
+                                }
+                              });
+                              // 01职员，02干部，03科室上报员
+                              if (user.duty === "02") {
+                                getCadreList({ start: todayStart, end: now, keyword: "" });
+                              }
+                            }
 
   showConfirm = (): void => {
     Modal.confirm({
@@ -150,7 +164,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       {
         title: "人员类别",
         dataIndex: "role",
-        key: 'role',
+        key: "role",
         filters: [
           {
             text: "在职职工",
@@ -191,7 +205,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           const { id } = record;
           return (
             <span>
-              <span>{text}</span>
+              <span>{text}</span>;
             </span>
           )
         },
@@ -226,7 +240,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value ? "red" : "green";
           const fever = value ? "是" : "否";
-          return <span style={{ color: color }}> {fever}</span >
+          return <span style={{ color: color }}> {fever}</span>;
         },
       },
       {
@@ -236,7 +250,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value >= 37.2 ? "red" : "green";
           const temperature = value >= 37.2 ? value : "";
-          return <span style={{ color: color }}>{temperature}</span >
+          return <span style={{ color: color }}>{temperature}</span>;;
         },
         sorter: (a: any, b: any) => a.temperature - b.temperature,
       },
@@ -274,7 +288,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           // console.log(new Date(value));
           const dt = new Date(value);
           console.log(dt.valueOf());
-          return <span> {date2LocalString(dt, 'yyyy-MM-dd hh:mm:ss')} </span >
+          return <span> {date2LocalString(dt, 'yyyy-MM-dd hh:mm:ss')} </span>;
         },
         sorter: (a: any, b: any) => {
           console.log(a);
@@ -327,7 +341,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             <SearchForm ></SearchForm>
           </Col>
           <Col span={6}>
-            <section className="temp-reports-summary">共检索到{tempReportList.length}份报告，{feverCount}份发热，{foreignCount}份离京</section>
+            <section className="temp-reports-summary">共检索到{tempReportList.length}份报告，{feverCount}份发热，{foreignCount}份离京</section>,
           </Col>
         </Row>
         <Table

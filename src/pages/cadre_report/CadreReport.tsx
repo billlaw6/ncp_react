@@ -15,7 +15,7 @@ import { getCadreReportListAction } from "_actions/report";
 
 const { Item } = Form;
 const { Option } = Select;
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
 const CadreReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
   const { user, departmentList, getCadreReportList } = props;
@@ -50,15 +50,21 @@ const CadreReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = p
       console.log(" Key: ", key, "  value: ", value);
     });
     console.groupEnd();
-    submitCadreReport(formData).then((res) => {
-      // 提交后需要主动重新获取列表
-      const todayStart = moment().startOf('day').format(dateFormat);
-      const now = moment().locale('zh-cn').format(dateFormat);
-      getCadreReportList({ start: todayStart, end: now, keyword: "" });
-      history.push("/");
-    }).catch((err) => {
-      console.log(err);
-    });
+    submitCadreReport(formData)
+      .then(res => {
+        // 提交后需要主动重新获取列表
+        const todayStart = moment()
+          .startOf("day")
+          .format(dateFormat);
+        const now = moment()
+          .locale("zh-cn")
+          .format(dateFormat);
+        getCadreReportList({ start: todayStart, end: now, keyword: "" });
+        history.push("/");
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     // setIsEdit(false);
   };
@@ -110,19 +116,28 @@ const CadreReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = p
                 }
                 filterOption={(input, option) => {
                   // console.log(option.props.title);
-                  if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                  if (
+                    option!
+                      .props!.title!.toString()
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0 ||
+                    option!
+                      .props!.value!.toString()
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
+                  ) {
                     return true;
                   } else {
                     return false;
                   }
-                }
-                }
+                }}
               >
-                {departmentList.map((item) => {
+                {departmentList.map(item => {
                   return (
-                    <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
-                  )
+                    <Option key={item.code} value={item.code} title={item.py}>
+                      {item.name}
+                    </Option>
+                  );
                 })}
               </Select>
               <Input
@@ -155,7 +170,11 @@ const CadreReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = p
                 onChange={updateInputVal}
               ></Input>
             </Item>
-            <Item label="不在岗原因" style={{ display: cadreReport.on_duty_flag ? "block" : "none" }} colon={false}>
+            <Item
+              label="不在岗原因"
+              style={{ display: cadreReport.on_duty_flag ? "block" : "none" }}
+              colon={false}
+            >
               <Select
                 showSearch
                 defaultValue={cadreReport.reason}
@@ -163,11 +182,21 @@ const CadreReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = p
                   setCadreReport(Object.assign({}, cadreReport, { reason: value }))
                 }
               >
-                <Option key={'xj'} value={'休假'} title={'xj'}>休假</Option>
-                <Option key={'wp'} value={'外派'} title={'wp'}>外派</Option>
-                <Option key={'cqcgjx'} value={'长期出国进修'} title={'cqcgxj'}>长期出国进修</Option>
-                <Option key={'glgc'} value={'隔离观察'} title={'glgc'}>隔离观察</Option>
-                <Option key={'qt'} value={'其它原因'} title={'qt'}>其它原因</Option>
+                <Option key={"xj"} value={"休假"} title={"xj"}>
+                  休假
+                </Option>
+                <Option key={"wp"} value={"外派"} title={"wp"}>
+                  外派
+                </Option>
+                <Option key={"cqcgjx"} value={"长期出国进修"} title={"cqcgxj"}>
+                  长期出国进修
+                </Option>
+                <Option key={"glgc"} value={"隔离观察"} title={"glgc"}>
+                  隔离观察
+                </Option>
+                <Option key={"qt"} value={"其它原因"} title={"qt"}>
+                  其它原因
+                </Option>
               </Select>
               {/* <Input
                 style={{ display: cadreReport.reason === "其它原因：" ? "block" : "none" }}

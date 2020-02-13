@@ -1,5 +1,10 @@
 import { TempReportI, UserI, CadreReportI } from "_constants/interface";
-import { getTempReportListAction, checkTempReportListAction, getCadreReportListAction, checkCadreReportListAction } from "_actions/report";
+import {
+  getTempReportListAction,
+  checkTempReportListAction,
+  getCadreReportListAction,
+  checkCadreReportListAction,
+} from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
 

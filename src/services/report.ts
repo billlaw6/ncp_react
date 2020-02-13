@@ -31,7 +31,7 @@ export const searchTempReport = async (params: any) => {
 };
 
 export const submitCadreReport = async (params: any) => {
-  const res = await axios.post(`/report/cadre/`, params );
+  const res = await axios.post(`/report/cadre/`, params);
   return res;
 };
 
@@ -46,9 +46,9 @@ export const checkCadreReport = async (params: string[]) => {
 };
 
 export const downloadCadreReportList = async (params: any) => {
-  const res = await axios.post(`/report/cadre/download/`, params );
+  const res = await axios.post(`/report/cadre/download/`, params);
   return res;
-}
+};
 
 export const getCadreReportDetail = async (params: any) => {
   const res = await axios.get(`/report/cadre/${params.id}`, { params: params });

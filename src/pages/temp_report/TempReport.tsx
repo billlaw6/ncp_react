@@ -15,7 +15,7 @@ import { getTempReportListAction } from "_actions/report";
 
 const { Item } = Form;
 const { Option } = Select;
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
 const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
   const { user, departmentList, getTempReportList } = props;
@@ -54,8 +54,12 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
     console.groupEnd();
     submitTempReport(formData).then((res) => {
       // 提交后需要主动重新获取列表
-      const todayStart = moment().startOf('day').format(dateFormat);
-      const now = moment().locale('zh-cn').format(dateFormat);
+      const todayStart = moment()
+        .startOf("day")
+        .format(dateFormat);
+      const now = moment()
+        .locale("zh-cn")
+        .format(dateFormat);
       getTempReportList({ start: todayStart, end: now, keyword: "" });
       history.push("/");
     }).catch((err) => {
@@ -112,19 +116,21 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 }
                 filterOption={(input, option) => {
                   // console.log(option.props.title);
-                  if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                  if (
+                    option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                  ) {
                     return true;
                   } else {
                     return false;
                   }
-                }
-                }
-              >
-                {departmentList.map((item) => {
+                }}>
+                {departmentList.map(item => {
                   return (
-                    <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
-                  )
+                    <Option key={item.code} value={item.code} title={item.py}>
+                      {item.name}
+                    </Option>
+                  );;
                 })}
               </Select>
               <Input
@@ -142,8 +148,8 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 disabled={false}
                 value={tempReport.is_fever}
                 onChange={(e: RadioChangeEvent): void => {
-                  // console.log(e.target.value);
-                  setTempReport(Object.assign({}, tempReport, { is_fever: e.target.value }))
+                  // console.log(e.target.value);;;;
+                  setTempReport(Object.assign({}, tempReport, { is_fever: e.target.value }));;
                 }}
               >
                 <Radio value={0}>未发热</Radio>
@@ -157,7 +163,11 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 onChange={updateInputVal}
               ></Input>
             </Item>
-            <Item label="具体温度" style={{ display: tempReport.is_fever ? "block" : "none" }} colon={false}>
+            <Item
+              label="具体温度"
+              style={{ display: tempReport.is_fever ? "block" : "none" }}
+              colon={false}
+            >
               <Input
                 type="number"
                 name="temperature"
@@ -188,7 +198,11 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 onChange={updateInputVal}
               ></Input>
             </Item>
-            <Item label="所在位置" style={{ display: tempReport.foreign_flag ? "block" : "none" }} colon={false}>
+            <Item
+              label="所在位置"
+              style={{ display: tempReport.foreign_flag ? "block" : "none" }}
+              colon={false}
+            >
               <Input
                 type="text"
                 disabled={tempReport.foreign_flag ? false : true}
@@ -231,7 +245,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
           </div>
         </form>
       </div>
-    </section>
+    </section >
   );
 };
 
