@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState, useRef } from "react";
-import { Form, Input, Row, Col, Select, DatePicker, Radio } from "antd";
+import { Form, Input, InputNumber, Row, Col, Select, DatePicker, Radio } from "antd";
 import moment, { Moment } from "moment";
 import { connect, MapDispatchToProps } from "react-redux";
 
@@ -76,6 +76,10 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
     setTempReport(Object.assign({}, tempReport, { [name]: value }));
   };
 
+  const updateTemperatureVal = (value: number | undefined): void => {
+    setTempReport(Object.assign({}, tempReport, { temperature: value }));
+  };
+
   return (
     <section className="temp-report">
       <div className="temp-report-header">每日体温上报</div>
@@ -142,7 +146,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 onChange={updateInputVal}
               ></Input>
             </Item>
-            <Item label="是否发热" colon={false}>
+            <Item label="是否发热（高于37.2度)" colon={false}>
               <Radio.Group
                 className="temp-report-form-gender"
                 disabled={false}
@@ -168,14 +172,16 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
               style={{ display: tempReport.is_fever ? "block" : "none" }}
               colon={false}
             >
-              <Input
-                type="number"
+              <InputNumber
                 name="temperature"
                 disabled={tempReport.is_fever ? false : true}
+                max={45}
+                min={37.2}
+                precision={1}
                 step="0.1"
                 value={tempReport.temperature}
-                onChange={updateInputVal}
-              ></Input>
+                onChange={updateTemperatureVal}
+              ></InputNumber>摄氏度
             </Item>
             <Item label="是否离京" colon={false}>
               <Radio.Group

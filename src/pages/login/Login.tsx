@@ -18,8 +18,8 @@ const Login: FunctionComponent<LoginPropsI> = props => {
   const $form = useRef<HTMLFormElement>(null);
 
   const defaultUserLogin = {
-    username: "liubin",
-    password: "liubin123456",
+    username: "",
+    password: "",
   };
   const [userLogin, setUserLogin] = useState(defaultUserLogin);
   const [isEdit, setIsEdit] = useState(true);

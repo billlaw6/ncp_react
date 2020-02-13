@@ -10,6 +10,7 @@ import { ReactElement } from "react";
 
 export interface MapStateToPropsI {
   tempReportList: TempReportI[];
+  cadreReportList: CadreReportI[];
   user: UserI;
   token: string;
 }

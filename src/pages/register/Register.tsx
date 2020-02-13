@@ -18,10 +18,10 @@ const Register: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = prop
 
   const defaultUserRegister = {
     role: 1,
-    cell_phone: "18001163901",
-    name: 'lb',
-    password1: "abc",
-    password2: "abc",
+    cell_phone: "",
+    name: "",
+    password1: "",
+    password2: "",
   };
   const [userRegister, setUserRegister] = useState(defaultUserRegister); // 网页中的用户信息 默认为服务器端用户信息
   const [isEdit, setIsEdit] = useState(true); // 网页中的用户信息 默认为服务器端用户信息

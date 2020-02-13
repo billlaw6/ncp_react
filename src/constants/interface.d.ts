@@ -99,8 +99,9 @@ export declare interface StoreStateI {
   router: { location: Location };
   token: string;
   user: UserI;
-  tempReportList: TempReportI[];
   departmentList: DepartmentI[];
+  tempReportList: TempReportI[];
+  cadreReportList: CadreReportI[];
 }
 
 export declare interface CustomHTMLDivElement extends HTMLDivElement {

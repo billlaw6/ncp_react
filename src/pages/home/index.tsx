@@ -51,36 +51,36 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   componentDidMount(): void {
-                              const {
-                                user,
-                                tempReportList,
-                                getTempList,
-                                getCadreList,
-                              } = this.props;
-                              const { feverCount, foreignCount } = this.state;
-                              // 默认取当天的数据
-                              const todayStart = moment()
-                                .startOf("day")
-                                .format(dateFormat);
-                              const now = moment()
-                                .locale("zh-cn")
-                                .format(dateFormat);
-                              getTempList({ start: todayStart, end: now, keyword: "" });
-                              tempReportList.forEach(item => {
-                                if (item.is_fever) {
-                                  const newFeverCount = feverCount + 1;
-                                  this.setState({ feverCount: newFeverCount });
-                                }
-                                if (item.foreign_flag) {
-                                  const newForeignCount = foreignCount + 1;
-                                  this.setState({ foreignCount: newForeignCount });
-                                }
-                              });
-                              // 01职员，02干部，03科室上报员
-                              if (user.duty === "02") {
-                                getCadreList({ start: todayStart, end: now, keyword: "" });
-                              }
-                            }
+    const {
+      user,
+      tempReportList,
+      getTempList,
+      getCadreList,
+    } = this.props;
+    const { feverCount, foreignCount } = this.state;
+    // 默认取当天的数据
+    const todayStart = moment()
+      .startOf("day")
+      .format(dateFormat);
+    const now = moment()
+      .locale("zh-cn")
+      .format(dateFormat);
+    getTempList({ start: todayStart, end: now, keyword: "" });
+    tempReportList.forEach(item => {
+      if (item.is_fever) {
+        const newFeverCount = feverCount + 1;
+        this.setState({ feverCount: newFeverCount });
+      }
+      if (item.foreign_flag) {
+        const newForeignCount = foreignCount + 1;
+        this.setState({ foreignCount: newForeignCount });
+      }
+    });
+    // 01职员，02干部，03科室上报员
+    if (user.duty === "02") {
+      getCadreList({ start: todayStart, end: now, keyword: "" });
+    }
+  }
 
   showConfirm = (): void => {
     Modal.confirm({
@@ -133,8 +133,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     axios({
       method: 'get',
       url: downloadUrl,
-      data: { startDt: todayStart, endDt: now, keyword: "" },
-      headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'},
+      params: { start: todayStart, end: now, keyword: "" },
+      headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
       responseType: 'blob',
     }).then((res: any) => {
       // let blob = new Blob([res]);
@@ -153,7 +153,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   render(): ReactElement {
-    const { user, tempReportList } = this.props;
+    const { user, tempReportList, cadreReportList } = this.props;
     const { loading, feverCount, foreignCount, selectedRowKeys, page } = this.state;
     const rowSelection = {
       selectedRowKeys,
@@ -335,13 +335,22 @@ class Home extends Component<HomePropsI, HomeStateI> {
     return (
       <div className="temp-reports">
         <div className="temp-reports-header">我的上报卡</div>
-        <a href="/temp-report">新建体温上报</a>
+        <Row type="flex" justify="space-around" className="temp-reports-link">
+          <Col span="12">
+            <a href="/temp-report">新建体温上报</a>
+          </Col>
+          {user.duty === "02" ? (
+            <Col span="12">
+              <a href="/cadre-report">新建干部在岗上报</a>
+            </Col>) : ""}
+        </Row>
         <Row type="flex" justify="space-around">
           <Col span={18}>
             <SearchForm ></SearchForm>
           </Col>
           <Col span={6}>
-            <section className="temp-reports-summary">共检索到{tempReportList.length}份报告，{feverCount}份发热，{foreignCount}份离京</section>,
+            <section className="temp-reports-summary">共检索到{tempReportList.length}份体温报告，{feverCount}份发热，{foreignCount}份离京</section>,
+            <section className="cadre-reports-summary">共检索到{cadreReportList.length}份干部报告</section>,
           </Col>
         </Row>
         <Table
@@ -397,6 +406,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   tempReportList: state.tempReportList,
+  cadreReportList: state.cadreReportList,
   user: state.user,
   token: state.token,
 });
