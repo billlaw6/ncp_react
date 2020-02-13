@@ -8,7 +8,8 @@ let requestName: string; // 每次发起请求都会携带这个参数，用于�
 
 switch (process.env.NODE_ENV) {
   case "development":
-    axios.defaults.baseURL = "http://localhost:8083/rest-api/";
+    // axios.defaults.baseURL = "http://localhost:8083/rest-api/";
+    axios.defaults.baseURL = "http://123.56.115.20:8083/rest-api/";
     break;
   case "production":
     axios.defaults.baseURL = "http://report.carryon.top/rest-api/";

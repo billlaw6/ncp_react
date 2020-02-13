@@ -28,7 +28,7 @@ function* registerUserEffect(action: ReturnType<typeof registerUserAction>) {
     //   console.log("Key: ", key, "  Value: ", value);
     // });
     // console.groupEnd();
-    console.log(res.data);
+    // console.log(res.data);
     yield put({ type: types.SET_TOKEN, payload: res.data.token });
     yield put({ type: types.SET_USER, payload: res.data.token });
     yield put(push("/profile"));
@@ -46,7 +46,7 @@ function* loginUserEffect(action: ReturnType<typeof loginUserAction>) {
         //   console.log("Key: ", key, "  Value: ", value);
         // });
         // console.groupEnd();
-        console.log(key_res);
+        // console.log(key_res);
         yield put({ type: types.SET_TOKEN, payload: key_res.data.key });
         const user_res = yield call(getUserInfo);
         // console.log(user_res);
@@ -69,7 +69,7 @@ function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
     //   console.log("Key: ", key, "  Value: ", value);
     // });
     // console.groupEnd();
-    console.log(res.data);
+    // console.log(res.data);
     yield put({ type: types.SET_USER, payload: res.data });
     yield put(push("/temp-report"));
   } catch (error) {
@@ -91,10 +91,10 @@ function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
 
 function* getDepartmentListEffect(action: ReturnType<typeof getDepartmentListAction>) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(getDepartmentList, action.payload);
     // console.log(typeof JSON.parse(res.data));
-    console.log(res.data);
+    // console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_DEPARTMENT_LIST, payload: res.data });
   } catch (error) {
@@ -104,10 +104,10 @@ function* getDepartmentListEffect(action: ReturnType<typeof getDepartmentListAct
 
 function* getTempReportEffect(action: ReturnType<typeof getTempReportListAction>) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(getTempReportList, action.payload);
     // console.log(typeof JSON.parse(res.data));
-    console.log(res.data);
+    // console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_TEMP_REPORT_LIST, payload: res.data });
   } catch (error) {
@@ -128,10 +128,10 @@ function* checkTempReportEffect(action: ReturnType<typeof checkTempReportListAct
 
 function* getCadreReportEffect(action: ReturnType<typeof getCadreReportListAction>) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(getCadreReportList, action.payload);
     // console.log(typeof JSON.parse(res.data));
-    console.log(res.data);
+    // console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_CADRE_REPORT_LIST, payload: res.data });
   } catch (error) {

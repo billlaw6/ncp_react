@@ -114,13 +114,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
   checkTempReport = async (): Promise<void> => {
     const { selectedRowKeys } = this.state;
     const { checkTempList } = this.props;
-    console.log("check selected reports: ", selectedRowKeys);
+    // console.log("check selected reports: ", selectedRowKeys);
     checkTempList(selectedRowKeys);
   };
   /* === APIS 与服务器交互数据的方法 END === */
 
   onSelectChange = (selectedRowKeys: any) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    // console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys })
   }
 
@@ -287,11 +287,11 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: string) => {
           // console.log(new Date(value));
           const dt = new Date(value);
-          console.log(dt.valueOf());
+          // console.log(dt.valueOf());
           return <span> {date2LocalString(dt, 'yyyy-MM-dd hh:mm:ss')} </span>;
         },
         sorter: (a: any, b: any) => {
-          console.log(a);
+          // console.log(a);
           const a1 = new Date(a.created_at).valueOf();
           const b1 = new Date(b.created_at).valueOf();
           return a1 - b1;
