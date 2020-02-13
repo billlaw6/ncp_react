@@ -130,7 +130,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const now = moment().locale('zh-cn').format(dateFormat);
     downloadTempReportList({ start: todayStart, end: now, keyword: "" });
     // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
-    const downloadUrl = "/rest-api/report/temp/download/";
+    const downloadUrl = "http://report.carryon.top/rest-api/report/temp/download/";
     axios({
       method: 'get',
       url: downloadUrl,
