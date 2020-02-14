@@ -22,7 +22,7 @@ const defaultUser: UserI = {
   name: "",
   role: -1,
   department: "",
-  duties: -1,
+  duty: "01",
   cell_phone: "",
   gender: 0,
   age: 0,

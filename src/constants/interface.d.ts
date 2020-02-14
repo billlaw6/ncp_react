@@ -19,11 +19,11 @@ export declare enum RoleE {
 }
 
 // 职务枚举
-export declare enum DutiesE {
-  干部 = 0,
-  职员 = 1,
-  上报员 = 2,
-}
+// export declare enum DutiesE {
+//   干部 = 0,
+//   职员 = 1,
+//   上报员 = 2,
+// }
 
 // 用户信息
 export declare interface UserI {
@@ -32,13 +32,13 @@ export declare interface UserI {
   name: string;
   role: RoleE;
   department: string;
-  duties?: DutiesE;
   cell_phone: string;
   gender: GenderE;
   birthday?: string;
   age: number;
   address: string;
   duty?: string;
+  title?: string;
   unit?: string;
   groups?: string[];
   pinyin?: "";

@@ -82,7 +82,16 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
 
   return (
     <section className="temp-report">
-      <div className="temp-report-header">每日体温上报</div>
+      <Row type="flex" justify="start">
+        <Col span={12}>
+          <div className="temp-report-header">每日体温上报</div>
+        </Col>
+        <Col span={12}>
+          <div className="profile-link">
+            <a href="/profile">修改个人信息</a>
+          </div>
+        </Col>
+      </Row>
       <div className="temp-report-content">
         <form
           className="temp-report-form"

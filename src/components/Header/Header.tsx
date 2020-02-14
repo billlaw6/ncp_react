@@ -58,7 +58,7 @@ const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   return (
     <AntdHeader id="header">
       <div className="header-content">
-        <a className="logo" href="/">北京大学第三医院抗疫每日个人上报</a>
+        <a className="logo" href="/">北医三院抗疫日报</a>
 
         <Dropdown
           className="avatar"

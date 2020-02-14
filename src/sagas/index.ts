@@ -81,6 +81,7 @@ function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
   try {
     const res = yield call(logoutUser);
     yield put({ type: types.SET_TEMP_REPORT_LIST, payload: [] });
+    yield put({ type: types.SET_CADRE_REPORT_LIST, payload: [] });
     yield put({ type: types.SET_TOKEN, payload: "" });
     yield put({ type: types.SET_USER, payload: {} });
     yield put(push("/login"));

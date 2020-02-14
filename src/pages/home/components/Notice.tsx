@@ -10,12 +10,12 @@ import { PrivacyNoticePropsI } from "./type";
 
 const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
   const { user, onChecked } = props;
-  const { duties = 0 } = user;
+  const { duty } = user
 
   const [checkWarn, setCheckWarn] = useState(false); // 当未选中同意时，点击确定 提醒
   const [check, setCheck] = useState(false); // 是否勾选同意
   const [privacyNoticeContent, setPrivacyNoticeContent] = useState(""); // 隐私协议内容
-  const [privacyNotice, setPrivacyNotice] = useState(duties); // 隐私协议版本
+  const [privacyNotice, setPrivacyNotice] = useState(duty); // 隐私协议版本
   const [show, setShow] = useState(true); // 是否现实modal窗
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       // something
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
       console.log(privacyNotice);
-      // agreePrivacyNotice({ duties_id: privacyNotice }).then(
+      // agreePrivacyNotice({ duty_id: privacyNotice }).then(
       //   (): void => {
       //     setShow(false);
       //     onChecked && onChecked();
@@ -53,13 +53,13 @@ const PrivacyNotice: FunctionComponent<PrivacyNoticePropsI> = props => {
       // );
       //   .catch(error => console.error(error));
       /* =========== 这里应当返回成功以后再执行 先放到finally内 后删 ============= */
-      // agreePrivacyNoticeAction({ duties_id: privacyNotice });
+      // agreePrivacyNoticeAction({ duty_id: privacyNotice });
       // setShow(false);
       // onChecked && onChecked();
     }
   }
 
-  if (!duties || privacyNotice !== duties)
+  if (!duty || privacyNotice !== duty)
     return (
       <Modal
         className="privacy-notice"

@@ -24,6 +24,7 @@ export interface MapDispatchToPropsI {
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
 export interface HomeStateI {
   selectedRowKeys: []; //当前已选择的id 集
+  selectedRowKeysCadre: []; //当前已选择的id 集
   loading: false,
   redirectReport: boolean; // 是否重定向到report页
   page: number;

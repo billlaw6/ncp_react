@@ -168,6 +168,60 @@ const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props
                 onChange={updateInputVal}
               ></Input>
             </Item>
+            <Item
+              style={{ display: userInfo.role === 0 ? 'block' : 'none' }}
+              label="角色"
+              colon={false}>
+              <Select
+                disabled={!isEdit}
+                dropdownClassName="profile-form-gender"
+                value={userInfo.duty}
+                onChange={(value: string): void => {
+                  setUserInfo(Object.assign({}, userInfo, { duty: value }));
+                  // if (value !== "02") {
+                  //   setUserInfo(Object.assign({}, userInfo, { title: null }));
+                  // }
+                }}
+              >
+                <Option value={"01"}>职员</Option>
+                <Option value={"02"}>干部</Option>
+                <Option value={"03"}>科室上报员</Option>
+                <Option value={"04"}>医院上报员</Option>
+              </Select>
+              <Input
+                style={{ display: "none" }}
+                type="text"
+                name="duty"
+                disabled={!isEdit}
+                value={userInfo.duty}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
+            <Item
+              style={{ display: userInfo.duty === "02" ? 'block' : 'none' }}
+              label="职务"
+              colon={false}>
+              <Select
+                disabled={userInfo.duty !== "02"}
+                dropdownClassName="profile-form-gender"
+                value={userInfo.title}
+                onChange={(value: string): void =>
+                  setUserInfo(Object.assign({}, userInfo, { title: value }))
+                }
+              >
+                <Option value={"01"}>院级领导</Option>
+                <Option value={"02"}>处级领导</Option>
+                <Option value={"03"}>科级领导</Option>
+              </Select>
+              <Input
+                style={{ display: "none" }}
+                type="text"
+                name="title"
+                disabled={!isEdit}
+                value={userInfo.title}
+                onChange={updateInputVal}
+              ></Input>
+            </Item>
             <Item label="地址" colon={false}>
               <Input
                 disabled={!isEdit}

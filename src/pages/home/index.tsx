@@ -28,6 +28,7 @@ import LinkButton from "_components/LinkButton/LinkButton";
 import SearchForm from "./components/SearchForm";
 import { date2LocalString } from "../../utils/utils";
 import { downloadTempReportList } from "_services/report";
+// import { axios as MyAxios } from "_services/api";
 import axios from "axios";
 
 import "./Home.less";
@@ -42,6 +43,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
     this.state = {
       selectedRowKeys: [],
+      selectedRowKeysCadre: [],
       loading: false,
       redirectReport: false,
       page: 1,
@@ -82,16 +84,20 @@ class Home extends Component<HomePropsI, HomeStateI> {
     }
   }
 
+
   showConfirm = (): void => {
     Modal.confirm({
       centered: true,
       className: "del-confirm",
       title: "确认审核",
-      content: "确认审核所选报告吗？",
+      content: "确认审核所选体温报告吗？",
       cancelText: "取消",
       okText: "确定",
       onOk: async (): Promise<void> => {
-        await this.checkTempReport();
+        const { selectedRowKeys } = this.state;
+        const { checkTempList } = this.props;
+        // console.log("check selected reports: ", selectedRowKeys);
+        checkTempList(selectedRowKeys);
         this.setState({
           selectedRowKeys: [],
         });
@@ -104,24 +110,38 @@ class Home extends Component<HomePropsI, HomeStateI> {
     });
   };
 
-  /* === APIS 与服务器交互数据的方法 START === */
-
-  /**
-   * 审核所选报告
-   *
-   * @memberof Home
-   */
-  checkTempReport = async (): Promise<void> => {
-    const { selectedRowKeys } = this.state;
-    const { checkTempList } = this.props;
-    // console.log("check selected reports: ", selectedRowKeys);
-    checkTempList(selectedRowKeys);
+  showConfirmCadre = (): void => {
+    Modal.confirm({
+      centered: true,
+      className: "del-confirm",
+      title: "确认审核",
+      content: "确认审核所选干部报告吗？",
+      cancelText: "取消",
+      okText: "确定",
+      onOk: async (): Promise<void> => {
+        const { selectedRowKeysCadre } = this.state;
+        const { checkCadreList } = this.props;
+        // console.log("check selected reports: ", selectedRowKeys);
+        checkCadreList(selectedRowKeysCadre);
+        this.setState({
+          selectedRowKeysCadre: [],
+        });
+      },
+      onCancel: (): void => {
+        this.setState({
+          selectedRowKeysCadre: [],
+        });
+      },
+    });
   };
-  /* === APIS 与服务器交互数据的方法 END === */
 
   onSelectChange = (selectedRowKeys: any) => {
     // console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
+  }
+
+  onSelectChangeCadre = (selectedRowKeysCadre: any) => {
+    this.setState({ selectedRowKeysCadre });
   }
 
   handleDownloadClick = () => {
@@ -155,14 +175,50 @@ class Home extends Component<HomePropsI, HomeStateI> {
     })
   }
 
+  handleDownloadCadreClick = () => {
+    console.log('donwload cadre clicked');
+    // const todayStart = moment().startOf('week').format(dateFormat);
+    const todayStart = moment().subtract('days', 7).format(dateFormat);
+    const now = moment().locale('zh-cn').format(dateFormat);
+    // downloadTempReportList({ start: todayStart, end: now, keyword: "" });
+    // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
+    // const downloadUrl = "http://123.56.115.20:8083/rest-api/report/temp/download/";
+    const downloadUrl = "http://report.carryon.top/rest-api/report/cadre/download/";
+    axios({
+      method: 'get',
+      url: downloadUrl,
+      params: { start: todayStart, end: now, keyword: "" },
+      headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
+      responseType: 'blob',
+    }).then((res: any) => {
+      // let blob = new Blob([res]);
+      let blob = new Blob([res.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      });
+      let a = document.createElement("a");
+      let objectUrl = URL.createObjectURL(blob);  // 创建下载链接
+      a.href = objectUrl;
+      document.body.appendChild(a);
+      a.click(); // 点击下载
+      // a.dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(objectUrl);  // 释放掉blob对象
+    })
+  }
+
   render(): ReactElement {
     const { user, tempReportList, cadreReportList } = this.props;
-    const { loading, feverCount, foreignCount, selectedRowKeys, page } = this.state;
+    const { loading, feverCount, foreignCount, selectedRowKeys, selectedRowKeysCadre, page } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     }
+    const rowSelectionCadre = {
+      selectedRowKeys,
+      onChangeCadre: this.onSelectChangeCadre,
+    }
     const hasSelected = selectedRowKeys.length > 0;
+    const hasSelectedCadre = selectedRowKeysCadre.length > 0;
     const columns: any = [
       {
         title: "人员类别",
@@ -324,28 +380,64 @@ class Home extends Component<HomePropsI, HomeStateI> {
         },
       },
     ];
-
-    const dataSource: any = this.props.tempReportList;
-
-    const paginationConfig: PaginationConfig = {
-      current: page,
-      defaultPageSize: DEFAULT_PAGE_SIZE,
-      total: dataSource.length,
-      hideOnSinglePage: true,
-      onChange: (page): void => {
-        this.setState({ page });
+    const cadre_columns: any = [
+      {
+        title: "姓名",
+        dataIndex: "name",
+        key: 'name',
+        render: (text: string, record: any): ReactElement | string => {
+          const { id } = record;
+          return (
+            <span>
+              <span>{text}</span>;
+            </span>
+          )
+        },
       },
-    };
+      {
+        title: "职务",
+        dataIndex: "title",
+        key: "title"
+      },
+      {
+        title: "是否在岗",
+        dataIndex: "on_duty_flag",
+        key: "on_duty_flag",
+        filters: [
+          {
+            text: "在岗",
+            value: 0,
+          },
+          {
+            text: "不在岗",
+            value: 1,
+          },
+        ],
+        onFilter: (value: number, record: any) => record.on_duty_flag == value,
+        render: (value: number) => {
+          const color = value ? "red" : "green";
+          const onDuty = value ? "是" : "否";
+          return <span style={{ color: color }}>{onDuty}</span>;
+        },
+      },
+      {
+        title: "不在岗原因",
+        dataIndex: "reason",
+        key: "reason",
+        // 中文排序方法
+        sorter: (a: any, b: any) => a.localeCompare(b.reason, 'zh-CN'),
+      },
+    ]
 
     return (
       <div className="temp-reports">
         <div className="temp-reports-header">我的上报卡</div>
-        <Row type="flex" justify="space-around" className="temp-reports-link">
-          <Col span="12">
+        <Row type="flex" justify="start" className="temp-reports-link">
+          <Col span={12}>
             <a href="/temp-report">新建体温上报</a>
           </Col>
           {user.duty === "02" ? (
-            <Col span="12">
+            <Col span={12}>
               <a href="/cadre-report">新建干部在岗上报</a>
             </Col>) : ""}
         </Row>
@@ -358,52 +450,101 @@ class Home extends Component<HomePropsI, HomeStateI> {
             <section className="cadre-reports-summary">共检索到{cadreReportList.length}份干部报告</section>,
           </Col>
         </Row>
-        <Table
-          ref="temp-reports-table"
-          rowSelection={rowSelection}
-          className="temp-report-list temp-report-list-table"
-          rowKey={"id"}
-          columns={columns}
-          dataSource={dataSource}
-          // dataSource={tempReportList}
-          // pagination={paginationConfig}
-          onRow={(record): TableEventListeners => {
-            return {
-              onClick: (): void => {
-                // this.onClickItem(record.id);
-              },
-            };
-          }}
-        ></Table>
 
-        <Button
-          style={{
-            margin: "15px",
-            float: "right",
-            display: user.duty === "03" ? "block" : "none"
-          }}
-          disabled={hasSelected ? false : true}
-          onClick={this.showConfirm}
-        >
-          审核提交选中报告
-        </Button>
-        <Button
-          style={{
-            margin: "15px",
-            float: "right",
-          }}
-          onClick={this.handleDownloadClick}
-        >
-          下载全部数据到Excel文件
-        </Button>
+        <div
+          className="temp-report-div">
+          <h3>每日体温上报</h3>
+          <Table
+            ref="temp-reports-table"
+            rowSelection={rowSelection}
+            className="temp-report-list temp-report-list-table"
+            rowKey={"id"}
+            columns={columns}
+            dataSource={tempReportList}
+            onRow={(record): TableEventListeners => {
+              return {
+                onClick: (): void => {
+                  // this.onClickItem(record.id);
+                },
+              };
+            }}
+          ></Table>
 
-        {/* <ReactHTMLTableToExcel
-          id = "export-table-xls-button"
-          className="download-excel-button"
-          table="table-to-xls"
-          filename={"体温报告" + 123}
-          sheet={"体温报告" + 123}
-          buttonText="导出表格到Excel"/> */}
+          <Row>
+            <Col>
+              <Button
+                style={{
+                  margin: "15px",
+                  float: "right",
+                  display: user.duty === "03" ? "block" : "none"
+                }}
+                disabled={hasSelected ? false : true}
+                onClick={this.showConfirm}
+              >
+                审核提交选体温报告
+            </Button>
+            </Col>
+            <Col>
+              <Button
+                style={{
+                  margin: "15px",
+                  float: "right",
+                }}
+                onClick={this.handleDownloadClick}
+              >
+                下载体温报告到Excel文件
+            </Button>
+            </Col>
+          </Row>
+        </div>
+
+        <div
+          style={{ display: user.duty === "02" ? "block" : "none" }}
+          className="cadre-report-div">
+          <h3>每日干部在岗上报</h3>
+          <Table
+            ref="cadre-reports-table"
+            rowSelection={rowSelectionCadre}
+            className="cadre-report-list cadre-report-list-table"
+            rowKey={"id"}
+            columns={cadre_columns}
+            dataSource={cadreReportList}
+            onRow={(record): TableEventListeners => {
+              return {
+                onClick: (): void => {
+                  // this.onClickItem(record.id);
+                },
+              };
+            }}
+          ></Table>
+          <Row>
+            <Col>
+              <Button
+                style={{
+                  margin: "15px",
+                  float: "right",
+                  display: user.duty === "03" ? "block" : "none"
+                }}
+                disabled={hasSelectedCadre ? false : true}
+                onClick={this.showConfirmCadre}
+              >
+                审核提交选干部报告
+            </Button>
+            </Col>
+            <Col>
+              <Button
+                style={{
+                  margin: "15px",
+                  float: "right",
+                }}
+                onClick={this.handleDownloadClick}
+              >
+                下载干部报告到Excel文件
+            </Button>
+            </Col>
+          </Row>
+        </div>
+
       </div>
     );
   };
