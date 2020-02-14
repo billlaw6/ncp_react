@@ -6,6 +6,7 @@ import Login from "_pages/login/Login";
 import Profile from "_pages/profile/Profile";
 import TempReport from "_pages/temp_report/TempReport";
 import CadreReport from "_pages/cadre_report/CadreReport";
+import DailyReport from "_pages/daily_report/DailyReport";
 
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
@@ -43,6 +44,12 @@ const routes: RoutesI[] = [
     name: "profile",
     path: "/profile",
     component: Profile,
+    permission: ["login"],
+  },
+  {
+    name: "dailyReport",
+    path: "/daily-report",
+    component: DailyReport,
     permission: ["login"],
   },
   {

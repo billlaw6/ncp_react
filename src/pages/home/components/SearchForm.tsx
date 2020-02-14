@@ -4,7 +4,6 @@ import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect } from "react-redux";
 
-// import { getTempReportList } from "_services/report";
 import { getTempReportListAction } from "_actions/report";
 import { StoreStateI } from "_constants/interface";
 import { MapDispatchToPropsI, MapStateToPropsI } from "./type";
