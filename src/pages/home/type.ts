@@ -15,14 +15,17 @@ export interface MapStateToPropsI {
   token: string;
 }
 export interface MapDispatchToPropsI {
-  getTempList: typeof getTempReportListAction;
-  checkTempList: typeof checkTempReportListAction;
-  getCadreList: typeof getCadreReportListAction;
-  checkCadreList: typeof checkCadreReportListAction;
+  getTempReportListAction: typeof getTempReportListAction;
+  checkTempReportListAction: typeof checkTempReportListAction;
+  getCadreReportListAction: typeof getCadreReportListAction;
+  checkCadreReportListAction: typeof checkCadreReportListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
 export interface HomeStateI {
+  start: string; // YYYY-MM-DD HH:MM:SS
+  end: string; // YYYY-MM-DD HH:MM:SS
+  keyword: string;
   selectedRowKeys: []; //当前已选择的id 集
   selectedRowKeysCadre: []; //当前已选择的id 集
   loading: false,

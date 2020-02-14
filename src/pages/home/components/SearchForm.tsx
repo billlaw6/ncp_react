@@ -1,10 +1,10 @@
-import React from "react";
+import React, { FormEvent } from "react";
 import { Form, Icon, Input, Button, DatePicker } from "antd";
 import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect } from "react-redux";
 
-import { getTempReportList } from "_services/report";
+// import { getTempReportList } from "_services/report";
 import { getTempReportListAction } from "_actions/report";
 import { StoreStateI } from "_constants/interface";
 import { MapDispatchToPropsI, MapStateToPropsI } from "./type";
@@ -13,9 +13,8 @@ const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
 interface SearchFormProps extends FormComponentProps {
-  dtRange?: [Moment, Moment];
-  keyword?: string;
-  // handleSubmit: Function;
+  handleFieldsChange: any;
+  handleSubmit: any;
 }
 
 function hasErrors(fieldsError: any) {
@@ -28,25 +27,24 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & MapDispatch
     this.props.form.validateFields();
   }
 
-  handleSubmit = (e: any) => {
-    const { getTempReportList } = this.props;
+  onSubmit = (e: any) => {
+    const {handleSubmit} = this.props;
+    console.log('on submit')
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        // console.log('Received values of form: ', values);
-        // console.log(values.dtRange[0].locale('zh-cn').format(dateFormat));
-        // console.log(values.dtRange[1].locale('zh-cn').format(dateFormat));
         let formData: any = {};
         formData["start"] = values.dtRange[0].locale("zh-cn").format(dateFormat);
         formData["end"] = values.dtRange[1].locale("zh-cn").format(dateFormat);
         formData["keyword"] = values.keyword;
-        getTempReportList(formData);
+        handleSubmit(formData);
       }
-    });
-  };
+    })
+  }
 
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { handleFieldsChange, handleSubmit } = this.props;
 
     // Only show error after a field is touched.
     const dtRangeError = isFieldTouched("dtRange") && getFieldError("dtRange");
@@ -58,9 +56,12 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & MapDispatch
       .locale("zh-cn")
       .format(dateFormat);
     const dateFormatList = [dateFormat, dateFormat];
-    console.log(todayStart);
+    // console.log(todayStart);
     return (
-      <Form layout="inline" onSubmit={this.handleSubmit}>
+      <Form
+        layout="inline"
+        onSubmit={this.onSubmit}
+      >
         <Form.Item validateStatus={dtRangeError ? "error" : ""} help={dtRangeError || ""}>
           {getFieldDecorator("dtRange", {
             rules: [{ required: true, message: "Please input your dtRange!" }],
@@ -89,7 +90,12 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & MapDispatch
   }
 }
 
-const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({ name: "horizontal_search" })(
+const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({
+  name: "horizontal_search",
+  onFieldsChange(props, changedFields, allValues) {
+    props.handleFieldsChange(changedFields);
+  }
+})(
   HorizontalSearchForm,
 );
 

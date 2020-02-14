@@ -1,5 +1,5 @@
 import { UserI } from "_constants/interface";
-import { LoginUserActionFuncI, GetDepartmentListActionFuncI } from "_actions/user";
+import { LoginUserActionFuncI, SetTokenActionFuncI, SetUserActionFuncI, GetDepartmentListActionFuncI } from "_actions/user";
 
 export interface MapStateToPropsI {
   user: UserI;
@@ -7,10 +7,12 @@ export interface MapStateToPropsI {
 
 export interface MapDispatchToPropsI {
   loginUserAction: LoginUserActionFuncI;
-  getDepartmentList: GetDepartmentListActionFuncI;
+  setTokenAction: SetTokenActionFuncI;
+  setUserAction: SetUserActionFuncI;
+  getDepartmentListAction: GetDepartmentListActionFuncI;
 }
 
-export type LoginPropsI = MapDispatchToPropsI;
+export type LoginPropsI = MapStateToPropsI & MapDispatchToPropsI;
 
 export interface FieldsI {
   username: {

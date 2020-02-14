@@ -3,7 +3,7 @@ import React, { ReactElement, Component } from "react";
 import { connect } from "react-redux";
 import { Button, Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Modal } from "antd";
 // import ReactHTMLTableToExcel from "react-html-table-to-excel";
-import moment from "moment";
+import moment, {Moment} from "moment";
 import { StoreStateI, TempReportI } from "_constants/interface";
 
 import {
@@ -27,7 +27,7 @@ import LinkButton from "_components/LinkButton/LinkButton";
 // import Notice from "./components/Notice";
 import SearchForm from "./components/SearchForm";
 import { date2LocalString } from "../../utils/utils";
-import { downloadTempReportList } from "_services/report";
+import { getTempReportList, downloadTempReportList } from "_services/report";
 // import { axios as MyAxios } from "_services/api";
 import axios from "axios";
 
@@ -46,18 +46,43 @@ class Home extends Component<HomePropsI, HomeStateI> {
       selectedRowKeysCadre: [],
       loading: false,
       redirectReport: false,
+      start: "",
+      end: "",
+      keyword: "",
       page: 1,
       feverCount: 0,
       foreignCount: 0,
     };
   }
+  // 传给检索表单
+  handleFieldsChange = (changedValues: any) => {
+    // const { start, end, keyword } = this.state;
+    // for (const key of Object.keys(changedValues)) {
+    //   if (key === "dtRange") {
+    //     this.setState({'start': changedValues["dtRange"].value[0].locale("zh-cn").format(dateFormat)});
+    //     this.setState({'end': changedValues["dtRange"].value[1].locale("zh-cn").format(dateFormat)});
+    //   }
+    //   if (key === "keyword") {
+    //     this.setState({'keyword': changedValues["keyword"].value});
+    //   }
+    // }
+  };
+
+  // 传给检索表单
+  handleSubmit = (submitedData: any) => {
+    console.log(submitedData);
+    // const { getTempReportList } = this.props;
+    this.setState({...submitedData});
+    getTempReportListAction(submitedData);
+    getCadreReportListAction(submitedData);
+  };
 
   componentDidMount(): void {
     const {
       user,
       tempReportList,
-      getTempList,
-      getCadreList,
+      getTempReportListAction,
+      getCadreReportListAction,
     } = this.props;
     const { feverCount, foreignCount } = this.state;
     // 默认取当天的数据
@@ -67,7 +92,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const now = moment()
       .locale("zh-cn")
       .format(dateFormat);
-    getTempList({ start: todayStart, end: now, keyword: "" });
+    getTempReportListAction({ start: todayStart, end: now, keyword: "" });
     tempReportList.forEach(item => {
       if (item.is_fever) {
         const newFeverCount = feverCount + 1;
@@ -80,10 +105,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
     });
     // 01职员，02干部，03科室上报员
     if (user.duty === "02") {
-      getCadreList({ start: todayStart, end: now, keyword: "" });
+      getCadreReportListAction({ start: todayStart, end: now, keyword: "" });
     }
   }
-
 
   showConfirm = (): void => {
     Modal.confirm({
@@ -95,9 +119,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
       okText: "确定",
       onOk: async (): Promise<void> => {
         const { selectedRowKeys } = this.state;
-        const { checkTempList } = this.props;
+        const { checkTempReportListAction } = this.props;
         // console.log("check selected reports: ", selectedRowKeys);
-        checkTempList(selectedRowKeys);
+        checkTempReportListAction(selectedRowKeys);
         this.setState({
           selectedRowKeys: [],
         });
@@ -120,9 +144,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
       okText: "确定",
       onOk: async (): Promise<void> => {
         const { selectedRowKeysCadre } = this.state;
-        const { checkCadreList } = this.props;
+        const { checkCadreReportListAction } = this.props;
         // console.log("check selected reports: ", selectedRowKeys);
-        checkCadreList(selectedRowKeysCadre);
+        checkCadreReportListAction(selectedRowKeysCadre);
         this.setState({
           selectedRowKeysCadre: [],
         });
@@ -136,27 +160,30 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   onSelectChange = (selectedRowKeys: any) => {
-    // console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log('selectedRowKeys changed: ', selectedRowKeys);
     this.setState({ selectedRowKeys });
   }
 
-  onSelectChangeCadre = (selectedRowKeysCadre: any) => {
-    this.setState({ selectedRowKeysCadre });
+  onSelectChangeCadre = (selectedRowKeys: any) => {
+    // console.log('cadre selection');
+    // console.log(selectedRowKeys);
+    this.setState({ selectedRowKeysCadre: selectedRowKeys });
   }
 
   handleDownloadClick = () => {
     console.log('donwload clicked');
+    const { start, end, keyword } = this.state;
     // const todayStart = moment().startOf('week').format(dateFormat);
-    const todayStart = moment().subtract('days', 7).format(dateFormat);
-    const now = moment().locale('zh-cn').format(dateFormat);
+    // const todayStart = moment().subtract('days', 7).format(dateFormat);
+    // const now = moment().locale('zh-cn').format(dateFormat);
     // downloadTempReportList({ start: todayStart, end: now, keyword: "" });
     // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
-    // const downloadUrl = "http://123.56.115.20:8083/rest-api/report/temp/download/";
-    const downloadUrl = "http://report.carryon.top/rest-api/report/temp/download/";
+    const downloadUrl = "http://123.56.115.20:8083/rest-api/report/temp/download/";
+    // const downloadUrl = "http://report.carryon.top/rest-api/report/temp/download/";
     axios({
       method: 'get',
       url: downloadUrl,
-      params: { start: todayStart, end: now, keyword: "" },
+      params: { start: start, end: end, keyword: keyword },
       headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
       responseType: 'blob',
     }).then((res: any) => {
@@ -177,17 +204,18 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   handleDownloadCadreClick = () => {
     console.log('donwload cadre clicked');
+    const { start, end, keyword } = this.state;
     // const todayStart = moment().startOf('week').format(dateFormat);
-    const todayStart = moment().subtract('days', 7).format(dateFormat);
-    const now = moment().locale('zh-cn').format(dateFormat);
+    // const todayStart = moment().subtract('days', 7).format(dateFormat);
+    // const now = moment().locale('zh-cn').format(dateFormat);
     // downloadTempReportList({ start: todayStart, end: now, keyword: "" });
-    // const downloadUrl = "http://localhost:8083/rest-api/report/temp/download/";
-    // const downloadUrl = "http://123.56.115.20:8083/rest-api/report/temp/download/";
-    const downloadUrl = "http://report.carryon.top/rest-api/report/cadre/download/";
+    // const downloadUrl = "http://localhost:8083/rest-api/report/cadre/download/";
+    const downloadUrl = "http://123.56.115.20:8083/rest-api/report/cadre/download/";
+    // const downloadUrl = "http://report.carryon.top/rest-api/report/cadre/download/";
     axios({
       method: 'get',
       url: downloadUrl,
-      params: { start: todayStart, end: now, keyword: "" },
+      params: { start: start, end: end, keyword: keyword },
       headers: { 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' },
       responseType: 'blob',
     }).then((res: any) => {
@@ -208,14 +236,14 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   render(): ReactElement {
     const { user, tempReportList, cadreReportList } = this.props;
-    const { loading, feverCount, foreignCount, selectedRowKeys, selectedRowKeysCadre, page } = this.state;
+    const { start, end , keyword, loading, feverCount, foreignCount, selectedRowKeys, selectedRowKeysCadre, page } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
     }
     const rowSelectionCadre = {
       selectedRowKeys,
-      onChangeCadre: this.onSelectChangeCadre,
+      onChange: this.onSelectChangeCadre,
     }
     const hasSelected = selectedRowKeys.length > 0;
     const hasSelectedCadre = selectedRowKeysCadre.length > 0;
@@ -427,6 +455,46 @@ class Home extends Component<HomePropsI, HomeStateI> {
         // 中文排序方法
         sorter: (a: any, b: any) => a.localeCompare(b.reason, 'zh-CN'),
       },
+      {
+        title: "上报日期",
+        dataIndex: "created_at",
+        key: "created_at",
+        render: (value: string) => {
+          // console.log(new Date(value));
+          const dt = new Date(value);
+          // console.log(dt.valueOf());
+          return (
+            <span> {date2LocalString(dt, "yyyy-MM-dd hh:mm:ss")} </span>
+          );
+        },
+        sorter: (a: any, b: any) => {
+          // console.log(a);
+          const a1 = new Date(a.created_at).valueOf();
+          const b1 = new Date(b.created_at).valueOf();
+          return a1 - b1;
+        }
+      },
+      {
+        title: "是否已审",
+        dataIndex: "check_flag",
+        key: "check_flag",
+        filters: [
+          {
+            text: "未审核",
+            value: 0,
+          },
+          {
+            text: "已审核",
+            value: 1,
+          },
+        ],
+        onFilter: (value: number, record: any) => record.check_flag == value,
+        render: (value: number) => {
+          const color = value ? "green" : "red";
+          const status = value ? "已审" : "未审";
+          return <span style={{ color: color }}> {status}</span >
+        },
+      },
     ]
 
     return (
@@ -443,7 +511,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         </Row>
         <Row type="flex" justify="space-around">
           <Col span={18}>
-            <SearchForm ></SearchForm>
+            <SearchForm handleFieldsChange={this.handleFieldsChange} handleSubmit={this.handleSubmit}></SearchForm>
           </Col>
           <Col span={6}>
             <section className="temp-reports-summary">共检索到{tempReportList.length}份体温报告，{feverCount}份发热，{foreignCount}份离京</section>,
@@ -458,7 +526,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             ref="temp-reports-table"
             rowSelection={rowSelection}
             className="temp-report-list temp-report-list-table"
-            rowKey={"id"}
+            rowKey={record => record.id}
             columns={columns}
             dataSource={tempReportList}
             onRow={(record): TableEventListeners => {
@@ -504,9 +572,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
           <h3>每日干部在岗上报</h3>
           <Table
             ref="cadre-reports-table"
-            rowSelection={rowSelectionCadre}
+            // rowSelection={rowSelectionCadre}
             className="cadre-report-list cadre-report-list-table"
-            rowKey={"id"}
+            rowKey={record => record.id}
             columns={cadre_columns}
             dataSource={cadreReportList}
             onRow={(record): TableEventListeners => {
@@ -537,7 +605,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
                   margin: "15px",
                   float: "right",
                 }}
-                onClick={this.handleDownloadClick}
+                onClick={this.handleDownloadCadreClick}
               >
                 下载干部报告到Excel文件
             </Button>
@@ -557,9 +625,9 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   token: state.token,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getTempList: getTempReportListAction,
-  checkTempList: checkTempReportListAction,
-  getCadreList: getCadreReportListAction,
-  checkCadreList: checkCadreReportListAction,
+  getTempReportListAction,
+  checkTempReportListAction,
+  checkCadreReportListAction,
+  getCadreReportListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

@@ -2,19 +2,22 @@ import React, { FunctionComponent, useEffect, useState, useRef } from "react";
 import { Carousel } from "antd";
 import { connect } from "react-redux";
 
-import { getDepartmentListAction, loginUserAction } from "_actions/user";
+import { getDepartmentListAction, loginUserAction, setTokenAction, setUserAction } from "_actions/user";
+import { loginUser, getUserInfo } from "_services/user";
 import { StoreStateI } from "_constants/interface";
 
 import { Form, Input, Row, Col, Select, DatePicker } from "antd";
 
 import "./Login.less";
 import { LoginPropsI, MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { useHistory } from "react-router-dom";
 
 const { Item } = Form;
 const { Option } = Select;
 
 const Login: FunctionComponent<LoginPropsI> = props => {
-  const { loginUserAction, getDepartmentList } = props;
+  const { loginUserAction, getDepartmentListAction, setTokenAction, setUserAction } = props;
+  const history = useHistory();
   const $form = useRef<HTMLFormElement>(null);
 
   const defaultUserLogin = {
@@ -27,10 +30,10 @@ const Login: FunctionComponent<LoginPropsI> = props => {
 
   useEffect(() => {
     console.log("login mounted");
-    getDepartmentList({ keyword: "" })
+    getDepartmentListAction({ keyword: "" })
   }, []);
 
-  const onSubmit = (): void => {
+  const onSubmit = async () => {
     if (!$form.current) return setIsEdit(true);
     const formData = new FormData($form.current);
     /* ======== 此处添加update User Info action == START ======== */
@@ -41,7 +44,21 @@ const Login: FunctionComponent<LoginPropsI> = props => {
       console.log(" Key: ", key, "  value: ", value);
     });
     console.groupEnd();
-    loginUserAction(formData);
+    // Action没有反馈，切换到直接网络请求
+    // loginUserAction(formData);
+    const res: any = await loginUser(formData);
+    try {
+      setTokenAction(res.data.key);
+      const user_res: any = await getUserInfo();
+      setUserAction(user_res.data);
+      if (user_res.data.name === "") {
+        history.push("/profile");
+      } else {
+        history.push("/temp-report");
+      }
+    } catch (error) {
+      console.log(error);
+    };
   };
 
   const updateInputVal = (e: React.FormEvent<HTMLInputElement>): void => {
@@ -122,7 +139,10 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => {
 
 const mapDispatchToProps: MapDispatchToPropsI = {
   loginUserAction: loginUserAction,
-  getDepartmentList: getDepartmentListAction,
+  setTokenAction: setTokenAction,
+  setUserAction: setUserAction,
+  getDepartmentListAction: getDepartmentListAction,
 };
 
+// export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Login));
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
