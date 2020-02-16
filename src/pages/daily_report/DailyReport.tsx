@@ -1,58 +1,93 @@
 import React, { FunctionComponent, useState, useRef } from "react";
-import { Form, Button, Input, InputNumber, Row, Col, Select, DatePicker, Radio } from "antd";
+import { Form, AutoComplete, Button, Input, InputNumber, Row, Col, Select, DatePicker, Radio } from "antd";
 import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect, MapDispatchToProps } from "react-redux";
 
-import { StoreStateI } from "_constants/interface";
-import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { StoreStateI, WorkStatusI } from "_constants/interface";
+import { DailyReportPropsI, DailyReportStateI, MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { history } from "../../store/configureStore";
 
 import "./DailyReport.less";
 import { RadioChangeEvent } from "antd/lib/radio";
-import { history } from "../../store/configureStore";
 
-import { submitTempReport } from "_services/report";
-import { getTempReportListAction } from "_actions/report";
+import { submitDailyReport } from "_services/report";
+import { getWorkStatusList } from "_services/user";
+import { getDailyReportListAction } from "_actions/report";
 
 const { Item } = Form;
 const { Option } = Select;
-const dateFormat = "YYYY-MM-DD HH:mm:ss";
+// const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
-interface TempReportFormProps extends FormComponentProps {
-  // handleFieldsChange: any;
-  // handleSubmit: any;
+interface DailyReportFormProps extends FormComponentProps {
 }
 
 function hasErrors(fieldsError: any) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class TempReportForm extends React.Component<TempReportFormProps & MapStateToPropsI & MapDispatchToPropsI> {
+class DailyReportForm extends React.Component<DailyReportFormProps & DailyReportPropsI, DailyReportStateI> {
   state = {
-    checkTemperature: false,
-    checkFromWhere: false,
+    showTemperature: false,
+    showFromWhere: false,
+    workStatusList: [],
+    workDepartmentList: [],
   }
   componentDidMount() {
+    getWorkStatusList().then((res: any) => {
+      this.setState({ workStatusList: res.data });
+    }).catch((error: any) => {
+      console.log(error);
+    })
+    this.setState({
+      workDepartmentList: this.props.departmentList.map((item) => {
+        return item.name + "(" + item.code + ")";
+      })
+    })
     this.props.form.validateFields();
-  }
-
-  handleFieldsChange = (changedFields: any): void => {
-    console.log(changedFields)
   }
 
   // 取消修改
   onCancel = (): void => {
-    // setTempReport(defaultTempReport);
+    // setDailyReport(defaultDailyReport);
   };
 
   // 提交修改
-  onSubmit = (): void => {
+  onSubmit = (e: any): void => {
+    e.preventDefault();
     console.log('submit');
+    this.props.form.validateFields((err, values) => {
+      if (!err) {
+        console.log(values);
+        submitDailyReport(values).then((res) => {
+          // console.log(res);
+          // console.log(typeof(this.props.dailyReportSearchForm.start))
+          this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
+          history.push("/");
+        }).catch((error) => {
+          console.log(error);
+        })
+      }
+    })
+  };
+
+  temperatureValidator(rule: any, value: any, callback: Function): any {
+    try {
+      console.log(value);
+      if (this.state.showTemperature && value >= 42) {
+        throw new Error('您着火了吧？');
+      } else if (this.state.showTemperature && value < 37.2) {
+        throw new Error('低于37.2度请选择未发热吧');
+      }
+    } catch (err) {
+      callback(err);
+    }
   };
 
   render() {
-    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-    const { user, departmentList, getTempReportList } = this.props;
+    const { getFieldDecorator, getFieldValue, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { user, departmentList, getDailyReportListAction } = this.props;
+    const { workDepartmentList } = this.state;
 
     return (
       <section className="temp-report">
@@ -72,22 +107,7 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
             name="temp-report"
             onSubmit={this.onSubmit}
           >
-            <Item label="姓名" colon={false}>
-              {getFieldDecorator('name', {
-                rules: [{ required: true, message: "姓名为必填项" }],
-                initialValue: user.name,
-              })(
-                <Input disabled={true} type="text" name="name" />
-              )}
-            </Item>
-            <Item label="员工编码" colon={false}>
-              {getFieldDecorator('emp_code', {
-                initialValue: user.emp_code,
-              })(
-                <Input disabled={true} type="text" name="emp_code" />
-              )}
-            </Item>
-            <Item label="所在科室" colon={false}>
+            <Item label="所属科室" colon={false}>
               {getFieldDecorator('department', {
                 initialValue: user.department,
               })(
@@ -114,10 +134,77 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
                 </Select>
               )}
             </Item>
+            <Item label="员工编码" colon={false}>
+              {getFieldDecorator('emp_code', {
+                initialValue: user.emp_code,
+              })(
+                <Input disabled={true} type="text" name="emp_code" />
+              )}
+            </Item>
+            <Item label="姓名" colon={false}>
+              {getFieldDecorator('name', {
+                rules: [{ required: true, message: "请输入姓名" }],
+                initialValue: user.name,
+              })(
+                <Input disabled={true} type="text" name="name" />
+              )}
+            </Item>
+            <Item
+              label="人员状态"
+              colon={false}>
+              {getFieldDecorator('work_status', {
+                rules: [{ required: true, message: "请选择当前状态" }],
+                initialValue: user.work_status,
+              })(
+                <Select
+                  disabled={false}
+                  showSearch
+                  dropdownClassName="profile-form-gender"
+                  filterOption={(input, option) => {
+                    // console.log(option.props.title);
+                    if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                      option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }}
+                >
+                  {
+                    this.state.workStatusList.length > 0 ?
+                      this.state.workStatusList.map((item: WorkStatusI) => {
+                        return (
+                          <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                        )
+                      }) :
+                      <Option key={"empty"} value={"empty"} title={"empty"}>Empty</Option>
+                  }
+                </Select>
+              )}
+            </Item>
+            <Item label="当前工作科室（仅不在本科室工作或在各院区工作时填写）"
+              colon={false}>
+              {getFieldDecorator('work_department', {
+                rules: [{ required: false, message: "所在位置为必填项" }],
+                initialValue: user.work_department ? user.work_department : undefined,
+              })(
+                <AutoComplete
+                  // dataSource={['abc', 'bcd']}
+                  dataSource={workDepartmentList}
+                  placeholder="工作科室"
+                  filterOption={(inputValue: any, option: any) => {
+                    // console.log(option.props.children);
+                    return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                  }}
+                />
+              )}
+            </Item>
             <Item label="是否发热（高于37.2度)" colon={false}>
               {getFieldDecorator('is_fever', {
-                rules: [{ required: true, message: "是否发热为必填项" }],
-                // initialValue: 0,
+                rules: [
+                  { required: true, message: "是否发热为必填项" },
+                ],
+                initialValue: 0,
               })(
                 <Radio.Group
                   className="temp-report-form-gender"
@@ -125,9 +212,10 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
                   onChange={(e: any) => {
                     this.setState(
                       {
-                        checkTemperature: e.target.value,
+                        showTemperature: e.target.value,
                       },
                       () => {
+                        // 修改完值后立即校验表单对应项
                         this.props.form.validateFields(['temperature'], { force: true })
                       },
                     );
@@ -140,15 +228,20 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
             </Item>
             <Item
               label="具体温度"
-              style={{ display: this.state.checkTemperature ? "block" : "none" }}
+              style={{ display: this.state.showTemperature ? "block" : "none" }}
               colon={false}
             >
               {getFieldDecorator('temperature', {
-                rules: [{ required: this.state.checkTemperature, message: "此为必填项" }]
+                rules: [
+                  { required: this.state.showTemperature, message: "发热时具体温度为必填项" },
+                  // { validator: this.temperatureValidator },
+                ],
+                trigger: "onChange",
+                initialValue: 37.3,
               })(
                 <InputNumber
                   name="temperature"
-                  disabled={this.state.checkTemperature ? false : true}
+                  disabled={!this.state.showTemperature}
                   max={45}
                   min={37.2}
                   precision={1}
@@ -156,14 +249,38 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
                 ></InputNumber>
               )}摄氏度
             </Item>
-            <Item label="是否离京" colon={false}>
+            <Item
+              label="备注"
+              colon={false}
+            >
+              {getFieldDecorator('comments', {
+                rules: [{ required: this.state.showTemperature, message: "有发热时请说明具体情况" }]
+              })(
+                <Input
+                  type="text"
+                  name="comments"
+                ></Input>
+              )}
+            </Item>
+            {/* <Item label="是否离京" colon={false}>
               {getFieldDecorator('foreign_flag', {
-                rules: [{ required: true, message: "此为必填项" }],
+                rules: [{ required: true, message: "请选择是否离京" }],
                 initialValue: 0,
               })(
                 <Radio.Group
                   className="temp-report-form-gender"
                   disabled={false}
+                  onChange={(e: any) => {
+                    this.setState(
+                      {
+                        showFromWhere: e.target.value,
+                      },
+                      () => {
+                        // 修改完值后立即校验表单对应项
+                        this.props.form.validateFields(['temperature'], { force: true })
+                      },
+                    );
+                  }}
                 >
                   <Radio value={0}>未离京</Radio>
                   <Radio value={1}>离京</Radio>
@@ -172,19 +289,19 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
             </Item>
             <Item
               label="所在位置"
-              // style={{ display: tempReport.foreign_flag ? "block" : "none" }}
+              style={{ display: this.state.showFromWhere ? "block" : "none" }}
               colon={false}
             >
-              {getFieldDecorator('from_where', {
-                rules: [{ required: true, message: "此为必填项" }]
+              {getFieldDecorator('at_where', {
+                rules: [{ required: this.state.showFromWhere, message: "所在位置为必填项" }]
               })(
                 <Input
                   type="text"
-                  // disabled={tempReport.foreign_flag ? false : true}
-                  name="from_where"
+                  disabled={!this.state.showFromWhere}
+                  name="at_where"
                 ></Input>
               )}
-            </Item>
+            </Item> */}
             <Item >
               <Button type="primary" htmlType="submit">
                 提交
@@ -197,10 +314,10 @@ class TempReportForm extends React.Component<TempReportFormProps & MapStateToPro
   };
 }
 
-const WrappedTempReportForm = Form.create<TempReportFormProps>({
+const WrappedDailyReportForm = Form.create<DailyReportFormProps>({
   name: "daily_report_form",
-  onFieldsChange(props, changedFields, allValues) {
-    console.log(changedFields);
+  onFieldsChange(props, changedFields) {
+    // console.log(changedFields);
   },
   // 用于将父组件的值传入表单项
   // mapPropsToFields(props) {
@@ -211,14 +328,15 @@ const WrappedTempReportForm = Form.create<TempReportFormProps>({
   //   }
   // }
 })(
-  TempReportForm
+  DailyReportForm
 );
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   departmentList: state.departmentList,
+  dailyReportSearchForm: state.dailyReportSearchForm,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getTempReportList: getTempReportListAction,
+  getDailyReportListAction: getDailyReportListAction,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(WrappedTempReportForm);
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedDailyReportForm);

@@ -88,12 +88,11 @@ axios.interceptors.response.use(
   },
   (error: any) => {
     // 两种错误返回类型
-    const { response } = error;
-    console.log(response);
-    if (response) {
+    console.log(error);
+    if (error) {
       // 服务器返回了结果
       // console.log('response valid');
-      switch (response.status) {
+      switch (error.status) {
         case 400:
           // history.push("/login");
           return Promise.reject(error);

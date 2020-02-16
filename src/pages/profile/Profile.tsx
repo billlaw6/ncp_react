@@ -1,289 +1,294 @@
-import React, { FunctionComponent, useEffect, useState, useRef } from "react";
-import { Form, Input, Row, Col, Select, DatePicker } from "antd";
+import React, { FunctionComponent, useState, useRef } from "react";
+import { Form, Button, Input, AutoComplete, InputNumber, Row, Col, Select, DatePicker, Radio } from "antd";
+import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect, MapDispatchToProps } from "react-redux";
 
-import { StoreStateI } from "_constants/interface";
-import { MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { StoreStateI, RoleI } from "_constants/interface";
+import { ProfilePropsI, ProfileStateI, MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import { history } from "../../store/configureStore";
+import { updateUserInfo, getDutyList, getRoleList, getWorkStatusList } from "_services/user";
 
 import "./Profile.less";
-import { getDepartmentListAction, updateUserAction } from "_actions/user";
+
+import { updateUserAction } from "_actions/user";
 
 const { Item } = Form;
 const { Option } = Select;
+const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
-const Profile: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = props => {
-  const { user, departmentList, getDepartmentList, updateUser } = props;
-  const $form = useRef<HTMLFormElement>(null);
+interface ProfileFormProps extends FormComponentProps {
+  // handleFieldsChange: any;
+  // handleSubmit: any;
+}
 
-  const [userInfo, setUserInfo] = useState(user); // 网页中的用户信息 默认为服务器端用户信息
-  const [isEdit, setIsEdit] = useState(false); // 是否是编辑模式
+function hasErrors(fieldsError: any) {
+  return Object.keys(fieldsError).some(field => fieldsError[field]);
+}
 
-  useEffect(() => {
-    console.log("profile mounted");
-    // console.log(user);
-    getDepartmentList({ keyword: "" });
-  }, []);
+class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, ProfileStateI> {
+  state = {
+    // 本页面要用的字典
+    roleList: [],
+    dutyList: [],
+    workDepartmentList: [],
+    workStatusList: [],
+    isEditable: true,
+    isFever: false,
+    foreignFlag: false,
+  }
+
+  componentDidMount() {
+    getDutyList().then((res: any) => {
+      this.setState({ dutyList: res.data });
+    }).catch((error: any) => {
+      console.log(error);
+    })
+    getRoleList().then((res: any) => {
+      this.setState({ roleList: res.data });
+    }).catch((error: any) => {
+      console.log(error);
+    })
+    getWorkStatusList().then((res: any) => {
+      this.setState({ workStatusList: res.data });
+    }).catch((error: any) => {
+      console.log(error);
+    })
+    this.setState({
+      workDepartmentList: this.props.departmentList.map((item) => {
+        return item.name + "(" + item.code + ")";
+      })
+    })
+    this.props.form.validateFields();
+  }
 
   // 取消修改
-  const onCancel = (): void => {
-    setUserInfo(user);
-    setIsEdit(false);
+  onCancel = (): void => {
+    // setProfile(defaultProfile);
   };
+
   // 提交修改
-  const onSubmit = (): void => {
-    if (!$form.current) return setIsEdit(false);
-    const formData = new FormData($form.current);
-    /* ======== 此处添加update User Info action == START ======== */
-    //  将 [formData] 作为 data
-    /* ======== 此处添加update User Info action == END ======== */
-    console.group(">>>>>>>>> Form Data In Page <<<<<<<<");
-    formData.forEach((value, key) => {
-      console.log(" Key: ", key, "  value: ", value);
-    });
-    // console.groupEnd();
-    // console.log(formData.get('id'));
-    updateUser(formData);
-    setIsEdit(false);
+  onSubmit = (e: any): void => {
+    e.preventDefault();
+    // console.log('submit');
+    this.props.form.validateFields((err: any, values: any) => {
+      if (!err) {
+        // console.log(values);
+        this.props.updateUserAction(values);
+      }
+    })
   };
 
-  // 更新页面中的用户信息
-  const updateInputVal = (e: React.FormEvent<HTMLInputElement>): void => {
-    const $el = e.currentTarget;
-    const { name, value } = $el;
-    if (name === "emp_code" && value.length !== 5) return;
-    setUserInfo(Object.assign({}, userInfo, { [name]: value }));
-  };
+  render() {
+    const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const { user, departmentList, } = this.props;
+    const { workDepartmentList } = this.state;   // 析构出来避免后面取值时this指代变化问题
 
-  return (
-    <section className="profile">
-      <div className="profile-header">个人信息</div>
-      <div className="profile-content">
-        <form
-          className="profile-form"
-          name="profile"
-          ref={$form}
-          encType="multipart/form-data"
-          method="post"
-        >
-          <div className={`profile-form-header ${isEdit ? "profile-editing" : ""}`}>
-            <span onClick={(): void => setIsEdit(true)}>编辑信息</span>
-          </div>
-          <div className="profile-form-info">
+    return (
+      <div className="profile">
+        <div className="profile-content">
+          <Form
+            className="profile-form"
+            name="profile"
+            onSubmit={this.onSubmit}
+          >
+            <Item label="人员类别" colon={false}>
+              {getFieldDecorator('role', {
+                rules: [{ required: true, message: "请选择人员类别" }],
+                initialValue: user.role,
+              })(
+                <Select
+                  disabled={!this.state.isEditable}
+                  showSearch
+                  filterOption={(input, option) => {
+                    // console.log(option.props.title);
+                    if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                      option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                      return true;
+                    } else {
+                      return false;
+                    }
+                  }
+                  }
+                >
+                  {this.state.roleList.length > 0 ?
+                    this.state.roleList.map((item: RoleI) => {
+                      return (
+                        <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                      )
+                    }) :
+                    <Option key={"empty"} value={"empty"} title={"empty"}>Empty</Option>
+                  }
+                </Select>
+              )}
+            </Item>
             <Item label="姓名" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="text"
-                name="name"
-                value={userInfo.name}
-                onInput={updateInputVal}
-              />
+              {getFieldDecorator('name', {
+                rules: [{ required: true, message: "请输入姓名" }],
+                initialValue: user.name,
+              })(
+                <Input
+                  disabled={!this.state.isEditable}
+                  type="text"
+                  name="name"
+                />
+              )}
             </Item>
             <Item label="性别" colon={false}>
-              <Select
-                disabled={!isEdit}
-                defaultValue={userInfo.gender}
-                onChange={(value: number): void =>
-                  setUserInfo(Object.assign({}, userInfo, { gender: value }))
-                }
-              >
-                <Option value={0}>保密</Option>
-                <Option value={1}>男</Option>
-                <Option value={2}>女</Option>
-              </Select>
-              <Input
-                style={{ display: 'none' }}
-                disabled={!isEdit}
-                type="text"
-                name="gender"
-                value={userInfo.gender}
-                onInput={updateInputVal}
-              />
+              {getFieldDecorator('gender', {
+                rules: [{ required: true, message: "请选择您的性别" }],
+                initialValue: user.gender,
+              })(
+                <Select
+                  disabled={!this.state.isEditable}
+                >
+                  <Option value={0}>保密</Option>
+                  <Option value={1}>男</Option>
+                  <Option value={2}>女</Option>
+                </Select>
+              )}
             </Item>
             <Item label="年龄" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="number"
-                name="age"
-                value={userInfo.age}
-                onInput={updateInputVal}
-              ></Input>
+              {getFieldDecorator('age', {
+                rules: [{ required: true, message: "请录入您的年龄" }],
+                initialValue: user.age ? user.age : 18,
+              })(
+                <Input
+                  disabled={!this.state.isEditable}
+                  type="number"
+                  name="age"
+                ></Input>
+              )}
             </Item>
-            <Item label="人员类别" colon={false}>
-              <Select
-                disabled={!isEdit}
-                dropdownClassName="profile-form-gender"
-                value={userInfo.role}
-                onChange={(value: number): void =>
-                  setUserInfo(Object.assign({}, userInfo, { role: value }))
-                }
-              >
-                <Option value={0}>在职职工</Option>
-                <Option value={1}>外包公司</Option>
-                <Option value={2}>医辅人员</Option>
-                <Option value={3}>学生</Option>
-              </Select>
-              <Input
-                style={{ display: "none" }}
-                type="text"
-                name="role"
-                disabled={!isEdit}
-                value={userInfo.role}
-                onChange={updateInputVal}
-              ></Input>
-            </Item>
-            <Item label="所在科室"
-              style={{ display: userInfo.role === 0 ? 'block' : 'none' }}
+            <Item label="所属科室"
+              // style={{ display: this.props.user.role === '01' ? 'block' : 'none' }}
               colon={false}>
-              <Select
-                disabled={!isEdit}
-                showSearch
-                defaultValue={userInfo.department}
-                onChange={(value: string): void =>
-                  setUserInfo(Object.assign({}, userInfo, { department: value }))
-                }
-                filterOption={(input, option) => {
-                  // console.log(option.props.title);
-                  if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
-                    return true;
-                  } else {
-                    return false;
+              {getFieldDecorator('department', {
+                rules: [{ required: true, message: "请选择您所属的科室" }],
+                initialValue: user.department,
+              })(
+                <Select
+                  disabled={!this.state.isEditable}
+                  showSearch
+                  filterOption={(input, option) => {
+                    // console.log(option.props.title);
+                    if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
+                      option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                      return true;
+                    } else {
+                      return false;
+                    }
                   }
-                }
-                }
-              >
-                {departmentList.map((item) => {
-                  return (
-                    <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
-                  )
-                })}
-              </Select>
-              <Input
-                style={{ display: "none" }}
-                disabled={!isEdit}
-                type="text"
-                name="department"
-                value={userInfo.department}
-                onChange={updateInputVal}
-              ></Input>
+                  }
+                >
+                  {departmentList.map((item) => {
+                    return (
+                      <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                    )
+                  })}
+                </Select>
+              )}
             </Item>
-            <Item
-              style={{ display: userInfo.role === 0 ? 'block' : 'none' }}
-              label="角色"
+            <Item label="当前工作科室（仅不在本科室工作或在各院区工作时填写）"
               colon={false}>
-              <Select
-                disabled={!isEdit}
-                dropdownClassName="profile-form-gender"
-                value={userInfo.duty}
-                onChange={(value: string): void => {
-                  setUserInfo(Object.assign({}, userInfo, { duty: value }));
-                  // if (value !== "02") {
-                  //   setUserInfo(Object.assign({}, userInfo, { title: null }));
-                  // }
-                }}
-              >
-                <Option value={"01"}>职员</Option>
-                <Option value={"02"}>干部</Option>
-                <Option value={"03"}>科室上报员</Option>
-                <Option value={"04"}>医院上报员</Option>
-              </Select>
-              <Input
-                style={{ display: "none" }}
-                type="text"
-                name="duty"
-                disabled={!isEdit}
-                value={userInfo.duty}
-                onChange={updateInputVal}
-              ></Input>
+              {getFieldDecorator('work_department', {
+                rules: [{ required: false, message: "所在位置为必填项" }],
+                initialValue: user.work_department ? user.work_department : undefined,
+              })(
+                <AutoComplete
+                  // dataSource={['abc', 'bcd']}
+                  dataSource={workDepartmentList}
+                  placeholder="工作科室"
+                  filterOption={(inputValue: any, option: any) => {
+                    // console.log(option.props.children);
+                    return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                  }}
+                />
+              )}
             </Item>
             <Item
-              style={{ display: userInfo.duty === "02" ? 'block' : 'none' }}
               label="职务"
               colon={false}>
-              <Select
-                disabled={userInfo.duty !== "02"}
-                dropdownClassName="profile-form-gender"
-                value={userInfo.title}
-                onChange={(value: string): void =>
-                  setUserInfo(Object.assign({}, userInfo, { title: value }))
-                }
-              >
-                <Option value={"01"}>院级领导</Option>
-                <Option value={"02"}>处级领导</Option>
-                <Option value={"03"}>科级领导</Option>
-              </Select>
-              <Input
-                style={{ display: "none" }}
-                type="text"
-                name="title"
-                disabled={!isEdit}
-                value={userInfo.title}
-                onChange={updateInputVal}
-              ></Input>
+              {getFieldDecorator('duty', {
+                rules: [{ required: true, message: "所在位置为必填项" }],
+                initialValue: user.duty,
+              })(
+                <Select
+                  disabled={false}
+                  dropdownClassName="profile-form-gender"
+                >
+                  {this.state.dutyList.length > 0 ?
+                    this.state.dutyList.map((item: RoleI) => {
+                      return (
+                        <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                      )
+                    }) :
+                    <Option key={"empty"} value={"empty"} title={"empty"}>Empty</Option>
+                  }
+                </Select>
+              )}
             </Item>
-            <Item label="地址" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="text"
-                name="address"
-                value={userInfo.address}
-                onInput={updateInputVal}
-              />
+            <Item
+              label="人员状态"
+              colon={false}>
+              {getFieldDecorator('work_status', {
+                rules: [{ required: true, message: "请选择当前状态" }],
+                initialValue: user.work_status,
+              })(
+                <Select
+                  disabled={false}
+                  dropdownClassName="profile-form-gender"
+                >
+                  {this.state.workStatusList.length > 0 ?
+                    this.state.workStatusList.map((item: RoleI) => {
+                      return (
+                        <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
+                      )
+                    }) :
+                    <Option key={"empty"} value={"empty"} title={"empty"}>Empty</Option>
+                  }
+                </Select>
+              )}
             </Item>
             <Item label="手机" colon={false}>
-              <Input
-                disabled={!isEdit}
-                type="number"
-                name="cell_phone"
-                value={userInfo.cell_phone}
-                onInput={updateInputVal}
-              />
+              {getFieldDecorator('cell_phone', {
+                rules: [{ required: false, message: "所在位置为必填项" }],
+                initialValue: user.cell_phone,
+              })(
+                <Input
+                  disabled={!this.state.isEditable}
+                  type="number"
+                  name="cell_phone"
+                />
+              )}
             </Item>
-            <Row
-              className="profile-form-btns"
-              gutter={35}
-              type="flex"
-              align="middle"
-              justify="center"
-              style={{ visibility: isEdit ? "visible" : "hidden" }}
-            >
-              <Col span={5}>
-                <Item>
-                  <Input
-                    className="profile-form-cancel"
-                    type="button"
-                    name="cancel"
-                    value="取消"
-                    onClick={onCancel}
-                  ></Input>
-                </Item>
-              </Col>
-              <Col span={5}>
-                <Item>
-                  <Input
-                    className="profile-form-submit"
-                    type="button"
-                    name="submit"
-                    value="保存"
-                    onClick={onSubmit}
-                  ></Input>
-                </Item>
-              </Col>
-            </Row>
-          </div>
-        </form>
+            <Item >
+              <Button type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Item>
+          </Form>
+        </div>
       </div>
-    </section >
-  );
-};
+    );
+  };
+}
+
+const WrappedProfileForm = Form.create<ProfileFormProps>({
+  name: "profile_form",
+  onFieldsChange(props, changedFields, allValues) {
+    // console.log(changedFields);
+  },
+})(
+  ProfileForm
+);
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   departmentList: state.departmentList,
+  dailyReportSearchForm: state.dailyReportSearchForm,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getDepartmentList: getDepartmentListAction,
-  updateUser: updateUserAction,
+  updateUserAction: updateUserAction,
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default connect(mapStateToProps, mapDispatchToProps)(WrappedProfileForm);

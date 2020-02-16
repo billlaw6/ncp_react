@@ -1,11 +1,20 @@
-import { UserI, DepartmentI } from "_constants/interface";
+import { UserI, RoleI, DepartmentI, DailyReportSearchFormI } from "_constants/interface";
 import { UpdateUserActionFuncI, GetDepartmentListActionFuncI } from "_actions/user";
+import { RouteComponentProps } from "react-router";
 
 export interface MapStateToPropsI {
   user: UserI;
   departmentList: DepartmentI[];
+  // roleList不作为全局变量
+  // roleList: RoleI[];
+  dailyReportSearchForm: DailyReportSearchFormI;
 }
+
 export interface MapDispatchToPropsI {
-  getDepartmentList: GetDepartmentListActionFuncI;
-  updateUser: UpdateUserActionFuncI;
+  updateUserAction: UpdateUserActionFuncI;
+}
+
+export type ProfilePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
+
+export interface ProfileStateI {
 }

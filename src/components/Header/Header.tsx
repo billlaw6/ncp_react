@@ -37,10 +37,8 @@ const getAvatarMenu: FunctionComponent<HeaderPropsI> = (props): ReactElement => 
       <Divider></Divider>
       <MenuItemGroup>
         <MenuItem>
-          <Link to="/temp-report">每日体温上报</Link>
-          {/* 01职员，02干部，03科室上报员 */}
-          {duty === "02" ? <Link to="/cadre-report">每日干部在岗上报</Link> : ""}
-      </MenuItem>
+          <Link to="/daily-report">新建上报</Link>
+        </MenuItem>
       </MenuItemGroup>
       <Divider></Divider>
       <MenuItemGroup>
@@ -58,7 +56,7 @@ const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   return (
     <AntdHeader id="header">
       <div className="header-content">
-        <a className="logo" href="/">北医三院抗疫日报</a>
+        <a className="logo" href="/">北医三院抗疫日报平台</a>
 
         <Dropdown
           className="avatar"

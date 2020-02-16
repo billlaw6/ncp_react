@@ -4,9 +4,9 @@ import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect } from "react-redux";
 
-import { getTempReportListAction } from "_actions/report";
+import { getDailyReportListAction, setDailyReportListAction } from "_actions/report";
 import { StoreStateI } from "_constants/interface";
-import { MapDispatchToPropsI, MapStateToPropsI } from "./type";
+import { SearchFormPropsI, MapDispatchToPropsI, MapStateToPropsI } from "./type";
 
 const { RangePicker } = DatePicker;
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
@@ -20,57 +20,58 @@ function hasErrors(fieldsError: any) {
   return Object.keys(fieldsError).some(field => fieldsError[field]);
 }
 
-class HorizontalSearchForm extends React.Component<SearchFormProps & MapDispatchToPropsI, any> {
+class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormPropsI, any> {
   componentDidMount() {
     // To disable submit button at the beginning.
     this.props.form.validateFields();
   }
 
   onSubmit = (e: any) => {
-    const {handleSubmit} = this.props;
+    const { handleSubmit } = this.props;
     console.log('on submit')
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        let formData: any = {};
-        formData["start"] = values.dtRange[0].locale("zh-cn").format(dateFormat);
-        formData["end"] = values.dtRange[1].locale("zh-cn").format(dateFormat);
-        formData["keyword"] = values.keyword;
-        handleSubmit(formData);
+        handleSubmit(values);
       }
     })
   }
 
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-    const { handleFieldsChange, handleSubmit } = this.props;
 
     // Only show error after a field is touched.
     const dtRangeError = isFieldTouched("dtRange") && getFieldError("dtRange");
     const keywordError = isFieldTouched("keyword") && getFieldError("keyword");
-    const todayStart = moment()
-      .startOf("day")
-      .format(dateFormat);
-    const now = moment()
-      .locale("zh-cn")
-      .format(dateFormat);
-    const dateFormatList = [dateFormat, dateFormat];
-    // console.log(todayStart);
     return (
       <Form
         layout="inline"
         onSubmit={this.onSubmit}
       >
-        <Form.Item validateStatus={dtRangeError ? "error" : ""} help={dtRangeError || ""}>
+        <Form.Item
+          label="填报时间"
+          validateStatus={dtRangeError ? "error" : ""}
+          help={dtRangeError || ""}
+        >
           {getFieldDecorator("dtRange", {
-            rules: [{ required: true, message: "Please input your dtRange!" }],
-            initialValue: [moment(todayStart, dateFormat), moment(now, dateFormat)],
+            rules: [{ required: false, message: "Please input your dtRange!" }],
+            // RangePicker的数据要及早转化成字符串传输，Moment类型不适宜
+            initialValue: [
+              moment(this.props.dailyReportSearchForm.start),
+              moment(this.props.dailyReportSearchForm.end),
+            ]
           })(<RangePicker showTime={true} format={dateFormat} />)}
         </Form.Item>
-        <Form.Item validateStatus={keywordError ? "error" : ""} help={keywordError || ""}>
+        {/* 试图直接展示对象会白板
+        {this.props.dailyReportSearchForm.start} */}
+        <Form.Item
+          label="关键词"
+          validateStatus={keywordError ? "error" : ""}
+          help={keywordError || ""}
+        >
           {getFieldDecorator("keyword", {
             rules: [{ required: false, message: "Please input your keyword!" }],
-            initialValue: "",
+            initialValue: this.props.dailyReportSearchForm.keyword,
           })(
             <Input
               prefix={<Icon type="key" style={{ color: "rgba(0,0,0,.25)" }} />}
@@ -91,7 +92,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & MapDispatch
 
 const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({
   name: "horizontal_search",
-  onFieldsChange(props, changedFields, allValues) {
+  onFieldsChange(props, changedFields) {
     props.handleFieldsChange(changedFields);
   }
 })(
@@ -101,8 +102,10 @@ const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({
 // export default WrappedHorizontalSearchForm;
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
+  dailyReportSearchForm: state.dailyReportSearchForm,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
-  getTempReportList: getTempReportListAction,
+  // setDailyReportSearch: setDailyReportListAction,
+  // getDailyReportList: getDailyReportListAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(WrappedHorizontalSearchForm);

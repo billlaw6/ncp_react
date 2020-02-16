@@ -1,4 +1,5 @@
 import axios from "./api";
+import { DailyReportSearchFormI } from "_constants/interface";
 
 export const submitTempReport = async (params: any) => {
   const res = await axios.post(`/report/temp/`, params );
@@ -30,6 +31,7 @@ export const searchTempReport = async (params: any) => {
   return res;
 };
 
+////////////// ////////////// ////////////// //////////////
 export const submitCadreReport = async (params: any) => {
   const res = await axios.post(`/report/cadre/`, params);
   return res;
@@ -57,5 +59,37 @@ export const getCadreReportDetail = async (params: any) => {
 
 export const searchCadreReport = async (params: any) => {
   const res = await axios.get(`/report/cadre/`, { params: params });
+  return res;
+};
+
+////////////// ////////////// ////////////// //////////////
+export const submitDailyReport = async (params: any) => {
+  const res = await axios.post(`/report/daily/`, params);
+  return res;
+};
+
+export const getDailyReportList = async (params: DailyReportSearchFormI) => {
+  // console.log(params);
+  const res = await axios.get(`/report/daily/`, { params: params});
+  return res;
+};
+
+export const checkDailyReport = async (params: string[]) => {
+  const res = await axios.post(`/report/daily/check/`, { params: params });
+  return res;
+};
+
+export const downloadDailyReportList = async (params: any) => {
+  const res = await axios.post(`/report/daily/download/`, params);
+  return res;
+};
+
+export const getDailyReportDetail = async (params: any) => {
+  const res = await axios.get(`/report/daily/${params.id}`, { params: params });
+  return res;
+};
+
+export const searchDailyReport = async (params: any) => {
+  const res = await axios.get(`/report/daily/`, { params: params });
   return res;
 };

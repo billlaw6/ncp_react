@@ -1,12 +1,22 @@
-import { UserI, DepartmentI } from "_constants/interface";
+import { UserI, DepartmentI, DailyReportSearchFormI, WorkStatusI, DailyReportI } from "_constants/interface";
 import { UpdateUserActionFuncI } from "_actions/user";
-import { GetTempReportListActionFuncI } from "_actions/report";
+import { GetDailyReportListActionFuncI } from "_actions/report";
 
 export interface MapStateToPropsI {
   user: UserI;
   departmentList: DepartmentI[];
+  dailyReportSearchForm: DailyReportSearchFormI;
 };
 
 export interface MapDispatchToPropsI {
-  getTempReportList: GetTempReportListActionFuncI;
+  getDailyReportListAction: GetDailyReportListActionFuncI;
 };
+
+export type DailyReportPropsI = MapStateToPropsI & MapDispatchToPropsI;
+
+export interface DailyReportStateI {
+  showTemperature: boolean,
+  showFromWhere: boolean,
+  workStatusList: WorkStatusI[],
+  workDepartmentList: string[],
+}

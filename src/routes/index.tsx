@@ -2,10 +2,10 @@ import { ComponentType } from "react";
 
 import Home from "_pages/home/index";
 import Register from "_pages/register/Register";
-import Login from "_pages/login/Login";
+import Login from "_pages/login_action/Login";
 import Profile from "_pages/profile/Profile";
-import TempReport from "_pages/temp_report/TempReport";
-import CadreReport from "_pages/cadre_report/CadreReport";
+// import TempReport from "_pages/temp_report/TempReport";
+// import CadreReport from "_pages/cadre_report/CadreReport";
 import DailyReport from "_pages/daily_report/DailyReport";
 
 import DefaultLayout from "_layout/Default/Default";
@@ -52,18 +52,18 @@ const routes: RoutesI[] = [
     component: DailyReport,
     permission: ["login"],
   },
-  {
-    name: "tempReport",
-    path: "/temp-report",
-    component: TempReport,
-    permission: ["login"],
-  },
-  {
-    name: "cadreReport",
-    path: "/cadre-report",
-    component: CadreReport,
-    permission: ["login"],
-  },
+  // {
+  //   name: "tempReport",
+  //   path: "/temp-report",
+  //   component: TempReport,
+  //   permission: ["login"],
+  // },
+  // {
+  //   name: "cadreReport",
+  //   path: "/cadre-report",
+  //   component: CadreReport,
+  //   permission: ["login"],
+  // },
 ];
 
 export default routes;

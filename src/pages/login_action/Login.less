@@ -1,24 +1,18 @@
 @primaryColor: #7594ff;
 
-.profile {
+.login {
   width: 80%;
   margin: 0 auto 40px;
-
-  &-header {
-    padding: 28px 0 18px;
-    font-size: 22px;
-    font-weight: 500;
-  }
-
-  .profile-link {
-    padding: 32px 0 18px;
-    font-size: 16px;
-    font-weight: 500;
-  }
 
   &-content {
     margin: 0 auto;
     max-width: 662px;
+
+    &-title {
+      padding: 28px 0 18px;
+      font-size: 22px;
+      font-weight: 500;
+    }
   }
 
   &-form {
@@ -32,51 +26,6 @@
         font-weight: 500;
         &:hover {
           color: @primaryColor;
-        }
-      }
-    }
-
-    &-avatar {
-      position: relative;
-      border-radius: 90px;
-      overflow: hidden;
-      padding: 0;
-      margin: 0;
-      margin-right: 28px;
-      // border: 1px solid #000;
-
-      &,
-      input {
-        width: 90px;
-        height: 90px;
-      }
-      input,
-      img {
-        width: 90px;
-        position: absolute;
-        top: 0;
-        left: 0;
-      }
-      input {
-        opacity: 0 !important;
-        z-index: 1;
-      }
-      img {
-        z-index: 0;
-      }
-
-      &-desc {
-        display: none;
-        flex-direction: column;
-        align-items: flex-start;
-        span:first-child {
-          color: #595959;
-          font-size: 14px;
-          margin-bottom: 12px;
-        }
-        span:last-child {
-          color: #bfbfbf;
-          font-size: 12px;
         }
       }
     }
@@ -167,11 +116,11 @@
   }
 
   &-editing {
-    &.profile-form-header > span {
+    &.login-form-header > span {
       display: none;
     }
 
-    .profile-form-avatar-desc {
+    .login-form-avatar-desc {
       display: flex;
     }
   }

@@ -22,6 +22,16 @@ export const setTokenAction: SetTokenActionFuncI = payload => ({
   payload,
 });
 
+// 设置登录失败时提示
+export type SetLoginErrorActionT = ActionI<string, string>;
+export interface SetLoginErrorActionFuncI {
+  (payload: string): SetLoginErrorActionT;
+}
+export const setLoginErrorAction: SetLoginErrorActionFuncI = payload => ({
+  type: types.SET_LOGIN_ERROR,
+  payload,
+});
+
 // 需要监听：用于用户注册
 export type RegisterUserActionT = ActionI<string, FormData>;
 export interface RegisterUserActionFuncI {

@@ -1,15 +1,15 @@
 import { call, put, takeEvery } from "redux-saga/effects";
 import { getDepartmentListAction, registerUserAction, loginUserAction, updateUserAction, logoutUserAction } from "_actions/user";
 import {
-  getTempReportListAction,
-  checkTempReportListAction,
+  getDailyReportListAction,
+  checkDailyReportListAction,
   getCadreReportListAction,
   checkCadreReportListAction,
 } from "_actions/report";
 import { getDepartmentList, registerUser, loginUser, getUserInfo, logoutUser, updateUserInfo } from "_services/user";
 import {
-  getTempReportList,
-  checkTempReport,
+  getDailyReportList,
+  checkDailyReport,
   getCadreReportList,
   checkCadreReport,
 } from "_services/report";
@@ -23,12 +23,6 @@ function* registerUserEffect(action: ReturnType<typeof registerUserAction>) {
   try {
     yield put({ type: types.SET_TOKEN, payload: "" });
     const res = yield call(registerUser, action.payload);
-    // console.group("==== formData In Saga ====");
-    // action.payload.forEach((value, key) => {
-    //   console.log("Key: ", key, "  Value: ", value);
-    // });
-    // console.groupEnd();
-    // console.log(res.data);
     yield put({ type: types.SET_TOKEN, payload: res.data.token });
     yield put({ type: types.SET_USER, payload: res.data.token });
     yield put(push("/profile"));
@@ -41,20 +35,17 @@ function* loginUserEffect(action: ReturnType<typeof loginUserAction>) {
   try {
     yield put({ type: types.SET_TOKEN, payload: "" });
     const key_res = yield call(loginUser, action.payload);
-    // console.group("==== formData In Saga ====");
-    // action.payload.forEach((value, key) => {
-    //   console.log("Key: ", key, "  Value: ", value);
-    // });
-    // console.groupEnd();
-    // console.log(key_res);
+    console.log(key_res);
+    if (!key_res) {
+      yield put({ type: types.SET_LOGIN_ERROR, payload: "用户名或密码错误"});
+    }
     yield put({ type: types.SET_TOKEN, payload: key_res.data.key });
     const user_res = yield call(getUserInfo);
-    // console.log(user_res);
     yield put({ type: types.SET_USER, payload: user_res.data });
     if (user_res.data.name === "") {
       yield put(push("/profile"));
     } else {
-      yield put(push("/temp-report"));
+      yield put(push("/daily-report"));
     }
   } catch (error) {
     console.error(error);
@@ -71,7 +62,7 @@ function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
     // console.groupEnd();
     // console.log(res.data);
     yield put({ type: types.SET_USER, payload: res.data });
-    yield put(push("/temp-report"));
+    yield put(push("/daily-report"));
   } catch (error) {
     console.error(error);
   }
@@ -80,10 +71,12 @@ function* updateUserEffect(action: ReturnType<typeof updateUserAction>) {
 function* logoutUserEffect(action: ReturnType<typeof logoutUserAction>) {
   try {
     const res = yield call(logoutUser);
-    yield put({ type: types.SET_TEMP_REPORT_LIST, payload: [] });
-    yield put({ type: types.SET_CADRE_REPORT_LIST, payload: [] });
+    yield put({ type: types.SET_DAILY_REPORT_LIST, payload: [] });
+    yield put({ type: types.SET_DEPARTMENT_LIST, payload: [] });
     yield put({ type: types.SET_TOKEN, payload: "" });
     yield put({ type: types.SET_USER, payload: {} });
+    yield put({ type: types.SET_LOGIN_ERROR, payload: "" });
+    yield put({ type: types.SET_DAILY_REPORT_SEARCH_FORM, payload: {} });
     yield put(push("/login"));
   } catch (error) {
     console.error(error);
@@ -103,53 +96,52 @@ function* getDepartmentListEffect(action: ReturnType<typeof getDepartmentListAct
   }
 }
 
-function* getTempReportEffect(action: ReturnType<typeof getTempReportListAction>) {
+function* getDailyReportEffect(action: ReturnType<typeof getDailyReportListAction>) {
   try {
-    // console.log(action.payload);
-    const res = yield call(getTempReportList, action.payload);
-    // console.log(typeof JSON.parse(res.data));
-    // console.log(res.data);
+    console.log(action.payload);
+    const res = yield call(getDailyReportList, action.payload);
+    console.log(res.data);
     // put对应redux中的dispatch。
-    yield put({ type: types.SET_TEMP_REPORT_LIST, payload: res.data });
+    yield put({ type: types.SET_DAILY_REPORT_LIST, payload: res.data });
   } catch (error) {
     console.log(error.response);
   }
 }
 
-function* checkTempReportEffect(action: ReturnType<typeof checkTempReportListAction>) {
+function* checkDailyReportEffect(action: ReturnType<typeof checkDailyReportListAction>) {
   try {
-    const res = yield call(checkTempReport, action.payload);
+    const res = yield call(checkDailyReport, action.payload);
     // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
-    const defaultTempReportSearchForm = {};
-    yield put({ type: types.GET_TEMP_REPORT_LIST, payload: defaultTempReportSearchForm });
+    const defaultDailyReportSearchForm = {};
+    yield put({ type: types.GET_DAILY_REPORT_LIST, payload: defaultDailyReportSearchForm });
   } catch (error) {
     console.log(error.response);
   }
 }
 
-function* getCadreReportEffect(action: ReturnType<typeof getCadreReportListAction>) {
-  try {
-    // console.log(action.payload);
-    const res = yield call(getCadreReportList, action.payload);
-    // console.log(typeof JSON.parse(res.data));
-    // console.log(res.data);
-    // put对应redux中的dispatch。
-    yield put({ type: types.SET_CADRE_REPORT_LIST, payload: res.data });
-  } catch (error) {
-    console.log(error.response);
-  }
-}
+// function* getCadreReportEffect(action: ReturnType<typeof getCadreReportListAction>) {
+//   try {
+//     // console.log(action.payload);
+//     const res = yield call(getCadreReportList, action.payload);
+//     // console.log(typeof JSON.parse(res.data));
+//     // console.log(res.data);
+//     // put对应redux中的dispatch。
+//     yield put({ type: types.SET_CADRE_REPORT_LIST, payload: res.data });
+//   } catch (error) {
+//     console.log(error.response);
+//   }
+// }
 
-function* checkCadreReportEffect(action: ReturnType<typeof checkCadreReportListAction>) {
-  try {
-    const res = yield call(checkCadreReport, action.payload);
-    // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
-    const defaultCadreReportSearchForm = {};
-    yield put({ type: types.GET_CADRE_REPORT_LIST, payload: defaultCadreReportSearchForm });
-  } catch (error) {
-    console.log(error.response);
-  }
-}
+// function* checkCadreReportEffect(action: ReturnType<typeof checkCadreReportListAction>) {
+//   try {
+//     const res = yield call(checkCadreReport, action.payload);
+//     // 删除操作后用默认条件再获取一次结果，页面中暂未设定查询条件
+//     const defaultCadreReportSearchForm = {};
+//     yield put({ type: types.GET_CADRE_REPORT_LIST, payload: defaultCadreReportSearchForm });
+//   } catch (error) {
+//     console.log(error.response);
+//   }
+// }
 
 function* rootSaga() {
   yield takeEvery(types.REGISTER_USER, registerUserEffect);
@@ -157,10 +149,10 @@ function* rootSaga() {
   yield takeEvery(types.UPDATE_USER, updateUserEffect);
   yield takeEvery(types.LOGOUT_USER, logoutUserEffect);
   yield takeEvery(types.GET_DEPARTMENT_LIST, getDepartmentListEffect);
-  yield takeEvery(types.GET_TEMP_REPORT_LIST, getTempReportEffect);
-  yield takeEvery(types.CHECK_TEMP_REPORT_LIST, checkTempReportEffect);
-  yield takeEvery(types.GET_CADRE_REPORT_LIST, getCadreReportEffect);
-  yield takeEvery(types.CHECK_CADRE_REPORT_LIST, checkCadreReportEffect);
+  yield takeEvery(types.GET_DAILY_REPORT_LIST, getDailyReportEffect);
+  yield takeEvery(types.CHECK_DAILY_REPORT_LIST, checkDailyReportEffect);
+  // yield takeEvery(types.GET_CADRE_REPORT_LIST, getCadreReportEffect);
+  // yield takeEvery(types.CHECK_CADRE_REPORT_LIST, checkCadreReportEffect);
 }
 
 export default rootSaga;

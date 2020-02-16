@@ -1,15 +1,14 @@
-import { UserI } from "_constants/interface";
-import { GetTempReportListActionFuncI } from "_actions/report";
+import { UserI, DailyReportSearchFormI } from "_constants/interface";
+import { SetDailyReportSearchFormActionFuncI, GetDailyReportListActionFuncI } from "_actions/report";
 
 export interface MapStateToPropsI {
   user: UserI;
+  dailyReportSearchForm: DailyReportSearchFormI,
 }
 
 export interface MapDispatchToPropsI {
-  getTempReportList: GetTempReportListActionFuncI;
+  // setDailyReportSearch: SetDailyReportSearchFormActionFuncI,
+  // getDailyReportList: GetDailyReportListActionFuncI;
 }
 
-export interface PrivacyNoticePropsI {
-  user: UserI;
-  onChecked: Function;
-}
+export type SearchFormPropsI = MapStateToPropsI & MapDispatchToPropsI;

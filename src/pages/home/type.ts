@@ -1,38 +1,35 @@
-import { TempReportI, UserI, CadreReportI } from "_constants/interface";
+import { DailyReportI, UserI, DailyReportSearchFormI } from "_constants/interface";
 import {
-  getTempReportListAction,
-  checkTempReportListAction,
-  getCadreReportListAction,
-  checkCadreReportListAction,
+  setDailyReportSearchAction,
+  checkDailyReportListAction,
+  getDailyReportListAction,
 } from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
+import { Moment } from 'moment';
 
 export interface MapStateToPropsI {
-  tempReportList: TempReportI[];
-  cadreReportList: CadreReportI[];
   user: UserI;
   token: string;
+  dailyReportList: DailyReportI[];
+  dailyReportSearchForm: DailyReportSearchFormI;
 }
 export interface MapDispatchToPropsI {
-  getTempReportListAction: typeof getTempReportListAction;
-  checkTempReportListAction: typeof checkTempReportListAction;
-  getCadreReportListAction: typeof getCadreReportListAction;
-  checkCadreReportListAction: typeof checkCadreReportListAction;
+  getDailyReportListAction: typeof getDailyReportListAction;
+  setDailyReportSearchAction: typeof setDailyReportSearchAction;
+  checkDailyReportListAction: typeof checkDailyReportListAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;
+
 export interface HomeStateI {
-  start: string; // YYYY-MM-DD HH:MM:SS
-  end: string; // YYYY-MM-DD HH:MM:SS
-  keyword: string;
   selectedRowKeys: []; //当前已选择的id 集
-  selectedRowKeysCadre: []; //当前已选择的id 集
   loading: false,
   redirectReport: boolean; // 是否重定向到report页
-  page: number;
   feverCount: number;
   foreignCount: number;
+  cadreCount: number;
+  isDeptReporter: boolean;
 }
 
 export interface TableDataI {
