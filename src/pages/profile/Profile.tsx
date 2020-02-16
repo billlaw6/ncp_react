@@ -36,6 +36,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
     isEditable: true,
     isFever: false,
     foreignFlag: false,
+    selectedRole: "",
   }
 
   componentDidMount() {
@@ -82,7 +83,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
     const { user, departmentList, } = this.props;
-    const { workDepartmentList } = this.state;   // 析构出来避免后面取值时this指代变化问题
+    const { selectedRole, workDepartmentList } = this.state;   // 析构出来避免后面取值时this指代变化问题
 
     return (
       <div className="profile">
@@ -108,8 +109,18 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                     } else {
                       return false;
                     }
-                  }
-                  }
+                  }}
+                  onChange={(value: string) => {
+                    this.setState(
+                      {
+                        selectedRole: value,
+                      },
+                      () => {
+                        // 修改完值后立即校验表单对应项
+                        this.props.form.validateFields(['department'], { force: true });
+                      },
+                    );
+                  }}
                 >
                   {this.state.roleList.length > 0 ?
                     this.state.roleList.map((item: RoleI) => {
@@ -161,7 +172,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               )}
             </Item>
             <Item label="所属科室"
-              // style={{ display: this.props.user.role === '01' ? 'block' : 'none' }}
+              style={{ display: selectedRole === '01' ? 'block' : 'none' }}
               colon={false}>
               {getFieldDecorator('department', {
                 rules: [{ required: true, message: "请选择您所属的科室" }],
@@ -190,6 +201,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               )}
             </Item>
             <Item label="当前工作科室（仅不在本科室工作或在各院区工作时填写）"
+              style={{ display: selectedRole === '01' ? 'block' : 'none' }}
               colon={false}>
               {getFieldDecorator('work_department', {
                 rules: [{ required: false, message: "所在位置为必填项" }],
@@ -210,11 +222,11 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               label="职务"
               colon={false}>
               {getFieldDecorator('duty', {
-                rules: [{ required: true, message: "所在位置为必填项" }],
+                rules: [{ required: false, message: "所在位置为必填项" }],
                 initialValue: user.duty,
               })(
                 <Select
-                  disabled={false}
+                  disabled={true}
                   dropdownClassName="profile-form-gender"
                 >
                   {this.state.dutyList.length > 0 ?
@@ -232,7 +244,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               label="人员状态"
               colon={false}>
               {getFieldDecorator('work_status', {
-                rules: [{ required: true, message: "请选择当前状态" }],
+                rules: [{ required: false, message: "请选择当前状态" }],
                 initialValue: user.work_status,
               })(
                 <Select
