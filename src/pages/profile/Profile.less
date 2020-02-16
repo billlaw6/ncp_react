@@ -81,12 +81,6 @@
       }
     }
 
-    &-cancel,
-    &-submit {
-      border-radius: 19px !important;
-      cursor: pointer;
-    }
-
     &-cancel {
       border-color: #bfbfbf !important;
       color: #bfbfbf !important;
@@ -98,6 +92,8 @@
     }
 
     &-submit {
+      width: 20%;
+      background-color: white;
       border-color: @primaryColor !important;
       color: @primaryColor !important;
 
@@ -106,18 +102,6 @@
         background-color: @primaryColor !important;
       }
     }
-
-    // &-gender {
-    //   .ant-select-dropdown-menu-item {
-    //     &-active {
-    //       background-color: #fff !important;
-    //     }
-    //     &:hover {
-    //       background-color: #fff !important;
-    //       color: @primaryColor;
-    //     }
-    //   }
-    // }
 
     &-birthday {
       width: 100%;
@@ -128,6 +112,9 @@
 
     label {
       color: #8c8c8c;
+    }
+    &-item {
+      text-align: center;
     }
   }
 

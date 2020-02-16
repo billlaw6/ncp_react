@@ -90,10 +90,10 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
     const { workDepartmentList } = this.state;
 
     return (
-      <section className="temp-report">
+      <section className="daily-report">
         <Row type="flex" justify="start">
           <Col span={12}>
-            <div className="temp-report-header">每日体温上报</div>
+            <div className="daily-report-header">每日体温上报</div>
           </Col>
           <Col span={12}>
             <div className="profile-link">
@@ -101,10 +101,10 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
             </div>
           </Col>
         </Row>
-        <div className="temp-report-content">
+        <div className="daily-report-content">
           <Form
-            className="temp-report-form"
-            name="temp-report"
+            className="daily-report-form"
+            name="daily-report"
             onSubmit={this.onSubmit}
           >
             <Item label="所属科室" colon={false}>
@@ -207,7 +207,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                 initialValue: 0,
               })(
                 <Radio.Group
-                  className="temp-report-form-gender"
+                  className="daily-report-form-gender"
                   disabled={false}
                   onChange={(e: any) => {
                     this.setState(
@@ -268,7 +268,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                 initialValue: 0,
               })(
                 <Radio.Group
-                  className="temp-report-form-gender"
+                  className="daily-report-form-gender"
                   disabled={false}
                   onChange={(e: any) => {
                     this.setState(
@@ -302,8 +302,8 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                 ></Input>
               )}
             </Item> */}
-            <Item >
-              <Button type="primary" htmlType="submit">
+            <Item className="daily-report-form-item">
+              <Button type="primary" className="daily-report-form-item-submit">
                 提交
               </Button>
             </Item>

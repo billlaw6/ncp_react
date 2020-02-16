@@ -1,6 +1,16 @@
 @primaryColor: #7594ff;
 
-.temp-report {
+.daily-report-form-item {
+  text-align: center;
+  &-submit {
+    width: 20%;
+    background-color: white;
+    border-color: @primaryColor !important;
+    color: @primaryColor !important;
+  }
+}
+
+.daily-report {
   width: 80%;
   margin: 0 auto 40px;
 
@@ -34,6 +44,10 @@
           color: @primaryColor;
         }
       }
+    }
+
+    &-form-item {
+      text-align: center;
     }
 
     &-avatar {
@@ -167,11 +181,11 @@
   }
 
   &-editing {
-    &.temp-report-form-header > span {
+    &.daily-report-form-header > span {
       display: none;
     }
 
-    .temp-report-form-avatar-desc {
+    .daily-report-form-avatar-desc {
       display: flex;
     }
   }

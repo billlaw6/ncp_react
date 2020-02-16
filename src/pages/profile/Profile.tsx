@@ -87,6 +87,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
 
     return (
       <div className="profile">
+        <div className="profile-header">个人信息编辑</div>
         <div className="profile-content">
           <Form
             className="profile-form"
@@ -274,8 +275,8 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                 />
               )}
             </Item>
-            <Item >
-              <Button type="primary" htmlType="submit">
+            <Item colon={false} className="profile-form-item">
+              <Button className="profile-form-submit" type="primary" htmlType="submit">
                 提交
               </Button>
             </Item>
