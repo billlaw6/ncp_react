@@ -25,6 +25,7 @@ import { PaginationConfig, ColumnProps, TableEventListeners } from "antd/lib/tab
 import LinkButton from "_components/LinkButton/LinkButton";
 import SearchForm from "./components/SearchForm";
 import { date2LocalString } from "../../utils/utils";
+import { baseURL } from "_services/api";
 import axios from "axios";
 
 import "./Home.less";
@@ -133,9 +134,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
   handleDownloadClick = () => {
     console.log('donwload clicked');
     // const { start, end, keyword } = this.state;
-    // const downloadUrl = "http://localhost:8083/rest-api/report/daily/download/";
-    const downloadUrl = "http://123.56.115.20:8083/rest-api/report/daily/download/";
+    // const downloadUrl = "http://123.56.115.20:8083/rest-api/report/daily/download/";
     // const downloadUrl = "http://report.carryon.top/rest-api/report/daily/download/";
+    const downloadUrl = baseURL + "report/daily/download"
     axios({
       method: 'get',
       url: downloadUrl,
