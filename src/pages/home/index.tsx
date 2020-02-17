@@ -34,7 +34,6 @@ const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 class Home extends Component<HomePropsI, HomeStateI> {
   constructor(props: HomePropsI) {
     super(props);
-
     this.state = {
       selectedRowKeys: [],
       loading: false,
@@ -44,6 +43,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       foreignCount: 0,
       isDeptReporter: false,
     };
+    this.handleSubmit = this.handleSubmit.bind(this); //
   }
   // 传给检索表单
   handleFieldsChange = (changedValues: any) => {
@@ -66,7 +66,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
   // 传给检索表单
   handleSubmit = (submitedData: any) => {
     console.log(submitedData);
-    this.props.getDailyReportListAction(submitedData);
+    console.log(this.props.dailyReportSearchForm);
+    this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
   };
 
   componentDidMount(): void {
@@ -79,6 +80,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       this.setState({ isDeptReporter: true })
     }
     const { feverCount, cadreCount, foreignCount } = this.state;
+    console.log(this.props.dailyReportSearchForm);
     getDailyReportListAction(this.props.dailyReportSearchForm);
     dailyReportList.forEach(item => {
       if (item.is_fever) {

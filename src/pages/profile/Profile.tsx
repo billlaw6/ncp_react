@@ -27,17 +27,19 @@ function hasErrors(fieldsError: any) {
 }
 
 class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, ProfileStateI> {
-  state = {
-    // 本页面要用的字典
-    roleList: [],
-    dutyList: [],
-    workDepartmentList: [],
-    workStatusList: [],
-    isEditable: true,
-    isFever: false,
-    foreignFlag: false,
-    selectedRole: "",
-  }
+  // constructor(props: any) {
+    state = {
+      // 本页面要用的字典
+      roleList: [],
+      dutyList: [],
+      workDepartmentList: [],
+      workStatusList: [],
+      isEditable: true,
+      isFever: false,
+      foreignFlag: false,
+      selectedRole: "",
+    }
+  // }
 
   componentDidMount() {
     getDutyList().then((res: any) => {

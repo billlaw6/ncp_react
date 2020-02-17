@@ -88,11 +88,11 @@ axios.interceptors.response.use(
   },
   (error: any) => {
     // 两种错误返回类型
-    console.log(error);
-    if (error) {
+    console.error(error);
+    if (error.ressponse) {
       // 服务器返回了结果
       // console.log('response valid');
-      switch (error.status) {
+      switch (error.response.status) {
         case 400:
           // history.push("/login");
           return Promise.reject(error);
@@ -129,4 +129,5 @@ axios.interceptors.response.use(
   },
 );
 
+export const baseURL = axios.defaults.baseURL;
 export default axios;

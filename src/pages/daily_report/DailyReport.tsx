@@ -29,13 +29,13 @@ function hasErrors(fieldsError: any) {
 class DailyReportForm extends React.Component<DailyReportFormProps & DailyReportPropsI, DailyReportStateI> {
   constructor(props: any) {
     super(props);
+    this.state = {
+      showTemperature: false,
+      showFromWhere: false,
+      workStatusList: [],
+      workDepartmentList: [],
+    }
     this.temperatureValidator = this.temperatureValidator.bind(this); // 让函数内能取到组件的state和props
-  }
-  state = {
-    showTemperature: false,
-    showFromWhere: false,
-    workStatusList: [],
-    workDepartmentList: [],
   }
   componentDidMount() {
     getWorkStatusList().then((res: any) => {

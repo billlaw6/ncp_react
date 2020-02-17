@@ -16,9 +16,6 @@
   }
 
   &-form {
-    &-validate-error {
-      color: red;
-    }
     &-header {
       display: flex;
       align-items: center;
@@ -33,6 +30,12 @@
       }
     }
 
+    &-cancel,
+    &-submit {
+      border-radius: 19px !important;
+      cursor: pointer;
+    }
+
     &-cancel {
       border-color: #bfbfbf !important;
       color: #bfbfbf !important;
@@ -44,16 +47,26 @@
     }
 
     &-submit {
-      border-radius: 19px !important;
       border-color: @primaryColor !important;
       color: @primaryColor !important;
-      width: 20%;
 
       &:hover {
         color: #fff !important;
         background-color: @primaryColor !important;
       }
     }
+
+    // &-gender {
+    //   .ant-select-dropdown-menu-item {
+    //     &-active {
+    //       background-color: #fff !important;
+    //     }
+    //     &:hover {
+    //       background-color: #fff !important;
+    //       color: @primaryColor;
+    //     }
+    //   }
+    // }
 
     &-birthday {
       width: 100%;
