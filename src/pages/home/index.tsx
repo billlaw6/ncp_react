@@ -50,10 +50,12 @@ class Home extends Component<HomePropsI, HomeStateI> {
     // console.log(changedValues);
     // 此时收到的还是Moment类型
     if (changedValues.hasOwnProperty("dtRange")) {
-      const start = changedValues.dtRange.value[0].locale('zh-cn').format(dateFormat);
-      const end = changedValues.dtRange.value[1].locale('zh-cn').format(dateFormat);
-      const keyword = this.props.dailyReportSearchForm.keyword;
-      this.props.setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
+      if (changedValues.dtRange.length > 0) {
+        const start = changedValues.dtRange.value[0].locale('zh-cn').format(dateFormat);
+        const end = changedValues.dtRange.value[1].locale('zh-cn').format(dateFormat);
+        const keyword = this.props.dailyReportSearchForm.keyword;
+        this.props.setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
+      }
     }
     if (changedValues.hasOwnProperty("keyword")) {
       const start = this.props.dailyReportSearchForm.start;
@@ -170,40 +172,33 @@ class Home extends Component<HomePropsI, HomeStateI> {
         dataIndex: "department",
         key: "department",
         // 中文排序方法
-        sorter: (a: any, b: any) => a.localeCompare(b.department, 'zh-CN'),
+        sorter: (a: DailyReportI, b: DailyReportI) => {
+          return a.department.localeCompare(b.department, 'zh-CN');
+        }
       },
       {
-        title: "员工编码",
-        dataIndex: "emp_code",
-        key: "emp_code",
+        title: "人员角色",
+        dataIndex: "role",
+        key: "role",
         filters: [
           {
             text: "在职职工",
-            value: 0,
+            value: "在职职工",
           },
           {
             text: "外包公司",
-            value: 1,
+            value: "外包公司",
           },
           {
             text: "医辅人员",
-            value: 2,
+            value: "医辅人员",
           },
           {
             text: "学生",
-            value: 3,
+            value: "学生",
           },
         ],
         onFilter: (value: number, record: any) => record.emp_code == value,
-        render: (value: string) => {
-          const roleObject: any = {
-            '0': '在职职工',
-            '1': '外包公司',
-            '2': '医辅人员',
-            '3': '学生',
-          }
-          return <span>{value}</span>
-        }
       },
       {
         title: "姓名",
@@ -213,7 +208,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           const { id } = record;
           return (
             <span>
-              <span>{text}</span>;
+              <span>{text}</span>
             </span>
           )
         },
@@ -253,21 +248,21 @@ class Home extends Component<HomePropsI, HomeStateI> {
         key: "duty",
         filters: [
           {
-            text: "是",
-            value: 0,
+            text: "否",
+            value: '职员',
           },
           {
-            text: "否",
-            value: 1,
+            text: "是",
+            value: '干部',
           },
         ],
         onFilter: (value: number, record: any) => record.duty == value,
         render: (value: number) => {
-          const genderObject: any = {
-            '0': '是',
-            '1': '否',
+          const dutyObject: any = {
+            '职员': '否',
+            '干部': '是',
           }
-          return <span> {genderObject[value]}</span>;
+          return <span> {dutyObject[value]}</span>;
         },
       },
       {
@@ -275,11 +270,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
         dataIndex: "created_at",
         key: "created_at",
         render: (value: string) => {
-          // console.log(new Date(value));
-          const dt = new Date(value);
+          const dt = moment(new Date(value));
           // console.log(dt.valueOf());
           return (
-            <span> {date2LocalString(dt, "yyyy-MM-dd hh:mm:ss")} </span>
+            <span> {dt.format('YYYY-MM-DD')} </span>
           );
         },
         sorter: (a: any, b: any) => {
@@ -295,8 +289,36 @@ class Home extends Component<HomePropsI, HomeStateI> {
         key: "work_status_name",
         filters: [
           {
-            text: "",
-            value: 1,
+            text: "白班",
+            value: "白班",
+          },
+          {
+            text: "夜班",
+            value: "夜班",
+          },
+          {
+            text: "备班",
+            value: "备班",
+          },
+          {
+            text: "休假",
+            value: "休假（含倒休）",
+          },
+          {
+            text: "隔离观察",
+            value: "隔离观察",
+          },
+          {
+            text: "武汉支援（不填写体温情况）",
+            value: "武汉支援（不填写体温情况）",
+          },
+          {
+            text: "下乡",
+            value: "下乡",
+          },
+          {
+            text: "其他（在备注栏标注）",
+            value: "其他（在备注栏标注）",
           },
         ],
         onFilter: (value: number, record: any) => record.work_status == value,
@@ -306,11 +328,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
         dataIndex: "work_department",
         key: "work_department",
         render: (text: string, record: any): ReactElement | string => {
-          const { id } = record;
-          console.log(record);
           return (
-              <span>{text}</span>
+            <span>{text}</span>
           )
+        },
+        // 中文排序方法
+        sorter: (a: DailyReportI, b: DailyReportI) => {
+          return a.work_department.localeCompare(b.work_department, 'zh-CN');
         },
       },
       {
@@ -342,11 +366,11 @@ class Home extends Component<HomePropsI, HomeStateI> {
         dataIndex: "temperature",
         key: "temperature",
         render: (value: number) => {
-          const color = value >= 37.2 ? "red" : "green";
-          const dailyerature = value >= 37.2 ? value : "";
+          const color = value > 37.2 ? "red" : "green";
+          const dailyerature = value > 37.2 ? value : "";
           return <span style={{ color: color }}>{dailyerature}</span>;;
         },
-        sorter: (a: any, b: any) => a.dailyerature - b.dailyerature,
+        sorter: (a: any, b: any) => a.temperature - b.temperature,
       },
       {
         title: "备注",
@@ -374,6 +398,17 @@ class Home extends Component<HomePropsI, HomeStateI> {
           return <span style={{ color: color }}> {status}</span >
         },
       },
+      // {
+      //   title: '操作',
+      //   key: 'action',
+      //   render: (text: string, record: DailyReportI) => {
+      //     return (
+      //       <span>
+      //         删除
+      //       </span>
+      //     )
+      //   }
+      // }
     ];
 
     return (

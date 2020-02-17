@@ -62,6 +62,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
               initialValue: [
                 moment(dailyReportSearchForm.start),
                 moment(dailyReportSearchForm.end),
+                // moment(),
               ]
             })(<RangePicker showTime={true} format={dateFormat} />)}
           </Form.Item>

@@ -57,7 +57,7 @@ const dailyReportListReducer = (
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 const defaultDailyReportSearchForm: DailyReportSearchFormI = {
   start: moment().startOf("day").locale("zh-cn").format(dateFormat),
-  end: moment().locale("zh-cn").format(dateFormat),
+  end: moment().endOf("day").locale("zh-cn").format(dateFormat),
   keyword: "",
 };
 const dailyReportSearchFormReducer = (

@@ -83,6 +83,7 @@ export declare interface DailyReportI {
   id: string;
   department: string;
   duty: string;
+  role: string;
   emp_code: string;
   name: string;
   gender: number;

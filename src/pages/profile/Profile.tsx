@@ -17,18 +17,12 @@ const { Item } = Form;
 const { Option } = Select;
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
-interface ProfileFormProps extends FormComponentProps {
-  // handleFieldsChange: any;
-  // handleSubmit: any;
-}
-
-function hasErrors(fieldsError: any) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
+interface ProfileFormProps extends FormComponentProps { }
 
 class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, ProfileStateI> {
-  // constructor(props: any) {
-    state = {
+  constructor(props: ProfileFormProps & ProfilePropsI) {
+    super(props)
+    this.state = {
       // 本页面要用的字典
       roleList: [],
       dutyList: [],
@@ -39,7 +33,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
       foreignFlag: false,
       selectedRole: "",
     }
-  // }
+  }
 
   componentDidMount() {
     getDutyList().then((res: any) => {
@@ -65,13 +59,25 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
     this.props.form.validateFields();
   }
 
-  // 取消修改
-  onCancel = (): void => {
-    // setProfile(defaultProfile);
+
+  cellPhoneValidator(rule: any, value: any, callback: Function): any {
+    try {
+      if (value) {
+        if (!(/^1[3456789]\d{9}$/.test(value))) {
+          throw new Error('手机号码有误，请修正');
+        } else {
+          callback();
+        }
+      } else {
+        callback();
+      }
+    } catch (err) {
+      callback(err);
+    }
   };
 
   // 提交修改
-  onSubmit = (e: any): void => {
+  handleSubmit = (e: any): void => {
     e.preventDefault();
     // console.log('submit');
     this.props.form.validateFields((err: any, values: any) => {
@@ -94,7 +100,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
           <Form
             className="profile-form"
             name="profile"
-            onSubmit={this.onSubmit}
+            onSubmit={this.handleSubmit}
           >
             <Item label="人员类别" colon={false}>
               {getFieldDecorator('role', {
@@ -178,11 +184,11 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               style={{ display: selectedRole === '01' ? 'block' : 'none' }}
               colon={false}>
               {getFieldDecorator('department', {
-                rules: [{ required: true, message: "请选择您所属的科室" }],
+                rules: [{ required: selectedRole === '01', message: "请选择您所属的科室" }],
                 initialValue: user.department,
               })(
                 <Select
-                  disabled={!this.state.isEditable}
+                  disabled={selectedRole !== '01'}
                   showSearch
                   filterOption={(input, option) => {
                     // console.log(option.props.title);
@@ -213,7 +219,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                 <AutoComplete
                   // dataSource={['abc', 'bcd']}
                   dataSource={workDepartmentList}
-                  placeholder="工作科室"
+                  placeholder=""
                   filterOption={(inputValue: any, option: any) => {
                     // console.log(option.props.children);
                     return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
@@ -222,7 +228,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               )}
             </Item>
             <Item
-              label="职务"
+              label="职务（普通职员还是干部，由人事处统一设定，不用个人编辑）"
               colon={false}>
               {getFieldDecorator('duty', {
                 rules: [{ required: false, message: "所在位置为必填项" }],
@@ -244,7 +250,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
               )}
             </Item>
             <Item
-              label="人员状态"
+              label="人员状态（较长时间不变的推荐在此填写）"
               colon={false}>
               {getFieldDecorator('work_status', {
                 rules: [{ required: false, message: "请选择当前状态" }],
@@ -267,11 +273,14 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
             </Item>
             <Item label="手机" colon={false}>
               {getFieldDecorator('cell_phone', {
-                rules: [{ required: false, message: "所在位置为必填项" }],
+                rules: [
+                  { required: false, message: "所在位置为必填项" },
+                  { validator: this.cellPhoneValidator },
+                ],
                 initialValue: user.cell_phone,
               })(
                 <Input
-                  disabled={!this.state.isEditable}
+                  disabled={false}
                   type="number"
                   name="cell_phone"
                 />

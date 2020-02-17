@@ -19,23 +19,20 @@ const { Item } = Form;
 const { Option } = Select;
 // const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
-interface DailyReportFormProps extends FormComponentProps {
-}
-
-function hasErrors(fieldsError: any) {
-  return Object.keys(fieldsError).some(field => fieldsError[field]);
-}
+interface DailyReportFormProps extends FormComponentProps {}
 
 class DailyReportForm extends React.Component<DailyReportFormProps & DailyReportPropsI, DailyReportStateI> {
   constructor(props: any) {
     super(props);
     this.state = {
-      showTemperature: false,
-      showFromWhere: false,
+      workStatus: "",
+      isFever: false,
+      foreignFlag: false,
       workStatusList: [],
       workDepartmentList: [],
     }
     this.temperatureValidator = this.temperatureValidator.bind(this); // 让函数内能取到组件的state和props
+    this.commentsValidator = this.commentsValidator.bind(this); // 让函数内能取到组件的state和props
   }
   componentDidMount() {
     getWorkStatusList().then((res: any) => {
@@ -64,7 +61,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
       if (!err) {
         // console.log(values);
         submitDailyReport(values).then((res) => {
-          console.log(res);
+          // console.log(res);
           // console.log(typeof(this.props.dailyReportSearchForm.start))
           this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
           history.push("/");
@@ -80,13 +77,30 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
   temperatureValidator(rule: any, value: any, callback: Function): any {
     // console.log(value);
     // console.log(this.state.showTemperature);
-    const { showTemperature } = this.state;
+    const { isFever } = this.state;
     try {
-      console.log(value);
-      if (showTemperature && value >= 42) {
-        throw new Error('您着火了吧？');
-      } else if (showTemperature && value === 37.2) {
-        throw new Error('请填写具体温度');
+      // console.log(value);
+      if (isFever && value >= 42) {
+        throw new Error('您太火了吧？体温计正瑟瑟发抖……');
+      } else if (isFever && value > 36 && value <= 37.2) {
+        throw new Error('正常体温请选择未发热吧');
+      } else if (isFever && value < 36) {
+        throw new Error('《冬天里的一把火》送给你，跳个舞曲再测测？');
+      } else {
+        callback();
+      }
+    } catch (err) {
+      callback(err);
+    }
+  };
+
+  commentsValidator(rule: any, value: any, callback: Function): any {
+    const { workStatus, isFever } = this.state;
+    try {
+      if (isFever && !value) {
+        throw new Error('请说明发烧的具体情况');
+      } else if (workStatus === '08' && !value) {
+        throw new Error('请说明具体在岗情况');
       } else {
         callback();
       }
@@ -98,7 +112,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
   render() {
     const { getFieldDecorator, getFieldValue, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
     const { user, departmentList, getDailyReportListAction } = this.props;
-    const { showFromWhere, showTemperature, workDepartmentList } = this.state;
+    const { foreignFlag, workStatus, isFever, workDepartmentList } = this.state;
 
     return (
       <section className="daily-report">
@@ -180,6 +194,16 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                       return false;
                     }
                   }}
+                  onChange={(value: string) => {
+                    // console.log(value);
+                    this.setState({workStatus: value},
+                      () => {
+                        // 修改完值后立即校验表单对应项
+                        this.props.form.validateFields(['is_fever'], { force: true });
+                        this.props.form.validateFields(['comments'], { force: true });
+                      },
+                    );
+                  }}
                 >
                   {
                     this.state.workStatusList.length > 0 ?
@@ -213,9 +237,9 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
             <Item label="是否发热（高于37.2度)" colon={false}>
               {getFieldDecorator('is_fever', {
                 rules: [
-                  { required: true, message: "是否发热为必填项" },
+                  { required: !(workStatus === '06' || workStatus === '08'), message: "是否发热为必填项" },
                 ],
-                initialValue: 0,
+                initialValue: undefined,
               })(
                 <Radio.Group
                   className="daily-report-form-gender"
@@ -223,7 +247,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   onChange={(e: any) => {
                     this.setState(
                       {
-                        showTemperature: e.target.value,
+                        isFever: e.target.value,
                       },
                       () => {
                         // 修改完值后立即校验表单对应项
@@ -240,22 +264,22 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
             </Item>
             <Item
               label="具体温度"
-              style={{ display: showTemperature ? "block" : "none" }}
+              style={{ display: isFever ? "block" : "none" }}
               colon={false}
             >
               {getFieldDecorator('temperature', {
                 rules: [
-                  { required: showTemperature, message: "发热时具体温度为必填项" },
+                  { required: isFever || workStatus === '08', message: "发热时具体温度为必填项" },
                   { validator: this.temperatureValidator },
                 ],
                 trigger: "onChange",
-                initialValue: 37.2,
+                initialValue: 36.8,
               })(
                 <InputNumber
                   name="temperature"
-                  disabled={!showTemperature}
-                  max={45}
-                  min={37.2}
+                  disabled={!isFever}
+                  // max={42}
+                  // min={37.2}
                   precision={1}
                   step="0.1"
                 ></InputNumber>
@@ -266,7 +290,10 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
               colon={false}
             >
               {getFieldDecorator('comments', {
-                rules: [{ required: showTemperature, message: "有发热时请说明具体情况" }]
+                rules: [
+                  // { required: showTemperature, message: "有发热时请说明具体情况" },
+                  { validator: this.commentsValidator },
+                ]
               })(
                 <Input
                   type="text"
@@ -285,7 +312,7 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   onChange={(e: any) => {
                     this.setState(
                       {
-                        showFromWhere: e.target.value,
+                        foreignFlag: e.target.value,
                       },
                       () => {
                         // 修改完值后立即校验表单对应项
@@ -301,15 +328,15 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
             </Item>
             <Item
               label="所在位置"
-              style={{ display: showFromWhere ? "block" : "none" }}
+              style={{ display: foreignFlag ? "block" : "none" }}
               colon={false}
             >
               {getFieldDecorator('at_where', {
-                rules: [{ required: showFromWhere, message: "所在位置为必填项" }]
+                rules: [{ required: foreignFlag, message: "所在位置为必填项" }]
               })(
                 <Input
                   type="text"
-                  disabled={!showFromWhere}
+                  disabled={!foreignFlag}
                   name="at_where"
                 ></Input>
               )}

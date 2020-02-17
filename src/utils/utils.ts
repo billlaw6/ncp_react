@@ -1,6 +1,6 @@
 // date2LocalString(new Date, 'yyyy-MM-dd hh:mm:ss')
 export const date2LocalString = function (oldDateTime: string | Date, format: string) {
-  console.debug(typeof oldDateTime)
+  // console.debug(typeof oldDateTime)
   let dt = null
   if (typeof oldDateTime === 'string') {
     dt = new Date(oldDateTime)
