@@ -46,7 +46,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
     const keywordError = isFieldTouched("keyword") && getFieldError("keyword");
     return (
       <div className="search-form">
-        {dailyReportSearchForm.start}
+        {/* {dailyReportSearchForm.start} */}
         <Form
           layout="inline"
           onSubmit={this.onSubmit}
