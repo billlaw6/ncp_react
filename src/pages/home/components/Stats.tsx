@@ -52,22 +52,44 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
             legend: {
                 data: ['正常报告', '发热报告']
             },
+            toolbox: {
+                show: true,
+                feature: {
+                    dataView: { show: true, readOnly: false },
+                    magicType: { show: true, type: ['line', 'bar'] },
+                    restore: { show: true },
+                    saveAsImage: { show: true },
+                }
+            },
+            calculable: true,
             grid: {
                 left: '3%',
                 right: '4%',
                 bottom: '3%',
                 containLabel: true
             },
-            xAxis: {
-                type: 'value'
-            },
-            yAxis: {
+            xAxis: [{
+                type: 'value',
+            }],
+            yAxis: [{
                 type: 'category',
                 data: statsDailyReport.dept_stats.map((item: any) => {
                     return item[0]
                 })
-            },
+            }],
             series: [
+                {
+                    name: '正常报告',
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: statsDailyReport.dept_stats.map((item: any) => {
+                        return item[1]
+                    }),
+                    color: '#CC0066',
+                },
                 {
                     name: '正常报告',
                     type: 'bar',
@@ -77,8 +99,34 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                         position: 'insideRight'
                     },
                     data: statsDailyReport.dept_stats.map((item: any) => {
-                        return item[1]
-                    })
+                        return item[1] + 1
+                    }),
+                    color: '#CC0011',
+                },
+                {
+                    name: '正常报告',
+                    type: 'bar',
+                    stack: '总量',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: statsDailyReport.dept_stats.map((item: any) => {
+                        return item[1] + 1
+                    }),
+                    color: '#220011',
+                },
+                {
+                    name: '正常报告',
+                    type: 'bar',
+                    label: {
+                        show: true,
+                        position: 'insideRight'
+                    },
+                    data: statsDailyReport.dept_stats.map((item: any) => {
+                        return item[1] + 1
+                    }),
+                    color: '#CC0011',
                 },
             ]
         };
