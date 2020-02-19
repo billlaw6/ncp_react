@@ -30,7 +30,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
     const { handleSubmit } = this.props;
     console.log('on submit')
     e.preventDefault();
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         handleSubmit(values);
       }

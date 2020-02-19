@@ -12,3 +12,5 @@ export interface MapDispatchToPropsI {
 }
 
 export type SearchFormPropsI = MapStateToPropsI & MapDispatchToPropsI;
+
+/////////////////////

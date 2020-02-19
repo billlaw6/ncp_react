@@ -26,10 +26,12 @@ import LinkButton from "_components/LinkButton/LinkButton";
 import SearchForm from "./components/SearchForm";
 import { date2LocalString } from "../../utils/utils";
 import { baseURL } from "_services/api";
+import { statsDailyReportList } from "_services/report";
 import axios from "axios";
 import echarts from "echarts";
 import ReactEcharts from "echarts-for-react";
 import "./Home.less";
+import Stats from "./components/Stats";
 
 const dateFormat = 'YYYY-MM-DD HH:mm:ss';
 
@@ -44,50 +46,64 @@ class Home extends Component<HomePropsI, HomeStateI> {
       cadreCount: 0,
       foreignCount: 0,
       isDeptReporter: false,
+      statsDailyReport: {
+        branch_stats: [],
+        dept_stats: [],
+      },
     };
+    this.handleFieldsChange = this.handleFieldsChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this); //
   }
   // 传给检索表单
   handleFieldsChange = (changedValues: any) => {
-    // console.log(changedValues);
+    const { dailyReportSearchForm, setDailyReportSearchAction } = this.props;
     // 此时收到的还是Moment类型
     if (changedValues.hasOwnProperty("dtRange")) {
-      if (changedValues.dtRange.length > 0) {
+      // console.log(changedValues.dtRange.value.length);
+      if (changedValues.dtRange.value.length > 0) {
         const start = changedValues.dtRange.value[0].locale('zh-cn').format(dateFormat);
         const end = changedValues.dtRange.value[1].locale('zh-cn').format(dateFormat);
-        const keyword = this.props.dailyReportSearchForm.keyword;
-        this.props.setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
+        const keyword = dailyReportSearchForm.keyword;
+        setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
       }
     }
     if (changedValues.hasOwnProperty("keyword")) {
-      const start = this.props.dailyReportSearchForm.start;
-      const end = this.props.dailyReportSearchForm.end;
+      const start = dailyReportSearchForm.start;
+      const end = dailyReportSearchForm.end;
       const keyword = changedValues.keyword.value;
-      this.props.setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
+      setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
     }
   };
 
   // 传给检索表单
   handleSubmit = (submitedData: any) => {
+    const { dailyReportSearchForm } = this.props;
     console.log(submitedData);
     console.log(this.props.dailyReportSearchForm);
     this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
+    // 获取相应统计分析数据
+    statsDailyReportList(dailyReportSearchForm).then((res) => {
+      this.setState({
+        statsDailyReport:
+          res.data
+      })
+    }).catch((err) => {
+      console.log(err);
+      // history.push("/login");
+    })
   };
 
   componentDidMount(): void {
-    const {
-      user,
-      dailyReportList,
-      getDailyReportListAction,
-    } = this.props;
+    const { user, dailyReportList, dailyReportSearchForm, getDailyReportListAction, } = this.props;
     if (1 in user.groups) {
       this.setState({ isDeptReporter: true })
     }
     const { feverCount, cadreCount, foreignCount } = this.state;
-    console.log(this.props.dailyReportSearchForm);
-    getDailyReportListAction(this.props.dailyReportSearchForm);
+    console.log(dailyReportSearchForm);
+    getDailyReportListAction(dailyReportSearchForm);
     dailyReportList.forEach(item => {
       if (item.is_fever) {
+        console.log(item);
         const newFeverCount = feverCount + 1;
         this.setState({ feverCount: newFeverCount });
       }
@@ -133,7 +149,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
   }
 
   handleDownloadClick = () => {
-    console.log("donwload clicked");
+    // console.log("donwload clicked");
     const downloadUrl = baseURL + "report/daily/download";
     axios({
       method: "get",
@@ -159,157 +175,6 @@ class Home extends Component<HomePropsI, HomeStateI> {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(objectUrl); // 释放掉blob对象
     });
-  }
-
-  getOption() {
-    return {
-      title: {
-        text: ''
-      },
-      //点击提示标签
-      // tooltip: {},
-      legend: {
-        //图例文字展示
-        data: [
-          { name: '今日更新投诉量' },
-          { name: '昨日更新投诉量' }],
-        //图例显示在底部
-        bottom: 0,
-        //图例背景颜色
-        backgroundColor: "transparent",
-        // 图例标记的图形宽度。[ default: 25 ]
-        itemWidth: 12,
-        // 图例标记的图形高度。[ default: 14 ]
-        itemHeight: 9,
-        //图例文字样式设置
-        textStyle: {
-          color: "#333",                //文字颜色
-          fontStyle: "normal",         //italic斜体  oblique倾斜
-          fontWeight: "normal",        //文字粗细bold   bolder   lighter  100 | 200 | 300 | 400...
-          // fontFamily:"sans-serif",   //字体系列
-          fontSize: 12,                //字体大小
-        }
-      },
-      radar: {
-        //雷达图绘制类型，支持 'polygon' 和 'circle' [ default: 'polygon' ]
-        shape: 'polygon',
-        splitNumber: 3,
-        center: ['50%', '50%'],
-        radius: '65%',
-        //指示器名称和指示器轴的距离。[ default: 15 ]
-        nameGap: 5,
-        triggerEvent: true,
-        name: {
-          textStyle: {
-            color: '#999',
-            backgroundColor: 'transparent'
-            // borderRadius: 3,
-            // padding: [3, 5]
-          },
-          formatter: function (value: any, indicator: any) {
-            value = value.replace(/\S{4}/g, function (match: any) {
-              return match + '\n'
-            })
-            // value = value + '\n' + indicator.value;
-            return '{a|' + value + '}' + '\n' + '{b|' + indicator.value + '}'
-          },
-          //富文本编辑 修改文字展示样式
-          rich: {
-            a: {
-              color: "#999",
-              fontSize: 12,
-              align: "center"
-
-            },
-            b: {
-              color: "#333",
-              fontSize: 17,
-              align: "center"
-            }
-          }
-        },
-        // 设置雷达图中间射线的颜色
-        axisLine: {
-          lineStyle: {
-            color: '#ddd',
-          },
-        },
-        indicator: [
-          { "name": "车辆已售", "value": 380, "max": 500 },
-          { "name": "商家冒充个人", "value": 290, "max": 500 },
-          { "name": "商家服务态度差", "value": 450, "max": 500 },
-          { "name": "电话无法接通", "value": 300, "max": 500 },
-          { "name": "走私套牌抵押车", "value": 480, "max": 500 },
-          { "name": "价格高于标价", "value": 200, "max": 500 },
-          { "name": "卖新车", "value": 350, "max": 500 },
-          { "name": "图片与车款不符合", "value": 333, "max": 500 }
-        ],
-        //雷达图背景的颜色，在这儿随便设置了一个颜色，完全不透明度为0，就实现了透明背景
-        splitArea: {
-          show: false,
-          areaStyle: {
-            color: 'rgba(255,0,0,0)', // 图表背景的颜色
-          },
-        }
-      },
-      series: [{
-        name: '投诉统计',
-        type: 'radar',
-        //显示雷达图选中背景
-        areaStyle: { normal: {} },
-        data: [
-          {
-            value: [380, 290, 450, 300, 480, 200, 350, 333],
-            // 设置区域边框和区域的颜色
-            itemStyle: {
-              normal: {
-                //雷达图背景渐变设置
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                  offset: 0.5,
-                  color: 'rgba(48,107, 231, 1)'
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(73,168, 255, 0.7)'
-                }]),
-                //去除刻度
-                opacity: 0,
-                //雷达图边线样式
-                lineStyle: {
-                  width: 0,
-                  color: '#306BE7',
-                },
-              },
-            },
-            name: '今日更新投诉量',
-            id: "jintian"
-          },
-          {
-            value: [10, 250, 100, 370, 80, 500, 190, 400],
-            // 设置区域边框和区域的颜色
-            itemStyle: {
-              normal: {
-                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
-                  offset: 0.5,
-                  color: 'rgba(139,241, 134, 0.7)'
-                },
-                {
-                  offset: 1,
-                  color: 'rgba(0,208, 131, 1)'
-                }]),
-                opacity: 0,
-                lineStyle: {
-                  width: 0,
-                  color: '#8BF186',
-                },
-              },
-            },
-            name: '昨日更新投诉量',
-            id: "zuotian"
-          }
-        ]
-      }]
-    };
   }
 
   render(): ReactElement {
@@ -475,7 +340,11 @@ class Home extends Component<HomePropsI, HomeStateI> {
             value: "其他（在备注栏标注）",
           },
         ],
-        onFilter: (value: number, record: any) => record.work_status == value,
+        onFilter: (value: string, record: DailyReportI) => {
+          // console.log(record.work_status_name.toUpperCase());
+          // console.log(value.toUpperCase());
+          return record.work_status_name.toUpperCase().indexOf(value.toUpperCase()) !== -1;
+        }
       },
       {
         title: "现工作科室",
@@ -578,16 +447,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         </Row>
         <Row type="flex" justify="start">
           <Col span={24}>
-            <ReactEcharts
-              notMerge={true}
-              lazyUpdate={true}
-              style={{ width: '100%', height: '100px' }}
-              // theme={"dark"}
-              // onChartReady={this.onCharReadyCallback}
-              // onEvents={EventsDict}
-              // opts={}
-              option={this.getOption()}
-            />
+            <Stats></Stats>
           </Col>
         </Row>
         <div

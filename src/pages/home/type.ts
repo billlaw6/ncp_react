@@ -30,6 +30,10 @@ export interface HomeStateI {
   foreignCount: number;
   cadreCount: number;
   isDeptReporter: boolean;
+  statsDailyReport: {
+    branch_stats: any[];
+    dept_stats: any[];
+  };
 }
 
 export interface TableDataI {

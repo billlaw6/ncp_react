@@ -93,3 +93,8 @@ export const searchDailyReport = async (params: any) => {
   const res = await axios.get(`/report/daily/`, { params: params });
   return res;
 };
+
+export const statsDailyReportList = async (params: any) => {
+  const res = await axios.get(`/report/daily/stats/`, { params: params });
+  return res;
+};
