@@ -78,8 +78,11 @@ axios.interceptors.request.use(
 // 自定义响应成功的HTTP状态码
 axios.defaults.validateStatus = (status): boolean => {
   // console.log(status);
+  // console.log(/^(2|3)\d{2}$/.test(status.toString()));
   return /^(2|3)\d{2}$/.test(status.toString());
 };
+
+// 响应拦截
 axios.interceptors.response.use(
   (response: any) => {
     // 服务器返回了结果，有前面的validateStatus保证，这里接收的只会是2和3开着的状态
@@ -88,29 +91,18 @@ axios.interceptors.response.use(
   },
   (error: any) => {
     // 两种错误返回类型
-    console.error(error);
-    if (error.ressponse) {
-      // 服务器返回了结果
-      // console.log('response valid');
+    console.log(error);
+    if (error && error.response && error.response.status) {
+      // console.log(error.response.status);
       switch (error.response.status) {
         case 400:
-          // history.push("/login");
           return Promise.reject(error);
         case 401: // 当前请求用户需要验证，未登录；
-          // 跳转路由或弹出蒙层
-          // 直接修改localStorage会被redux-persist还原
-          // delete persistRoot.token;
-          // console.log(persistRoot);
-          // localStorage.setItem('persist:root', JSON.stringify(persistRoot));
-          // localStorage.setItem('persist:root', persistRoot);
+          console.log('401')
           history.push("/login");
           return Promise.reject(error);
         case 403: // 服务器拒绝执行，通常是token过期；
-          // 直接修改localStorage会被redux-persist还原
-          // persistRoot.token = '';
-          // console.log(persistRoot);
-          // localStorage.setItem('persist:root', JSON.stringify(persistRoot));
-          // history.push("/login");
+          history.push("/login");
           return Promise.reject(error);
         case 404: // 资源找不到；
           history.push("/");

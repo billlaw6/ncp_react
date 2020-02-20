@@ -98,9 +98,9 @@ function* getDepartmentListEffect(action: ReturnType<typeof getDepartmentListAct
 
 function* getDailyReportEffect(action: ReturnType<typeof getDailyReportListAction>) {
   try {
-    console.log(action.payload);
+    // console.log(action.payload);
     const res = yield call(getDailyReportList, action.payload);
-    console.log(res.data);
+    // console.log(res.data);
     // put对应redux中的dispatch。
     yield put({ type: types.SET_DAILY_REPORT_LIST, payload: res.data });
   } catch (error) {

@@ -42,9 +42,6 @@ class Home extends Component<HomePropsI, HomeStateI> {
       selectedRowKeys: [],
       loading: false,
       redirectReport: false,
-      feverCount: 0,
-      cadreCount: 0,
-      foreignCount: 0,
       isDeptReporter: false,
       statsDailyReport: {
         branch_stats: [],
@@ -77,9 +74,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   // 传给检索表单
   handleSubmit = (submitedData: any) => {
-    const { dailyReportSearchForm } = this.props;
-    console.log(submitedData);
-    console.log(this.props.dailyReportSearchForm);
+    const { dailyReportList, dailyReportSearchForm } = this.props;
+    // console.log(submitedData);
+    // console.log(this.props.dailyReportSearchForm);
     this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
     // 获取相应统计分析数据
     statsDailyReportList(dailyReportSearchForm).then((res) => {
@@ -98,24 +95,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     if (1 in user.groups) {
       this.setState({ isDeptReporter: true })
     }
-    const { feverCount, cadreCount, foreignCount } = this.state;
-    console.log(dailyReportSearchForm);
+    // console.log(dailyReportSearchForm);
     getDailyReportListAction(dailyReportSearchForm);
-    dailyReportList.forEach(item => {
-      if (item.is_fever) {
-        console.log(item);
-        const newFeverCount = feverCount + 1;
-        this.setState({ feverCount: newFeverCount });
-      }
-      if (item.duty == "干部") {
-        const newForeignCount = foreignCount + 1;
-        this.setState({ foreignCount: newForeignCount });
-      }
-      if (item.foreign_flag) {
-        const newForeignCount = foreignCount + 1;
-        this.setState({ foreignCount: newForeignCount });
-      }
-    });
   }
 
   showConfirm = (): void => {
@@ -179,7 +160,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   render(): ReactElement {
     const { user, dailyReportList } = this.props;
-    const { loading, isDeptReporter, feverCount, cadreCount, foreignCount, selectedRowKeys } = this.state;
+    const { loading, isDeptReporter, selectedRowKeys } = this.state;
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
@@ -442,10 +423,23 @@ class Home extends Component<HomePropsI, HomeStateI> {
             <SearchForm handleFieldsChange={this.handleFieldsChange} handleSubmit={this.handleSubmit}></SearchForm>
           </Col>
           <Col span={8}>
-            <section className="daily-reports-summary">共检索到{dailyReportList.length}份体温报告，{feverCount}份发热，{cadreCount}份干部报告</section>,
+            <section className="daily-reports-summary">
+              共检索到{dailyReportList.length}份体温报告，
+              <div className="fever-count">{(function(){
+                let feverCount = 0;
+                dailyReportList.forEach((item) => {
+                  if (item.is_fever) {
+                    feverCount = feverCount + 1;
+                  }
+                })
+                return feverCount;
+              })()
+              }份发热，
+              </div>
+             </section>,
           </Col>
         </Row>
-        <Row type="flex" justify="start">
+        <Row type="flex" justify="start" style={{display: 'none'}}>
           <Col span={24}>
             <Stats></Stats>
           </Col>

@@ -26,9 +26,6 @@ export interface HomeStateI {
   selectedRowKeys: []; //当前已选择的id 集
   loading: false,
   redirectReport: boolean; // 是否重定向到report页
-  feverCount: number;
-  foreignCount: number;
-  cadreCount: number;
   isDeptReporter: boolean;
   statsDailyReport: {
     branch_stats: any[];
