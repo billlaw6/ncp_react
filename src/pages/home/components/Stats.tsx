@@ -134,7 +134,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "01") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -169,7 +169,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "02") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -204,7 +204,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "03") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -239,7 +239,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "04") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -274,7 +274,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "05") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -304,12 +304,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 yColumns.push(item[1])
                                 console.log(yColumns);
                                 console.log(item[6]);
-                                if (item[3] === "02") {
+                                if (item[3] === "06") {
                                     data.push(item[5]);
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "06") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -344,7 +344,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "07") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -377,7 +377,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[3] === "08") {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -410,7 +410,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[4] === 0) {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }
@@ -443,7 +443,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
                                 } else {
                                     data.push(0);
                                 }
-                            } else if (yColumns.length === data.length) {
+                            } else if (yColumns.length === data.length && item[4] === 1) {
                             // 如果科室存在，则数据加到相同序列位置
                                 data[index] = data[index] + item[5]
                             }

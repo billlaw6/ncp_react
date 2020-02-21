@@ -439,7 +439,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
              </section>,
           </Col>
         </Row>
-        <Row type="flex" justify="start" style={{display: 'none'}}>
+        <Row type="flex" justify="start" style={{display: 'block'}}>
           <Col span={24}>
             <Stats></Stats>
           </Col>
