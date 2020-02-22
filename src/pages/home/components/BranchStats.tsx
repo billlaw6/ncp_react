@@ -7,7 +7,7 @@ import { MapStateToPropsI } from "./type";
 import ReactEcharts from "echarts-for-react";
 import { statsDailyReportList } from "_services/report";
 
-export interface StatsStateI {
+export interface BranchStatsStateI {
   xAxisColumns: string[];
   statsDailyReport: {
     branch_stats: any[];
@@ -15,7 +15,7 @@ export interface StatsStateI {
   };
 }
 
-class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
+class BranchStats extends React.Component<MapStateToPropsI, BranchStatsStateI> {
   constructor(props: MapStateToPropsI) {
     super(props);
     this.state = {
@@ -46,7 +46,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
     // console.log(statsDailyReport);
     show: return {
       // title: {
-      //     text: "报告统计",
+      //     text: "中层及以上干部情况统计",
       //     // subtext: '',
       //     left: '50%',
       //     textAlign: 'center',
@@ -64,17 +64,17 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
       },
       legend: {
         data: [
-          "总人数",
-          "白班",
-          "夜班",
-          "备班",
-          "休假",
-          "隔离观察",
-          "武汉支援",
-          "下乡",
-          "其他",
-          "正常",
-          "发热",
+          "干部总人数",
+          "白班干部",
+          "夜班干部",
+          "备班干部",
+          "休假干部",
+          "隔离观察干部",
+          "武汉支援干部",
+          "下乡干部",
+          "其他干部",
+          "干部正常报告",
+          "干部发热报告",
         ],
       },
       toolbox: {
@@ -105,8 +105,8 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
             let yColumns: string[] = [];
             let empCount: number[] = [];
             statsDailyReport.dept_stats.map((item: any) => {
-              if (yColumns.indexOf(item[1]) === -1) {
-                yColumns.push(item[1]);
+              if (yColumns.indexOf(item[0]) === -1 && item[2] === "02") {
+                yColumns.push(item[0]);
               }
             });
             // console.log(yColumns);
@@ -116,32 +116,40 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
       ],
       series: [
         {
-          name: "总人数",
+          name: "干部总人数",
           type: "bar",
           label: {
             show: true,
             position: "insideRight",
           },
           data: (() => {
-            let yColumns: string[] = [];
+            let bColumns: string[] = [];
+            let dColumns: string[] = [];
             let empCount: number[] = [];
             statsDailyReport.dept_stats.map((item: any) => {
-              let index = yColumns.indexOf(item[1]);
-              // 科室没出现过增加对应数据元素
-              if (index === -1) {
-                yColumns.push(item[1]);
+              let bIndex = bColumns.indexOf(item[0]);
+              // 院区没添加过时，添加对应院区和科室
+              if (bIndex === -1 && item[2] === "02") {
+                bColumns.push(item[0]);
+                dColumns.push(item[1]);
                 empCount.push(item[3]);
               } else {
-                // 科室出现过，在对应数据元素节点上累加
-                empCount[index] = empCount[index] + item[3];
+                // 院区添加过，一个科室只加一次人数
+                // 按院区统计只统计干部
+                if (dColumns.indexOf(item[1]) !== -1 && item[2] === "02") {
+                  empCount[bIndex] = empCount[bIndex] + item[3];
+                }
               }
+              console.log(item);
+              console.log(bColumns);
+              console.log(empCount);
             });
             return empCount;
           })(),
           color: "#0780cf",
         },
         {
-          name: "白班",
+          name: "白班干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -156,12 +164,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "01") {
+                if (item[4] === "01" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "01") {
+              } else if (yColumns.length === data.length && item[4] === "01" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[5];
               }
@@ -171,7 +179,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#C0C0C0",
         },
         {
-          name: "夜班",
+          name: "夜班干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -186,12 +194,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "02") {
+                if (item[4] === "02" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "02") {
+              } else if (yColumns.length === data.length && item[4] === "02" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -201,7 +209,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#696969",
         },
         {
-          name: "备班",
+          name: "备班干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -216,12 +224,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "03") {
+                if (item[4] === "03" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "03") {
+              } else if (yColumns.length === data.length && item[4] === "03" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -231,7 +239,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#0e2c82",
         },
         {
-          name: "休假（含倒休）",
+          name: "休假（含倒休）干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -246,12 +254,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[5]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "04") {
+                if (item[4] === "04" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "04") {
+              } else if (yColumns.length === data.length && item[4] === "04" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -261,7 +269,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#b6b51f",
         },
         {
-          name: "隔离观察",
+          name: "隔离观察干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -276,12 +284,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "05") {
+                if (item[4] === "05" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "05") {
+              } else if (yColumns.length === data.length && item[4] === "05" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -291,7 +299,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#da1f18",
         },
         {
-          name: "武汉支援",
+          name: "武汉支援干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -306,12 +314,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "06") {
+                if (item[4] === "06" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "06") {
+              } else if (yColumns.length === data.length && item[4] === "06" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -321,7 +329,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#701866",
         },
         {
-          name: "下乡",
+          name: "下乡干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -336,12 +344,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "07") {
+                if (item[4] === "07" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "07") {
+              } else if (yColumns.length === data.length && item[4] === "07" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -351,7 +359,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#f47a75",
         },
         {
-          name: "其他",
+          name: "其他干部",
           type: "bar",
           stack: "工作状态",
           label: {
@@ -366,12 +374,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "08") {
+                if (item[4] === "08" && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "08") {
+              } else if (yColumns.length === data.length && item[4] === "08" && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -381,7 +389,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#009db2",
         },
         {
-          name: "正常",
+          name: "干部正常报告",
           type: "bar",
           stack: "是否发热",
           label: {
@@ -396,12 +404,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[5] === 0) {
+                if (item[5] === 0 && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[5] === 0) {
+              } else if (yColumns.length === data.length && item[5] === 0 && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -411,7 +419,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           color: "#008000",
         },
         {
-          name: "发热",
+          name: "干部发热报告",
           type: "bar",
           stack: "是否发热",
           label: {
@@ -426,12 +434,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[5] === 1) {
+                if (item[5] === 1 && item[2] === "02") {
                   data.push(item[6]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[5] === 1) {
+              } else if (yColumns.length === data.length && item[5] === 1 && item[2] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[6];
               }
@@ -466,4 +474,4 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   dailyReportSearchForm: state.dailyReportSearchForm,
 });
-export default connect(mapStateToProps)(Stats);
+export default connect(mapStateToProps)(BranchStats);

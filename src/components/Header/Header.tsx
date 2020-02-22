@@ -2,7 +2,6 @@ import React, { FunctionComponent, ReactElement } from "react";
 import { Menu, Layout, Avatar, Dropdown } from "antd";
 import { ClickParam } from "antd/lib/menu";
 
-
 import { HeaderPropsI } from "./type";
 
 import "./Header.less";
@@ -56,7 +55,9 @@ const Header: FunctionComponent<HeaderPropsI> = (props): ReactElement => {
   return (
     <AntdHeader id="header">
       <div className="header-content">
-        <a className="logo" href="/">北医三院抗疫日报平台</a>
+        <a className="logo" href="/">
+          北医三院抗疫日报平台
+        </a>
 
         <Dropdown
           className="avatar"

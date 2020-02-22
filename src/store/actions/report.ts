@@ -1,6 +1,11 @@
-import { ActionI, TempReportI, CadreReportI, DailyReportI, DailyReportSearchFormI } from "_constants/interface";
+import {
+  ActionI,
+  TempReportI,
+  CadreReportI,
+  DailyReportI,
+  DailyReportSearchFormI,
+} from "_constants/interface";
 import * as types from "../action-types";
-
 
 //////////////////////////////////////////////////////////////////////////
 // 用于在SAGA中触发请求
@@ -66,7 +71,6 @@ export const setCadreReportListAction: SetCadreReportListActionFuncI = payload =
   type: types.SET_CADRE_REPORT_LIST,
   payload,
 });
-
 
 //////////////////////////////////////////////////////////////////////////
 export type setDailyReportSearchFormActionT = ActionI<string, DailyReportSearchFormI>;

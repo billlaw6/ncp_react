@@ -98,7 +98,7 @@ axios.interceptors.response.use(
         case 400:
           return Promise.reject(error);
         case 401: // 当前请求用户需要验证，未登录；
-          console.log('401')
+          console.log("401");
           history.push("/login");
           return Promise.reject(error);
         case 403: // 服务器拒绝执行，通常是token过期；

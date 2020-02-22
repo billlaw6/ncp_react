@@ -1,11 +1,27 @@
 import React, { FunctionComponent, useState, useRef } from "react";
-import { Form, AutoComplete, Button, Input, InputNumber, Row, Col, Select, DatePicker, Radio } from "antd";
+import {
+  Form,
+  AutoComplete,
+  Button,
+  Input,
+  InputNumber,
+  Row,
+  Col,
+  Select,
+  DatePicker,
+  Radio,
+} from "antd";
 import { FormComponentProps } from "antd/es/form";
 import moment, { Moment } from "moment";
 import { connect, MapDispatchToProps } from "react-redux";
 
 import { StoreStateI, WorkStatusI } from "_constants/interface";
-import { DailyReportPropsI, DailyReportStateI, MapStateToPropsI, MapDispatchToPropsI } from "./type";
+import {
+  DailyReportPropsI,
+  DailyReportStateI,
+  MapStateToPropsI,
+  MapDispatchToPropsI,
+} from "./type";
 import { history } from "../../store/configureStore";
 
 import "./DailyReport.less";
@@ -21,7 +37,10 @@ const { Option } = Select;
 
 interface DailyReportFormProps extends FormComponentProps {}
 
-class DailyReportForm extends React.Component<DailyReportFormProps & DailyReportPropsI, DailyReportStateI> {
+class DailyReportForm extends React.Component<
+  DailyReportFormProps & DailyReportPropsI,
+  DailyReportStateI
+> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -30,21 +49,23 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
       foreignFlag: false,
       workStatusList: [],
       workDepartmentList: [],
-    }
+    };
     this.temperatureValidator = this.temperatureValidator.bind(this); // 让函数内能取到组件的state和props
     this.commentsValidator = this.commentsValidator.bind(this); // 让函数内能取到组件的state和props
   }
   componentDidMount() {
-    getWorkStatusList().then((res: any) => {
-      this.setState({ workStatusList: res.data });
-    }).catch((error: any) => {
-      console.log(error);
-    })
-    this.setState({
-      workDepartmentList: this.props.departmentList.map((item) => {
-        return item.name + "(" + item.code + ")";
+    getWorkStatusList()
+      .then((res: any) => {
+        this.setState({ workStatusList: res.data });
       })
-    })
+      .catch((error: any) => {
+        console.log(error);
+      });
+    this.setState({
+      workDepartmentList: this.props.departmentList.map(item => {
+        return item.name + "(" + item.code + ")";
+      }),
+    });
     this.props.form.validateFields();
   }
 
@@ -55,23 +76,25 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
 
   // 提交修改
   onSubmit = (e: any): void => {
-    console.log('submit');
+    console.log("submit");
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
         // console.log(values);
-        submitDailyReport(values).then((res) => {
-          // console.log(res);
-          // console.log(typeof(this.props.dailyReportSearchForm.start))
-          this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
-          history.push("/");
-        }).catch((error) => {
-          console.log(error);
-        })
+        submitDailyReport(values)
+          .then(res => {
+            // console.log(res);
+            // console.log(typeof(this.props.dailyReportSearchForm.start))
+            this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
+            history.push("/");
+          })
+          .catch(error => {
+            console.log(error);
+          });
       } else {
         console.error(err);
       }
-    })
+    });
   };
 
   temperatureValidator(rule: any, value: any, callback: Function): any {
@@ -81,36 +104,42 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
     try {
       // console.log(value);
       if (isFever && value >= 42) {
-        throw new Error('您太火了吧？体温计正瑟瑟发抖……');
+        throw new Error("您太火了吧？体温计正瑟瑟发抖……");
       } else if (isFever && value > 36 && value <= 37.2) {
-        throw new Error('正常体温请选择未发热吧');
+        throw new Error("正常体温请选择未发热吧");
       } else if (isFever && value < 36) {
-        throw new Error('《冬天里的一把火》送给你，跳个舞曲再测测？');
+        throw new Error("《冬天里的一把火》送给你，跳个舞曲再测测？");
       } else {
         callback();
       }
     } catch (err) {
       callback(err);
     }
-  };
+  }
 
   commentsValidator(rule: any, value: any, callback: Function): any {
     const { workStatus, isFever } = this.state;
     try {
       if (isFever && !value) {
-        throw new Error('请说明发烧的具体情况');
-      } else if (workStatus === '08' && !value) {
-        throw new Error('请说明具体在岗情况');
+        throw new Error("请说明发烧的具体情况");
+      } else if (workStatus === "08" && !value) {
+        throw new Error("请说明具体在岗情况");
       } else {
         callback();
       }
     } catch (err) {
       callback(err);
     }
-  };
+  }
 
   render() {
-    const { getFieldDecorator, getFieldValue, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
+    const {
+      getFieldDecorator,
+      getFieldValue,
+      getFieldsError,
+      getFieldError,
+      isFieldTouched,
+    } = this.props.form;
     const { user, departmentList, getDailyReportListAction } = this.props;
     const { foreignFlag, workStatus, isFever, workDepartmentList } = this.state;
 
@@ -127,13 +156,9 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
           </Col>
         </Row>
         <div className="daily-report-content">
-          <Form
-            className="daily-report-form"
-            name="daily-report"
-            onSubmit={this.onSubmit}
-          >
+          <Form className="daily-report-form" name="daily-report" onSubmit={this.onSubmit}>
             <Item label="所属科室" colon={false}>
-              {getFieldDecorator('department', {
+              {getFieldDecorator("department", {
                 initialValue: user.department,
               })(
                 <Select
@@ -141,43 +166,44 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   showSearch
                   filterOption={(input, option) => {
                     if (
-                      option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                      option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                      option!
+                        .props!.title!.toString()
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0 ||
+                      option!
+                        .props!.value!.toString()
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
                     ) {
                       return true;
                     } else {
                       return false;
                     }
-                  }}>
+                  }}
+                >
                   {departmentList.map(item => {
                     return (
                       <Option key={item.code} value={item.code} title={item.py}>
                         {item.name}
                       </Option>
-                    );;
+                    );
                   })}
-                </Select>
+                </Select>,
               )}
             </Item>
             <Item label="员工编码" colon={false}>
-              {getFieldDecorator('emp_code', {
+              {getFieldDecorator("emp_code", {
                 initialValue: user.emp_code,
-              })(
-                <Input disabled={true} type="text" name="emp_code" />
-              )}
+              })(<Input disabled={true} type="text" name="emp_code" />)}
             </Item>
             <Item label="姓名" colon={false}>
-              {getFieldDecorator('name', {
+              {getFieldDecorator("name", {
                 rules: [{ required: true, message: "请输入姓名" }],
                 initialValue: user.name,
-              })(
-                <Input disabled={true} type="text" name="name" />
-              )}
+              })(<Input disabled={true} type="text" name="name" />)}
             </Item>
-            <Item
-              label="人员状态"
-              colon={false}>
-              {getFieldDecorator('work_status', {
+            <Item label="人员状态" colon={false}>
+              {getFieldDecorator("work_status", {
                 rules: [{ required: true, message: "请选择当前状态" }],
                 initialValue: user.work_status,
               })(
@@ -187,8 +213,16 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   dropdownClassName="profile-form-gender"
                   filterOption={(input, option) => {
                     // console.log(option.props.title);
-                    if (option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                      option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0) {
+                    if (
+                      option!
+                        .props!.title!.toString()
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0 ||
+                      option!
+                        .props!.value!.toString()
+                        .toLowerCase()
+                        .indexOf(input.toLowerCase()) >= 0
+                    ) {
                       return true;
                     } else {
                       return false;
@@ -196,30 +230,31 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   }}
                   onChange={(value: string) => {
                     // console.log(value);
-                    this.setState({workStatus: value},
-                      () => {
-                        // 修改完值后立即校验表单对应项
-                        this.props.form.validateFields(['is_fever'], { force: true });
-                        this.props.form.validateFields(['comments'], { force: true });
-                      },
-                    );
+                    this.setState({ workStatus: value }, () => {
+                      // 修改完值后立即校验表单对应项
+                      this.props.form.validateFields(["is_fever"], { force: true });
+                      this.props.form.validateFields(["comments"], { force: true });
+                    });
                   }}
                 >
-                  {
-                    this.state.workStatusList.length > 0 ?
-                      this.state.workStatusList.map((item: WorkStatusI) => {
-                        return (
-                          <Option key={item.code} value={item.code} title={item.py}>{item.name}</Option>
-                        )
-                      }) :
-                      <Option key={"empty"} value={"empty"} title={"empty"}>Empty</Option>
-                  }
-                </Select>
+                  {this.state.workStatusList.length > 0 ? (
+                    this.state.workStatusList.map((item: WorkStatusI) => {
+                      return (
+                        <Option key={item.code} value={item.code} title={item.py}>
+                          {item.name}
+                        </Option>
+                      );
+                    })
+                  ) : (
+                    <Option key={"empty"} value={"empty"} title={"empty"}>
+                      Empty
+                    </Option>
+                  )}
+                </Select>,
               )}
             </Item>
-            <Item label="当前工作科室（仅不在本科室工作或在各院区工作时填写）"
-              colon={false}>
-              {getFieldDecorator('work_department', {
+            <Item label="当前工作科室（仅不在本科室工作或在各院区工作时填写）" colon={false}>
+              {getFieldDecorator("work_department", {
                 rules: [{ required: false, message: "所在位置为必填项" }],
                 initialValue: user.work_department ? user.work_department : undefined,
               })(
@@ -229,15 +264,20 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   placeholder="工作科室"
                   filterOption={(inputValue: any, option: any) => {
                     // console.log(option.props.children);
-                    return option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    return (
+                      option.props.children.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
+                    );
                   }}
-                />
+                />,
               )}
             </Item>
             <Item label="是否发热（高于37.2度)" colon={false}>
-              {getFieldDecorator('is_fever', {
+              {getFieldDecorator("is_fever", {
                 rules: [
-                  { required: !(workStatus === '06' || workStatus === '08'), message: "是否发热为必填项" },
+                  {
+                    required: !(workStatus === "06" || workStatus === "08"),
+                    message: "是否发热为必填项",
+                  },
                 ],
                 initialValue: undefined,
               })(
@@ -251,25 +291,21 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                       },
                       () => {
                         // 修改完值后立即校验表单对应项
-                        this.props.form.validateFields(['temperature'], { force: true });
-                        this.props.form.validateFields(['comments'], { force: true });
+                        this.props.form.validateFields(["temperature"], { force: true });
+                        this.props.form.validateFields(["comments"], { force: true });
                       },
                     );
                   }}
                 >
                   <Radio value={0}>未发热</Radio>
                   <Radio value={1}>发热</Radio>
-                </Radio.Group>
+                </Radio.Group>,
               )}
             </Item>
-            <Item
-              label="具体温度"
-              style={{ display: isFever ? "block" : "none" }}
-              colon={false}
-            >
-              {getFieldDecorator('temperature', {
+            <Item label="具体温度" style={{ display: isFever ? "block" : "none" }} colon={false}>
+              {getFieldDecorator("temperature", {
                 rules: [
-                  { required: isFever || workStatus === '08', message: "发热时具体温度为必填项" },
+                  { required: isFever || workStatus === "08", message: "发热时具体温度为必填项" },
                   { validator: this.temperatureValidator },
                 ],
                 trigger: "onChange",
@@ -282,24 +318,17 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
                   // min={37.2}
                   precision={1}
                   step="0.1"
-                ></InputNumber>
-              )}摄氏度
+                ></InputNumber>,
+              )}
+              摄氏度
             </Item>
-            <Item
-              label="备注"
-              colon={false}
-            >
-              {getFieldDecorator('comments', {
+            <Item label="备注" colon={false}>
+              {getFieldDecorator("comments", {
                 rules: [
                   // { required: showTemperature, message: "有发热时请说明具体情况" },
                   { validator: this.commentsValidator },
-                ]
-              })(
-                <Input
-                  type="text"
-                  name="comments"
-                ></Input>
-              )}
+                ],
+              })(<Input type="text" name="comments"></Input>)}
             </Item>
             {/* <Item label="是否离京" colon={false}>
               {getFieldDecorator('foreign_flag', {
@@ -348,9 +377,9 @@ class DailyReportForm extends React.Component<DailyReportFormProps & DailyReport
             </Item>
           </Form>
         </div>
-      </section >
+      </section>
     );
-  };
+  }
 }
 
 const WrappedDailyReportForm = Form.create<DailyReportFormProps>({
@@ -366,9 +395,7 @@ const WrappedDailyReportForm = Form.create<DailyReportFormProps>({
   //     })
   //   }
   // }
-})(
-  DailyReportForm
-);
+})(DailyReportForm);
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,

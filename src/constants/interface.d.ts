@@ -1,5 +1,5 @@
 import { InputHTMLAttributes, DOMAttributes } from "react";
-import { Moment } from 'moment';
+import { Moment } from "moment";
 
 // Store相关接口
 // 本地变量遵循js规范使用驼峰式全名，需要与后台数据库字段对应的变量使用下划线风格。
@@ -17,7 +17,7 @@ export interface WorkStatusI {
   cadre_flag: number;
   pinyin: string;
   py: string;
-};
+}
 
 export interface DutyI {
   code: string;
@@ -25,7 +25,7 @@ export interface DutyI {
   cadre_flag: number;
   pinyin: string;
   py: string;
-};
+}
 
 // 用户信息
 export declare interface UserI {
@@ -47,7 +47,7 @@ export declare interface UserI {
   duty?: string;
   title?: string;
   unit?: string;
-  groups: string[]; // 这里的问号会影响页面是groups为空的提示
+  groups: number[]; // 这里的问号会影响页面是groups为空的提示
   pinyin?: "";
   py?: "";
 }
@@ -102,8 +102,8 @@ export declare interface DailyReportI {
 
 export interface DailyReportSearchFormI {
   // dtRange: [Moment, Moment]; // Moment的在页面间传输时会被转成String，可能和persist-redux有关系。
-  start: string;  // YYYY-mm-dd HH:MM:SS
-  end: string;  // YYYY-mm-dd HH:MM:SS
+  start: string; // YYYY-mm-dd HH:MM:SS
+  end: string; // YYYY-mm-dd HH:MM:SS
   keyword: string;
 }
 

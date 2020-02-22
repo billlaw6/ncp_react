@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/camelcase */
 import { UserI, DepartmentI } from "_constants/interface";
-import { setTokenAction, setLoginErrorAction, setUserAction, updateUserAction, setDepartmentListAction } from "_actions/user";
+import {
+  setTokenAction,
+  setLoginErrorAction,
+  setUserAction,
+  updateUserAction,
+  setDepartmentListAction,
+} from "_actions/user";
 import * as types from "../action-types";
 
 const defaultToken = "";
@@ -16,7 +22,10 @@ const tokenReducer = (state = defaultToken, action: ReturnType<typeof setTokenAc
 };
 
 const defaultLoginError = "";
-const loginErrorReducer = (state = defaultLoginError, action: ReturnType<typeof setLoginErrorAction>): string => {
+const loginErrorReducer = (
+  state = defaultLoginError,
+  action: ReturnType<typeof setLoginErrorAction>,
+): string => {
   switch (action.type) {
     case types.SET_LOGIN_ERROR: {
       return action.payload;
@@ -43,10 +52,7 @@ const defaultUser: UserI = {
   unit: "",
   groups: [],
 };
-const userReducer = (
-  state = defaultUser,
-  action: ReturnType<typeof setUserAction>,
-): UserI => {
+const userReducer = (state = defaultUser, action: ReturnType<typeof setUserAction>): UserI => {
   switch (action.type) {
     case types.SET_USER: {
       // console.log("action payload: ", action.payload as FormData);

@@ -1,7 +1,6 @@
 import { UserI, ActionI, DepartmentI } from "_constants/interface";
 import * as types from "../action-types";
 
-
 // 需要监听：用于用户注册
 export type LoginUserActionT = ActionI<string, FormData>;
 export interface LoginUserActionFuncI {

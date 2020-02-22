@@ -11,9 +11,7 @@ export interface MapDispatchToPropsI {
 
 export type RegisterPropsI = MapStateToPropsI & MapDispatchToPropsI;
 
-export interface RegisterStateI {
-
-}
+export interface RegisterStateI {}
 
 // 本页面独有的数据类型，防止因表单增加太多全局变量
 export interface RegisterErrorI {

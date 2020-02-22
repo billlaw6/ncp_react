@@ -28,18 +28,18 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
 
   onSubmit = (e: any) => {
     const { handleSubmit } = this.props;
-    console.log('on submit')
+    console.log("on submit");
     e.preventDefault();
     this.props.form.validateFields((err: any, values: any) => {
       if (!err) {
         handleSubmit(values);
       }
-    })
-  }
+    });
+  };
 
   render() {
     const { getFieldDecorator, getFieldsError, getFieldError, isFieldTouched } = this.props.form;
-    const { dailyReportSearchForm } = this.props;   // 析构出来避免后续this指向不明确
+    const { dailyReportSearchForm } = this.props; // 析构出来避免后续this指向不明确
 
     // Only show error after a field is touched.
     const dtRangeError = isFieldTouched("dtRange") && getFieldError("dtRange");
@@ -47,10 +47,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
     return (
       <div className="search-form">
         {/* {dailyReportSearchForm.start} */}
-        <Form
-          layout="inline"
-          onSubmit={this.onSubmit}
-        >
+        <Form layout="inline" onSubmit={this.onSubmit}>
           <Form.Item
             label="填报时间"
             validateStatus={dtRangeError ? "error" : ""}
@@ -63,7 +60,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
                 moment(dailyReportSearchForm.start),
                 moment(dailyReportSearchForm.end),
                 // moment(),
-              ]
+              ],
             })(<RangePicker showTime={true} format={dateFormat} />)}
           </Form.Item>
           {/* 试图直接展示对象会白板
@@ -87,7 +84,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
           <Form.Item>
             <Button type="primary" htmlType="submit" disabled={hasErrors(getFieldsError())}>
               查询
-          </Button>
+            </Button>
           </Form.Item>
         </Form>
       </div>
@@ -99,10 +96,8 @@ const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({
   name: "horizontal_search",
   onFieldsChange(props, changedFields) {
     props.handleFieldsChange(changedFields);
-  }
-})(
-  HorizontalSearchForm,
-);
+  },
+})(HorizontalSearchForm);
 
 // export default WrappedHorizontalSearchForm;
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({

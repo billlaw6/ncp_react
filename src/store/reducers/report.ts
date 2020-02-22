@@ -1,7 +1,17 @@
 import moment from "moment";
-import { TempReportI, CadreReportI, DailyReportI, DailyReportSearchFormI } from "_constants/interface";
+import {
+  TempReportI,
+  CadreReportI,
+  DailyReportI,
+  DailyReportSearchFormI,
+} from "_constants/interface";
 import * as types from "../action-types";
-import { setTempReportListAction, setCadreReportListAction, setDailyReportListAction, setDailyReportSearchAction } from "_actions/report";
+import {
+  setTempReportListAction,
+  setCadreReportListAction,
+  setDailyReportListAction,
+  setDailyReportSearchAction,
+} from "_actions/report";
 
 // 全局变量tempReportList
 const defaultTempReportList: TempReportI[] = [];
@@ -36,7 +46,6 @@ const cadreReportListReducer = (
   }
 };
 
-
 const defaultDailyReportList: DailyReportI[] = [];
 const dailyReportListReducer = (
   state = defaultDailyReportList,
@@ -56,8 +65,14 @@ const dailyReportListReducer = (
 // 默认取当天的数据
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 const defaultDailyReportSearchForm: DailyReportSearchFormI = {
-  start: moment().startOf("day").locale("zh-cn").format(dateFormat),
-  end: moment().endOf("day").locale("zh-cn").format(dateFormat),
+  start: moment()
+    .startOf("day")
+    .locale("zh-cn")
+    .format(dateFormat),
+  end: moment()
+    .endOf("day")
+    .locale("zh-cn")
+    .format(dateFormat),
   keyword: "",
 };
 const dailyReportSearchFormReducer = (
@@ -78,4 +93,9 @@ const dailyReportSearchFormReducer = (
   }
 };
 
-export { cadreReportListReducer, tempReportListReducer, dailyReportListReducer, dailyReportSearchFormReducer }
+export {
+  cadreReportListReducer,
+  tempReportListReducer,
+  dailyReportListReducer,
+  dailyReportSearchFormReducer,
+};

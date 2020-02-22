@@ -1,12 +1,25 @@
 import { call, put, takeEvery } from "redux-saga/effects";
-import { getDepartmentListAction, registerUserAction, loginUserAction, updateUserAction, logoutUserAction } from "_actions/user";
+import {
+  getDepartmentListAction,
+  registerUserAction,
+  loginUserAction,
+  updateUserAction,
+  logoutUserAction,
+} from "_actions/user";
 import {
   getDailyReportListAction,
   checkDailyReportListAction,
   getCadreReportListAction,
   checkCadreReportListAction,
 } from "_actions/report";
-import { getDepartmentList, registerUser, loginUser, getUserInfo, logoutUser, updateUserInfo } from "_services/user";
+import {
+  getDepartmentList,
+  registerUser,
+  loginUser,
+  getUserInfo,
+  logoutUser,
+  updateUserInfo,
+} from "_services/user";
 import {
   getDailyReportList,
   checkDailyReport,
@@ -37,7 +50,7 @@ function* loginUserEffect(action: ReturnType<typeof loginUserAction>) {
     const key_res = yield call(loginUser, action.payload);
     console.log(key_res);
     if (!key_res) {
-      yield put({ type: types.SET_LOGIN_ERROR, payload: "用户名或密码错误"});
+      yield put({ type: types.SET_LOGIN_ERROR, payload: "用户名或密码错误" });
     }
     yield put({ type: types.SET_TOKEN, payload: key_res.data.key });
     const user_res = yield call(getUserInfo);

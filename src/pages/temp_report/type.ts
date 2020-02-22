@@ -5,8 +5,8 @@ import { GetTempReportListActionFuncI } from "_actions/report";
 export interface MapStateToPropsI {
   user: UserI;
   departmentList: DepartmentI[];
-};
+}
 
 export interface MapDispatchToPropsI {
   getTempReportList: GetTempReportListActionFuncI;
-};
+}

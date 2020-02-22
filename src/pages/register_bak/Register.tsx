@@ -31,7 +31,7 @@ const Register: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = prop
     name: "",
     password1: "",
     password2: "",
-  }
+  };
   const [registerErrors, setRegisterErrors] = useState(defaultRegisterErrors); //
 
   // 取消修改

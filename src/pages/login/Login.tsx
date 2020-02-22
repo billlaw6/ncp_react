@@ -2,7 +2,12 @@ import React, { FunctionComponent, useEffect, useState, useRef } from "react";
 import { Carousel } from "antd";
 import { connect } from "react-redux";
 
-import { getDepartmentListAction, loginUserAction, setTokenAction, setUserAction } from "_actions/user";
+import {
+  getDepartmentListAction,
+  loginUserAction,
+  setTokenAction,
+  setUserAction,
+} from "_actions/user";
 import { loginUser, getUserInfo } from "_services/user";
 import { StoreStateI } from "_constants/interface";
 
@@ -30,7 +35,7 @@ const Login: FunctionComponent<LoginPropsI> = props => {
 
   useEffect(() => {
     console.log("login mounted");
-    getDepartmentListAction({ keyword: "" })
+    getDepartmentListAction({ keyword: "" });
   }, []);
 
   const onSubmit = async () => {
@@ -58,7 +63,7 @@ const Login: FunctionComponent<LoginPropsI> = props => {
       }
     } catch (error) {
       console.log(error);
-    };
+    }
   };
 
   const updateInputVal = (e: React.FormEvent<HTMLInputElement>): void => {

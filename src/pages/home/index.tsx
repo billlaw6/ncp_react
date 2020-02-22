@@ -6,12 +6,7 @@ import { Button, Row, Col, Dropdown, Menu, Icon, Pagination, Table, Checkbox, Mo
 import moment, { Moment } from "moment";
 import { StoreStateI, DailyReportI } from "_constants/interface";
 
-import {
-  MapStateToPropsI,
-  HomePropsI,
-  HomeStateI,
-  MapDispatchToPropsI,
-} from "./type";
+import { MapStateToPropsI, HomePropsI, HomeStateI, MapDispatchToPropsI } from "./type";
 import {
   setDailyReportSearchAction,
   getDailyReportListAction,
@@ -32,8 +27,9 @@ import echarts from "echarts";
 import ReactEcharts from "echarts-for-react";
 import "./Home.less";
 import Stats from "./components/Stats";
+import BranchStats from "./components/BranchStats";
 
-const dateFormat = 'YYYY-MM-DD HH:mm:ss';
+const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
 class Home extends Component<HomePropsI, HomeStateI> {
   constructor(props: HomePropsI) {
@@ -58,8 +54,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
     if (changedValues.hasOwnProperty("dtRange")) {
       // console.log(changedValues.dtRange.value.length);
       if (changedValues.dtRange.value.length > 0) {
-        const start = changedValues.dtRange.value[0].locale('zh-cn').format(dateFormat);
-        const end = changedValues.dtRange.value[1].locale('zh-cn').format(dateFormat);
+        const start = changedValues.dtRange.value[0].locale("zh-cn").format(dateFormat);
+        const end = changedValues.dtRange.value[1].locale("zh-cn").format(dateFormat);
         const keyword = dailyReportSearchForm.keyword;
         setDailyReportSearchAction({ start: start, end: end, keyword: keyword });
       }
@@ -79,21 +75,22 @@ class Home extends Component<HomePropsI, HomeStateI> {
     // console.log(this.props.dailyReportSearchForm);
     this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
     // 获取相应统计分析数据
-    statsDailyReportList(dailyReportSearchForm).then((res) => {
-      this.setState({
-        statsDailyReport:
-          res.data
+    statsDailyReportList(dailyReportSearchForm)
+      .then(res => {
+        this.setState({
+          statsDailyReport: res.data,
+        });
       })
-    }).catch((err) => {
-      console.log(err);
-      // history.push("/login");
-    })
+      .catch(err => {
+        console.log(err);
+        // history.push("/login");
+      });
   };
 
   componentDidMount(): void {
-    const { user, dailyReportList, dailyReportSearchForm, getDailyReportListAction, } = this.props;
-    if (1 in user.groups) {
-      this.setState({ isDeptReporter: true })
+    const { user, dailyReportList, dailyReportSearchForm, getDailyReportListAction } = this.props;
+    if (user.groups.indexOf(1) && user.groups.indexOf(2)) {
+      this.setState({ isDeptReporter: true });
     }
     // console.log(dailyReportSearchForm);
     getDailyReportListAction(dailyReportSearchForm);
@@ -125,9 +122,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
   };
 
   onSelectChange = (selectedRowKeys: any) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log("selectedRowKeys changed: ", selectedRowKeys);
     this.setState({ selectedRowKeys });
-  }
+  };
 
   handleDownloadClick = () => {
     // console.log("donwload clicked");
@@ -137,15 +134,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
       url: downloadUrl,
       params: this.props.dailyReportSearchForm,
       headers: {
-        "Content-Type":
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       },
       responseType: "blob",
     }).then((res: any) => {
       // let blob = new Blob([res]);
       let blob = new Blob([res.data], {
-        type:
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
       let a = document.createElement("a");
       let objectUrl = URL.createObjectURL(blob); // 创建下载链接
@@ -156,7 +151,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(objectUrl); // 释放掉blob对象
     });
-  }
+  };
 
   render(): ReactElement {
     const { user, dailyReportList } = this.props;
@@ -164,7 +159,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
     const rowSelection = {
       selectedRowKeys,
       onChange: this.onSelectChange,
-    }
+    };
     const hasSelected = selectedRowKeys.length > 0;
     const columns: any = [
       {
@@ -173,8 +168,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
         key: "department",
         // 中文排序方法
         sorter: (a: DailyReportI, b: DailyReportI) => {
-          return a.department.localeCompare(b.department, 'zh-CN');
-        }
+          return a.department.localeCompare(b.department, "zh-CN");
+        },
       },
       {
         title: "人员角色",
@@ -203,14 +198,14 @@ class Home extends Component<HomePropsI, HomeStateI> {
       {
         title: "姓名",
         dataIndex: "name",
-        key: 'name',
+        key: "name",
         render: (text: string, record: any): ReactElement | string => {
           const { id } = record;
           return (
             <span>
               <span>{text}</span>
             </span>
-          )
+          );
         },
       },
       {
@@ -234,10 +229,10 @@ class Home extends Component<HomePropsI, HomeStateI> {
         onFilter: (value: number, record: any) => record.gender == value,
         render: (value: number) => {
           const genderObject: any = {
-            '0': '保密',
-            '1': '男',
-            '2': '女',
-          }
+            "0": "保密",
+            "1": "男",
+            "2": "女",
+          };
           return <span> {genderObject[value]}</span>;
         },
       },
@@ -249,19 +244,19 @@ class Home extends Component<HomePropsI, HomeStateI> {
         filters: [
           {
             text: "否",
-            value: '职员',
+            value: "职员",
           },
           {
             text: "是",
-            value: '干部',
+            value: "干部",
           },
         ],
         onFilter: (value: number, record: any) => record.duty == value,
         render: (value: number) => {
           const dutyObject: any = {
-            '职员': '否',
-            '干部': '是',
-          }
+            职员: "否",
+            干部: "是",
+          };
           return <span> {dutyObject[value]}</span>;
         },
       },
@@ -272,16 +267,14 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: string) => {
           const dt = moment(new Date(value));
           // console.log(dt.valueOf());
-          return (
-            <span> {dt.format('YYYY-MM-DD')} </span>
-          );
+          return <span> {dt.format("YYYY-MM-DD")} </span>;
         },
         sorter: (a: any, b: any) => {
           // console.log(a);
           const a1 = new Date(a.created_at).valueOf();
           const b1 = new Date(b.created_at).valueOf();
           return a1 - b1;
-        }
+        },
       },
       {
         title: "人员状态",
@@ -325,20 +318,18 @@ class Home extends Component<HomePropsI, HomeStateI> {
           // console.log(record.work_status_name.toUpperCase());
           // console.log(value.toUpperCase());
           return record.work_status_name.toUpperCase().indexOf(value.toUpperCase()) !== -1;
-        }
+        },
       },
       {
         title: "现工作科室",
         dataIndex: "work_department",
         key: "work_department",
         render: (text: string, record: any): ReactElement | string => {
-          return (
-            <span>{text}</span>
-          )
+          return <span>{text}</span>;
         },
         // 中文排序方法
         sorter: (a: DailyReportI, b: DailyReportI) => {
-          return a.work_department.localeCompare(b.work_department, 'zh-CN');
+          return a.work_department.localeCompare(b.work_department, "zh-CN");
         },
       },
       {
@@ -359,9 +350,9 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value ? "red" : "green";
           const genderObject: any = {
-            '0': '否',
-            '1': '是',
-          }
+            "0": "否",
+            "1": "是",
+          };
           return <span style={{ color: color }}> {genderObject[value]}</span>;
         },
       },
@@ -372,7 +363,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value > 37.2 ? "red" : "green";
           const dailyerature = value > 37.2 ? value : "";
-          return <span style={{ color: color }}>{dailyerature}</span>;;
+          return <span style={{ color: color }}>{dailyerature}</span>;
         },
         sorter: (a: any, b: any) => a.temperature - b.temperature,
       },
@@ -399,7 +390,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         render: (value: number) => {
           const color = value ? "green" : "red";
           const status = value ? "已审" : "未审";
-          return <span style={{ color: color }}> {status}</span >
+          return <span style={{ color: color }}> {status}</span>;
         },
       },
       // {
@@ -420,32 +411,56 @@ class Home extends Component<HomePropsI, HomeStateI> {
         <div className="daily-reports-header">我的上报卡</div>
         <Row type="flex" justify="start">
           <Col span={16}>
-            <SearchForm handleFieldsChange={this.handleFieldsChange} handleSubmit={this.handleSubmit}></SearchForm>
+            <SearchForm
+              handleFieldsChange={this.handleFieldsChange}
+              handleSubmit={this.handleSubmit}
+            ></SearchForm>
           </Col>
           <Col span={8}>
             <section className="daily-reports-summary">
               共检索到{dailyReportList.length}份体温报告，
-              <div className="fever-count">{(function(){
-                let feverCount = 0;
-                dailyReportList.forEach((item) => {
-                  if (item.is_fever) {
-                    feverCount = feverCount + 1;
-                  }
-                })
-                return feverCount;
-              })()
-              }份发热，
+              <div className="fever-count">
+                {(function() {
+                  let feverCount = 0;
+                  dailyReportList.forEach(item => {
+                    if (item.is_fever) {
+                      feverCount = feverCount + 1;
+                    }
+                  });
+                  return feverCount;
+                })()}
+                份发热，
               </div>
-             </section>,
+            </section>
+            ,
           </Col>
         </Row>
-        <Row type="flex" justify="start" style={{display: 'block'}}>
+        <Row
+          type="flex"
+          justify="start"
+          style={{
+            display: user.groups.indexOf(2) !== -1 ? "block" : "none",
+            marginTop: "20px",
+          }}
+        >
+          <Col span={24}>
+            <BranchStats></BranchStats>
+          </Col>
+        </Row>
+        <Row
+          type="flex"
+          justify="start"
+          style={{
+            display:
+              user.groups.indexOf(1) !== -1 || user.groups.indexOf(2) !== -1 ? "block" : "none",
+            marginTop: "20px",
+          }}
+        >
           <Col span={24}>
             <Stats></Stats>
           </Col>
         </Row>
-        <div
-          className="daily-report-div">
+        <div className="daily-report-div">
           <Row type="flex" justify="start" className="daily-reports-link">
             <Col span={12}>
               <h3>每日体温上报</h3>
@@ -476,13 +491,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
                 style={{
                   margin: "15px",
                   float: "right",
-                  display: isDeptReporter ? "block" : "none"
+                  display: isDeptReporter ? "block" : "none",
                 }}
                 disabled={hasSelected ? false : true}
                 onClick={this.showConfirm}
               >
                 审核提交所选报告
-            </Button>
+              </Button>
             </Col>
             <Col>
               <Button
@@ -493,13 +508,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
                 onClick={this.handleDownloadClick}
               >
                 下载报告到Excel文件
-            </Button>
+              </Button>
             </Col>
           </Row>
         </div>
       </div>
     );
-  };
+  }
 }
 
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({

@@ -1,5 +1,10 @@
 import { UserI } from "_constants/interface";
-import { LoginUserActionFuncI, SetTokenActionFuncI, SetUserActionFuncI, GetDepartmentListActionFuncI } from "_actions/user";
+import {
+  LoginUserActionFuncI,
+  SetTokenActionFuncI,
+  SetUserActionFuncI,
+  GetDepartmentListActionFuncI,
+} from "_actions/user";
 
 export interface MapStateToPropsI {
   user: UserI;

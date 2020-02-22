@@ -13,7 +13,7 @@ export interface MapDispatchToPropsI {
 export type RegisterPropsI = MapStateToPropsI & MapDispatchToPropsI;
 
 export interface RegisterStateI {
-  password1: string;  // 用于password2校验
+  password1: string; // 用于password2校验
   registerErrors: RegisterErrorI;
 }
 

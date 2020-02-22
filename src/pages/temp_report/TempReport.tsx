@@ -52,19 +52,21 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
       console.log(" Key: ", key, "  value: ", value);
     });
     console.groupEnd();
-    submitTempReport(formData).then((res) => {
-      // 提交后需要主动重新获取列表
-      const todayStart = moment()
-        .startOf("day")
-        .format(dateFormat);
-      const now = moment()
-        .locale("zh-cn")
-        .format(dateFormat);
-      getTempReportList({ start: todayStart, end: now, keyword: "" });
-      history.push("/");
-    }).catch((err) => {
-      console.log(err);
-    });
+    submitTempReport(formData)
+      .then(res => {
+        // 提交后需要主动重新获取列表
+        const todayStart = moment()
+          .startOf("day")
+          .format(dateFormat);
+        const now = moment()
+          .locale("zh-cn")
+          .format(dateFormat);
+        getTempReportList({ start: todayStart, end: now, keyword: "" });
+        history.push("/");
+      })
+      .catch(err => {
+        console.log(err);
+      });
 
     // setIsEdit(false);
   };
@@ -130,20 +132,27 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 filterOption={(input, option) => {
                   // console.log(option.props.title);
                   if (
-                    option!.props!.title!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0 ||
-                    option!.props!.value!.toString().toLowerCase().indexOf(input.toLowerCase()) >= 0
+                    option!
+                      .props!.title!.toString()
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0 ||
+                    option!
+                      .props!.value!.toString()
+                      .toLowerCase()
+                      .indexOf(input.toLowerCase()) >= 0
                   ) {
                     return true;
                   } else {
                     return false;
                   }
-                }}>
+                }}
+              >
                 {departmentList.map(item => {
                   return (
                     <Option key={item.code} value={item.code} title={item.py}>
                       {item.name}
                     </Option>
-                  );;
+                  );
                 })}
               </Select>
               <Input
@@ -162,7 +171,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 value={tempReport.is_fever}
                 onChange={(e: RadioChangeEvent): void => {
                   // console.log(e.target.value);;;;
-                  setTempReport(Object.assign({}, tempReport, { is_fever: e.target.value }));;
+                  setTempReport(Object.assign({}, tempReport, { is_fever: e.target.value }));
                 }}
               >
                 <Radio value={0}>未发热</Radio>
@@ -190,7 +199,8 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
                 step="0.1"
                 value={tempReport.temperature}
                 onChange={updateTemperatureVal}
-              ></InputNumber>摄氏度
+              ></InputNumber>
+              摄氏度
             </Item>
             <Item label="是否离京" colon={false}>
               <Radio.Group
@@ -260,7 +270,7 @@ const TempReport: FunctionComponent<MapStateToPropsI & MapDispatchToPropsI> = pr
           </div>
         </form>
       </div>
-    </section >
+    </section>
   );
 };
 

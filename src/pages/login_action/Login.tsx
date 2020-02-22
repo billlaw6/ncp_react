@@ -2,7 +2,13 @@ import React, { FunctionComponent, useEffect, useState, useRef } from "react";
 import { Carousel } from "antd";
 import { connect } from "react-redux";
 
-import { getDepartmentListAction, setLoginErrorAction, loginUserAction, setTokenAction, setUserAction } from "_actions/user";
+import {
+  getDepartmentListAction,
+  setLoginErrorAction,
+  loginUserAction,
+  setTokenAction,
+  setUserAction,
+} from "_actions/user";
 import { loginUser, getUserInfo } from "_services/user";
 import { StoreStateI } from "_constants/interface";
 
@@ -16,7 +22,15 @@ const { Item } = Form;
 const { Option } = Select;
 
 const Login: FunctionComponent<LoginPropsI> = props => {
-  const { user, loginError, setLoginErrorAction, loginUserAction, getDepartmentListAction, setTokenAction, setUserAction } = props;
+  const {
+    user,
+    loginError,
+    setLoginErrorAction,
+    loginUserAction,
+    getDepartmentListAction,
+    setTokenAction,
+    setUserAction,
+  } = props;
   const history = useHistory();
   const $form = useRef<HTMLFormElement>(null);
 
@@ -30,7 +44,7 @@ const Login: FunctionComponent<LoginPropsI> = props => {
 
   useEffect(() => {
     console.log("login mounted");
-    getDepartmentListAction({ keyword: "" })
+    getDepartmentListAction({ keyword: "" });
   }, []);
 
   const onSubmit = async () => {
@@ -90,10 +104,8 @@ const Login: FunctionComponent<LoginPropsI> = props => {
                   onInput={updateInputVal}
                 />
               </Item>
-              <Row style={{color: 'red'}} type="flex" justify="space-around">
-                <Col span={24}>
-                  {loginError}
-                </Col>
+              <Row style={{ color: "red" }} type="flex" justify="space-around">
+                <Col span={24}>{loginError}</Col>
               </Row>
               <Row
                 className="login-form-btns"

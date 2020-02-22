@@ -6,7 +6,7 @@ import {
 } from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
-import { Moment } from 'moment';
+import { Moment } from "moment";
 
 export interface MapStateToPropsI {
   user: UserI;
@@ -24,7 +24,7 @@ export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponent
 
 export interface HomeStateI {
   selectedRowKeys: []; //当前已选择的id 集
-  loading: false,
+  loading: false;
   redirectReport: boolean; // 是否重定向到report页
   isDeptReporter: boolean;
   statsDailyReport: {
