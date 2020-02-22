@@ -140,9 +140,9 @@ class BranchStats extends React.Component<MapStateToPropsI, BranchStatsStateI> {
                   empCount[bIndex] = empCount[bIndex] + item[3];
                 }
               }
-              console.log(item);
-              console.log(bColumns);
-              console.log(empCount);
+            //   console.log(item);
+            //   console.log(bColumns);
+            //   console.log(empCount);
             });
             return empCount;
           })(),
