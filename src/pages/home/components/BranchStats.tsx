@@ -274,8 +274,6 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
             statsDailyReport.dept_stats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
-              console.log(item);
-              console.log(yColumns);
               if (index === -1) {
                 yColumns.push(item[0]);
                 if (item[3] === "05") {
