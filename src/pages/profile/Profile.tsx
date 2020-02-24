@@ -201,7 +201,6 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                 initialValue: user.department,
               })(
                 <Select
-                  disabled={selectedRole !== "01"}
                   showSearch
                   filterOption={(input, option) => {
                     // console.log(option.props.title);
