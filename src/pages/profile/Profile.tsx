@@ -28,7 +28,7 @@ const { Item } = Form;
 const { Option } = Select;
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
-interface ProfileFormProps extends FormComponentProps {}
+interface ProfileFormProps extends FormComponentProps { }
 
 class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, ProfileStateI> {
   constructor(props: ProfileFormProps & ProfilePropsI) {
@@ -160,10 +160,10 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                       );
                     })
                   ) : (
-                    <Option key={"empty"} value={"empty"} title={"empty"}>
-                      Empty
+                      <Option key={"empty"} value={"empty"} title={"empty"}>
+                        Empty
                     </Option>
-                  )}
+                    )}
                 </Select>,
               )}
             </Item>
@@ -193,11 +193,11 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
             </Item>
             <Item
               label="所属科室"
-              style={{ display: selectedRole === "01" ? "block" : "none" }}
+              style={{ display: "block" }}
               colon={false}
             >
               {getFieldDecorator("department", {
-                rules: [{ required: selectedRole === "01", message: "请选择您所属的科室" }],
+                rules: [{ required: true, message: "请选择您所属的科室" }],
                 initialValue: user.department,
               })(
                 <Select
@@ -233,7 +233,7 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
             </Item>
             <Item
               label="当前工作科室（仅不在本科室工作或在各院区工作时填写）"
-              style={{ display: selectedRole === "01" ? "block" : "none" }}
+              style={{ display: "block" }}
               colon={false}
             >
               {getFieldDecorator("work_department", {
@@ -268,10 +268,10 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                       );
                     })
                   ) : (
-                    <Option key={"empty"} value={"empty"} title={"empty"}>
-                      Empty
+                      <Option key={"empty"} value={"empty"} title={"empty"}>
+                        Empty
                     </Option>
-                  )}
+                    )}
                 </Select>,
               )}
             </Item>
@@ -290,10 +290,10 @@ class ProfileForm extends React.Component<ProfileFormProps & ProfilePropsI, Prof
                       );
                     })
                   ) : (
-                    <Option key={"empty"} value={"empty"} title={"empty"}>
-                      Empty
+                      <Option key={"empty"} value={"empty"} title={"empty"}>
+                        Empty
                     </Option>
-                  )}
+                    )}
                 </Select>,
               )}
             </Item>
