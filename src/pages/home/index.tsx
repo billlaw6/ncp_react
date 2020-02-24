@@ -178,8 +178,8 @@ class Home extends Component<HomePropsI, HomeStateI> {
         key: "role",
         filters: [
           {
-            text: "在职职工",
-            value: "在职职工",
+            text: "在职职员",
+            value: "在职职员",
           },
           {
             text: "外包公司",
@@ -194,7 +194,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             value: "学生",
           },
         ],
-        onFilter: (value: number, record: any) => record.emp_code == value,
+        onFilter: (value: string, record: any) => record.role === value,
       },
       {
         title: "姓名",
