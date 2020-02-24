@@ -64,7 +64,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
       },
       legend: {
         data: [
-          "总人数",
+          "总报告数",
           "白班",
           "夜班",
           "备班",
@@ -116,10 +116,10 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
       ],
       series: [
         {
-          name: "总人数",
+          name: "总报告数",
           type: "bar",
           label: {
-            show: true,
+            show: false,
             position: "insideRight",
           },
           data: (() => {
@@ -130,10 +130,10 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               // 科室没出现过增加对应数据元素
               if (index === -1) {
                 yColumns.push(item[1]);
-                empCount.push(item[3]);
+                empCount.push(item[5]);
               } else {
                 // 科室出现过，在对应数据元素节点上累加
-                empCount[index] = empCount[index] + item[3];
+                empCount[index] = empCount[index] + item[5];
               }
             });
             return empCount;
@@ -156,12 +156,12 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "01") {
-                  data.push(item[6]);
+                if (item[3] === "01") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "01") {
+              } else if (yColumns.length === data.length && item[3] === "01") {
                 // 如果科室存在，则数据加到相同序列位置
                 data[index] = data[index] + item[5];
               }
@@ -186,14 +186,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "02") {
-                  data.push(item[6]);
+                if (item[3] === "02") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "02") {
+              } else if (yColumns.length === data.length && item[3] === "02") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -216,14 +216,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "03") {
-                  data.push(item[6]);
+                if (item[3] === "03") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "03") {
+              } else if (yColumns.length === data.length && item[3] === "03") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -246,14 +246,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[5]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "04") {
-                  data.push(item[6]);
+                if (item[3] === "04") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "04") {
+              } else if (yColumns.length === data.length && item[3] === "04") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -274,16 +274,18 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
             statsDailyReport.dept_stats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[1]);
+              console.log(item);
+              console.log(yColumns);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "05") {
-                  data.push(item[6]);
+                if (item[3] === "05") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "05") {
+              } else if (yColumns.length === data.length && item[3] === "05") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -306,14 +308,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "06") {
-                  data.push(item[6]);
+                if (item[3] === "06") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "06") {
+              } else if (yColumns.length === data.length && item[3] === "06") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -336,14 +338,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "07") {
-                  data.push(item[6]);
+                if (item[3] === "07") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "07") {
+              } else if (yColumns.length === data.length && item[3] === "07") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -366,14 +368,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[4] === "08") {
-                  data.push(item[6]);
+                if (item[3] === "08") {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[4] === "08") {
+              } else if (yColumns.length === data.length && item[3] === "08") {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -396,14 +398,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[5] === 0) {
-                  data.push(item[6]);
+                if (item[4] === 0) {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[5] === 0) {
+              } else if (yColumns.length === data.length && item[4] === 0) {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;
@@ -426,14 +428,14 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
               let index = yColumns.indexOf(item[1]);
               if (index === -1) {
                 yColumns.push(item[1]);
-                if (item[5] === 1) {
-                  data.push(item[6]);
+                if (item[4] === 1) {
+                  data.push(item[5]);
                 } else {
                   data.push(0);
                 }
-              } else if (yColumns.length === data.length && item[5] === 1) {
+              } else if (yColumns.length === data.length && item[4] === 1) {
                 // 如果科室存在，则数据加到相同序列位置
-                data[index] = data[index] + item[6];
+                data[index] = data[index] + item[5];
               }
             });
             return data;

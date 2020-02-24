@@ -28,6 +28,7 @@ import ReactEcharts from "echarts-for-react";
 import "./Home.less";
 import Stats from "./components/Stats";
 import BranchStats from "./components/BranchStats";
+import CadreStats from "./components/CadreStats";
 
 const dateFormat = "YYYY-MM-DD HH:mm:ss";
 
@@ -433,6 +434,18 @@ class Home extends Component<HomePropsI, HomeStateI> {
               </div>
             </section>
             ,
+          </Col>
+        </Row>
+        <Row
+          type="flex"
+          justify="start"
+          style={{
+            display: user.groups.indexOf(2) !== -1 ? "block" : "none",
+            marginTop: "20px",
+          }}
+        >
+          <Col span={24}>
+            <CadreStats></CadreStats>
           </Col>
         </Row>
         <Row
