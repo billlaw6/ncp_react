@@ -411,13 +411,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
       <div className="daily-reports">
         <div className="daily-reports-header">我的上报卡</div>
         <Row type="flex" justify="start">
-          <Col span={16}>
+          <Col span={24}>
             <SearchForm
               handleFieldsChange={this.handleFieldsChange}
               handleSubmit={this.handleSubmit}
             ></SearchForm>
           </Col>
-          <Col span={8}>
+          <Col span={0}>
             <section className="daily-reports-summary">
               共检索到{dailyReportList.length}份体温报告，
               <div className="fever-count">
