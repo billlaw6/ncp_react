@@ -438,7 +438,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             ,
           </Col>
         </Row>
-        {/* <Row
+        <Row
           type="flex"
           justify="start"
           style={{
@@ -461,7 +461,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           <Col span={24}>
             <BranchStats></BranchStats>
           </Col>
-        </Row> */}
+        </Row>
         <Row
           type="flex"
           justify="start"

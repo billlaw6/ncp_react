@@ -43,7 +43,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
 
   getOption() {
     const { xAxisColumns, statsDailyReport } = this.state;
-    // console.log(statsDailyReport);
+    const { dailyReportStats } = this.props;
     show: return {
       title: {
           text: "全部报告按院区统计",
@@ -105,7 +105,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let empCount: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               if (yColumns.indexOf(item[0]) === -1) {
                 yColumns.push(item[0]);
               }
@@ -126,7 +126,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let empCount: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               let index = yColumns.indexOf(item[0]);
               // 科室没出现过增加对应数据元素
               if (index === -1) {
@@ -152,7 +152,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -182,7 +182,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -212,7 +212,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -242,7 +242,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[5]);
               if (index === -1) {
@@ -272,7 +272,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -302,7 +302,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -332,7 +332,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -362,7 +362,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -392,7 +392,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
@@ -422,7 +422,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           data: (() => {
             let yColumns: string[] = [];
             let data: number[] = [];
-            statsDailyReport.dept_stats.map((item: any) => {
+            dailyReportStats.map((item: any) => {
               // 如果是新科室则要新建一个数据项
               let index = yColumns.indexOf(item[0]);
               if (index === -1) {
