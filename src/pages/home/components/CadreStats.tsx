@@ -45,16 +45,17 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
     const { xAxisColumns, statsDailyReport } = this.state;
     // console.log(statsDailyReport);
     show: return {
-      // title: {
-      //     text: "报告统计",
-      //     // subtext: '',
-      //     left: '50%',
-      //     textAlign: 'center',
-      //     textStyle: {
-      //         fontSize: 16,
-      //         color: '#000',
-      //     }
-      // },
+      title: {
+          text: "干部报告统计",
+          // subtext: '',
+          left: '50%',
+          textAlign: 'center',
+          textStyle: {
+              margin: 20,
+              fontSize: 16,
+              color: '#000',
+          }
+      },
       tooltip: {
         trigger: "axis",
         axisPointer: {
@@ -76,6 +77,7 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
           "正常",
           "发热",
         ],
+        top: "10%",
       },
       toolbox: {
         show: false,
@@ -465,5 +467,6 @@ class Stats extends React.Component<MapStateToPropsI, StatsStateI> {
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   dailyReportSearchForm: state.dailyReportSearchForm,
+  dailyReportStats: state.dailyReportStats,
 });
 export default connect(mapStateToProps)(Stats);

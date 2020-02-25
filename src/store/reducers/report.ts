@@ -4,6 +4,7 @@ import {
   CadreReportI,
   DailyReportI,
   DailyReportSearchFormI,
+  DailyReportStatsT,
 } from "_constants/interface";
 import * as types from "../action-types";
 import {
@@ -11,6 +12,7 @@ import {
   setCadreReportListAction,
   setDailyReportListAction,
   setDailyReportSearchAction,
+  setDailyReportStatsAction,
 } from "_actions/report";
 
 // 全局变量tempReportList
@@ -93,9 +95,26 @@ const dailyReportSearchFormReducer = (
   }
 };
 
+const defaultDailyReportStats: DailyReportStatsT[] = [["", "", "", "", 0, 0]];
+const dailyReportStatsReducer = (
+  state = defaultDailyReportStats,
+  action: ReturnType<typeof setDailyReportStatsAction>,
+): DailyReportStatsT[] => {
+  if (!action) return state;
+  switch (action.type) {
+    // 全部CASE必须返回STATE类型的数据，以替换原来的STATE。actions文件中已经指定了payload的类型。
+    case types.SET_DAILY_REPORT_STATS:
+      return action.payload;
+    default: {
+      return state;
+    }
+  }
+};
+
 export {
   cadreReportListReducer,
   tempReportListReducer,
   dailyReportListReducer,
   dailyReportSearchFormReducer,
+  dailyReportStatsReducer,
 };

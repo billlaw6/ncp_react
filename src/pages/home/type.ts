@@ -1,8 +1,9 @@
-import { DailyReportI, UserI, DailyReportSearchFormI } from "_constants/interface";
+import { DailyReportI, UserI, DailyReportSearchFormI, DailyReportStatsT } from "_constants/interface";
 import {
   setDailyReportSearchAction,
   checkDailyReportListAction,
   getDailyReportListAction,
+  setDailyReportStatsAction,
 } from "_actions/report";
 import { RouteComponentProps } from "react-router";
 import { ReactElement } from "react";
@@ -13,11 +14,13 @@ export interface MapStateToPropsI {
   token: string;
   dailyReportList: DailyReportI[];
   dailyReportSearchForm: DailyReportSearchFormI;
+  dailyReportStats: DailyReportStatsT[];
 }
 export interface MapDispatchToPropsI {
   getDailyReportListAction: typeof getDailyReportListAction;
   setDailyReportSearchAction: typeof setDailyReportSearchAction;
   checkDailyReportListAction: typeof checkDailyReportListAction;
+  setDailyReportStatsAction: typeof setDailyReportStatsAction;
 }
 
 export type HomePropsI = MapStateToPropsI & MapDispatchToPropsI & RouteComponentProps;

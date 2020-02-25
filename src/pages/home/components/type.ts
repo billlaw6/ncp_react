@@ -1,4 +1,4 @@
-import { UserI, DailyReportSearchFormI } from "_constants/interface";
+import { UserI, DailyReportSearchFormI, DailyReportStatsT } from "_constants/interface";
 import {
   SetDailyReportSearchFormActionFuncI,
   GetDailyReportListActionFuncI,
@@ -7,6 +7,7 @@ import {
 export interface MapStateToPropsI {
   user: UserI;
   dailyReportSearchForm: DailyReportSearchFormI;
+  dailyReportStats: DailyReportStatsT[];
 }
 
 export interface MapDispatchToPropsI {

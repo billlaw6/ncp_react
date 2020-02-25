@@ -107,6 +107,8 @@ export interface DailyReportSearchFormI {
   keyword: string;
 }
 
+export type DailyReportStatsT = [string, string, string, string, number, number]
+
 export interface RoleI {
   code: string;
   name: string;
@@ -153,6 +155,7 @@ export declare interface StoreStateI {
   // 日报当前检索条件
   dailyReportSearchForm: DailyReportSearchFormI;
   dailyReportList: DailyReportI[];
+  dailyReportStats: DailyReportStatsT[];
 }
 
 export declare interface CustomHTMLDivElement extends HTMLDivElement {

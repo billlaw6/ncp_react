@@ -7,6 +7,7 @@ import {
   cadreReportListReducer,
   dailyReportListReducer,
   dailyReportSearchFormReducer,
+  dailyReportStatsReducer,
 } from "./report";
 
 // 每个reducer必须都返回state类型的数据！
@@ -21,6 +22,7 @@ const createRootReducer = (history: History) =>
     dailyReportSearchForm: dailyReportSearchFormReducer,
     dailyReportList: dailyReportListReducer,
     loginError: loginErrorReducer,
+    dailyReportStats: dailyReportStatsReducer,
   });
 
 export default createRootReducer;

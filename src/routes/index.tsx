@@ -7,6 +7,7 @@ import Profile from "_pages/profile/Profile";
 // import TempReport from "_pages/temp_report/TempReport";
 // import CadreReport from "_pages/cadre_report/CadreReport";
 import DailyReport from "_pages/daily_report/DailyReport";
+import CaseRecord from "_pages/case_record/CaseRecord";
 
 import DefaultLayout from "_layout/Default/Default";
 import FullscreenLayout from "_layout/FullscreenLayout/FullscreenLayout";
@@ -50,6 +51,12 @@ const routes: RoutesI[] = [
     name: "dailyReport",
     path: "/daily-report",
     component: DailyReport,
+    permission: ["login"],
+  },
+  {
+    name: "caseRecord",
+    path: "/case-record",
+    component: CaseRecord,
     permission: ["login"],
   },
   // {

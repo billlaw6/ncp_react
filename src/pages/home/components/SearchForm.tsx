@@ -77,7 +77,7 @@ class HorizontalSearchForm extends React.Component<SearchFormProps & SearchFormP
               <Input
                 prefix={<Icon type="key" style={{ color: "rgba(0,0,0,.25)" }} />}
                 type="keyword"
-                placeholder="keyword"
+                placeholder="院区或科室名称"
               />,
             )}
           </Form.Item>
@@ -103,6 +103,7 @@ const WrappedHorizontalSearchForm = Form.create<SearchFormProps>({
 const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   user: state.user,
   dailyReportSearchForm: state.dailyReportSearchForm,
+  dailyReportStats: state.dailyReportStats,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   // setDailyReportSearch: setDailyReportListAction,

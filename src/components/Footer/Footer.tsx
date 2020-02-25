@@ -10,7 +10,7 @@ const Footer = (): ReactElement => (
     <span style={{ display: "inline-flex", alignItems: "center" }}>
       <Icon type="copyright"></Icon>2020北京大学第三医院
     </span>
-    <a href="http://beian.miit.gov.cn">京ICP备</a>
+    <a href="http://beian.miit.gov.cn">京ICP备15010364号-2</a>
   </AntdFooter>
 );
 

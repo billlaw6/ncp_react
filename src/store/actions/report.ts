@@ -4,6 +4,7 @@ import {
   CadreReportI,
   DailyReportI,
   DailyReportSearchFormI,
+  DailyReportStatsT,
 } from "_constants/interface";
 import * as types from "../action-types";
 
@@ -107,5 +108,14 @@ export interface SetDailyReportListActionFuncI {
 }
 export const setDailyReportListAction: SetDailyReportListActionFuncI = payload => ({
   type: types.SET_DAILY_REPORT_LIST,
+  payload,
+});
+
+export type SetDailyReportStatsActionT = ActionI<string, DailyReportStatsT[]>;
+export interface SetDailyReportStatsActionFuncI {
+  (payload: DailyReportStatsT[]): SetDailyReportStatsActionT;
+}
+export const setDailyReportStatsAction: SetDailyReportStatsActionFuncI = payload => ({
+  type: types.SET_DAILY_REPORT_STATS,
   payload,
 });

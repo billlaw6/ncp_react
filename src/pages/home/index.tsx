@@ -12,6 +12,7 @@ import {
   getDailyReportListAction,
   checkDailyReportListAction,
   setDailyReportListAction,
+  setDailyReportStatsAction,
 } from "_actions/report";
 import { Redirect } from "react-router";
 
@@ -71,7 +72,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
 
   // 传给检索表单
   handleSubmit = (submitedData: any) => {
-    const { dailyReportList, dailyReportSearchForm } = this.props;
+    const { dailyReportList, dailyReportSearchForm, setDailyReportStatsAction } = this.props;
     // console.log(submitedData);
     // console.log(this.props.dailyReportSearchForm);
     this.props.getDailyReportListAction(this.props.dailyReportSearchForm);
@@ -81,6 +82,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
         this.setState({
           statsDailyReport: res.data,
         });
+        setDailyReportStatsAction(res.data)
       })
       .catch(err => {
         console.log(err);
@@ -411,13 +413,13 @@ class Home extends Component<HomePropsI, HomeStateI> {
       <div className="daily-reports">
         <div className="daily-reports-header">我的上报卡</div>
         <Row type="flex" justify="start">
-          <Col span={24}>
+          <Col span={18}>
             <SearchForm
               handleFieldsChange={this.handleFieldsChange}
               handleSubmit={this.handleSubmit}
             ></SearchForm>
           </Col>
-          <Col span={0}>
+          <Col span={6}>
             <section className="daily-reports-summary">
               共检索到{dailyReportList.length}份体温报告，
               <div className="fever-count">
@@ -436,7 +438,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
             ,
           </Col>
         </Row>
-        <Row
+        {/* <Row
           type="flex"
           justify="start"
           style={{
@@ -459,7 +461,7 @@ class Home extends Component<HomePropsI, HomeStateI> {
           <Col span={24}>
             <BranchStats></BranchStats>
           </Col>
-        </Row>
+        </Row> */}
         <Row
           type="flex"
           justify="start"
@@ -535,10 +537,12 @@ const mapStateToProps = (state: StoreStateI): MapStateToPropsI => ({
   token: state.token,
   dailyReportList: state.dailyReportList,
   dailyReportSearchForm: state.dailyReportSearchForm,
+  dailyReportStats: state.dailyReportStats,
 });
 const mapDispatchToProps: MapDispatchToPropsI = {
   setDailyReportSearchAction: setDailyReportSearchAction,
   getDailyReportListAction: getDailyReportListAction,
   checkDailyReportListAction: checkDailyReportListAction,
+  setDailyReportStatsAction: setDailyReportStatsAction,
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
