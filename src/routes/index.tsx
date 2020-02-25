@@ -57,7 +57,7 @@ const routes: RoutesI[] = [
     name: "caseRecord",
     path: "/case-record",
     component: CaseRecord,
-    permission: ["login"],
+    layout: FullscreenLayout,
   },
   // {
   //   name: "tempReport",
